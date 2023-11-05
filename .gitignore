@@ -1,12 +1,5 @@
-*.gem
-.bundle
-.jekyll-cache
-.sass-cache
 _site
-Gemfile.lock
-.vscode/
-
-# Demo Site 
-/Demo
-*.sh 
-*.xml
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
