@@ -8,30 +8,31 @@
 # -----------BASE SETTINGS---------------#
 #========================================#
 
-title: Dumbarton 
+title: Kai Zhang
 email: 
-description: a minimalistic jekyll theme for academics
+description: Kai Zhang's personal Website
 baseurl:                                       # the subpath of your site, e.g. /blog
-url: "https://dumbarton.netlify.app/"          # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://iamKaiZhang.github.io/"          # the base hostname & protocol for your site, e.g. http://example.com
 image: /assets/img/dumbarton.png               # used to generate site link preview
 image_alt: A minimalistic jekyll theme for academic    # image description
 
 # =======================================#
 # -----------SITE SETTINGS---------------#
 #========================================#: 
-author: John Doe 
+author: Kai Zhang
 profile_image: /assets/img/avatar/cropped.png #/assets/img/avatar/avatar.jpeg 
 occupation: 
 snippet:
-twitter: tbutler0x90
-github: tcbutler320
-linkedin: tyler-b-a700a1aa
-stackoverflow: '12935605'
-website: https://tbutler.org
+twitter:
+github: iamKaiZhang
+linkedin: kai-zhang-1a685a255
+instagram: kai.zhang.99
+stackoverflow:
+website:
 codepen: 
 medium: 
-email: developer.tbutler@gmail.com
-keybase: tbutler320
+email:
+keybase:
 pgp: 
 ctftime: 
 phonenumber: 
