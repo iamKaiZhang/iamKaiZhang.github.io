@@ -4,6 +4,7 @@
 .sass-cache
 _site
 Gemfile.lock
+.vscode/
 
 # Demo Site 
 /Demo
