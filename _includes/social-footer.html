@@ -1,7 +1,13 @@
 <!-- Displays Social Media Icons based on _config.yml settings -->
 <!-- {{ if site.twitter }} -->
 <span style="color: Black;">
-     {% if site.twitter %}
+    {% if site.email %}
+        <a href="mailto:{{ site.email }}">
+        <span style="color: {{ theme.social-color-footer }};">
+            <i class="fas fa-envelope fa-lg"></i></a>
+        </span>
+    {% endif %}
+    {% if site.twitter %}
         <a class="social-link" href="https://twitter.com/{{ site.twitter }}">
         <span style="color: {{ theme.social-color-footer }};">
             <i class="fab fa-twitter-square fa-lg"></i></a>

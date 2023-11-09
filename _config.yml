@@ -9,7 +9,7 @@
 #========================================#
 
 title: Kai Zhang
-email: 
+# email: kaizhang2099@outlook.com
 description: Kai Zhang's personal Website
 baseurl:                                       # the subpath of your site, e.g. /blog
 url: "https://iamKaiZhang.github.io/"          # the base hostname & protocol for your site, e.g. http://example.com
@@ -28,10 +28,10 @@ github: iamKaiZhang
 linkedin: kai-zhang-1a685a255
 instagram: kai.zhang.99
 stackoverflow:
-website:
+website: www.zhangkai.io
 codepen: 
 medium: 
-email:
+email: kaizhang2099@outlook.com
 keybase:
 pgp: 
 ctftime: 
