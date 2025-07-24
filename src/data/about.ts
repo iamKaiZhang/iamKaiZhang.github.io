@@ -18,5 +18,5 @@ The random facts about me are small yet certain proofs that I am unlike anyone e
 
 I don't expect them to be useful to you XD.
 
-[You can click here to view my random facts.](zhangkai.io/facts)
+[You can click here to view my random facts.](facts)
 `;
