@@ -42,11 +42,18 @@ dist/
 tmp/
 build/
 
+# Next.js
+.next/
+out/
+.swc/
+next-env.d.ts
+tsconfig.tsbuildinfo
+
 # OSX
 .DS_Store
 
 # Nohup
 nohup.out
 
-#
-.idea
+# IDEs
+.idea/
