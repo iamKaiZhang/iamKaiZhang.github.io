@@ -48,6 +48,16 @@ Ensure you have [node](https://nodejs.org/) >= v16. Optionally, use [nvm](https:
 
 By default, the application should be available at [http://localhost:3000/](http://localhost:3000/).
 
+## 🔬 Testing
+
+```bash
+npm run lint          # Run ESLint
+npm run type-check    # Run TypeScript type checking
+npm run format        # Format code with Prettier
+npm run format:check  # Check code formatting
+npm test              # Run Jest tests
+```
+
 ## 🚢 Deploying
 
 ### Deploying to GitHub Pages

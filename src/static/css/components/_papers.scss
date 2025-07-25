@@ -10,8 +10,8 @@
 }
 
 .papers {
-  @include vendor("display", "flex");
-  @include vendor("flex-direction", "column");
+  @include vendor('display', 'flex');
+  @include vendor('flex-direction', 'column');
   background: _palette(bg);
   margin: 0em 1em 1.5em;
 
@@ -19,7 +19,7 @@
     font-size: 1.1em;
     margin-bottom: 0.2em;
     margin-trim: 0em;
-    text-transform: capitalize; 
+    text-transform: capitalize;
     letter-spacing: 0.1em;
   }
 
