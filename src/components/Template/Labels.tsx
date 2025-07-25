@@ -24,6 +24,7 @@ const Labels: React.FC<LabelsProps> = ({ labels, categories = [] }) => {
     color: 'white',
     display: 'inline-block',
     fontSize: '9pt',
+    fontFamily: 'sans-serif',
   });
 
   return (

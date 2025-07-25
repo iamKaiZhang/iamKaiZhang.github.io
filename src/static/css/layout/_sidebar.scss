@@ -14,7 +14,7 @@
   > * {
     border-top: solid 1px _palette(border);
     margin: _size(section-spacing)*0.1 0 0 0;
-    padding: _size(section-spacing)*0.5 0 0 0;
+    padding: _size(section-spacing)*0.5 _size(section-spacing)*0.25 0 _size(section-spacing)*0.25;
   }
 
   > :first-child {

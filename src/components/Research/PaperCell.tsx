@@ -13,12 +13,12 @@ const PaperCell: React.FC<PaperCellProps> = ({ data }) => (
         {data.title}
         {data.status ? <span className="paper-status">[{data.status.toUpperCase()}] </span> : ''}
       </h3>
-      <div className="paper-details">{data.authors}</div>
-      <div className="paper-details">
+      <div>{data.authors}</div>
+      <div>
         <em>{data.journal}</em>
         {data.year ? `, ${data.year}` : ''}
       </div>
-      <div className="paper-remark">{data.remark ? `${data.remark}` : ''}</div>
+      <div>{data.remark ? `${data.remark}` : ''}</div>
       <div className="paper-links">
         {data.links &&
           data.links.map((item, index) => (

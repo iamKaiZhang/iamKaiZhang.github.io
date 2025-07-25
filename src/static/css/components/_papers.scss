@@ -16,31 +16,28 @@
   margin: 0em 1em 1.5em;
 
   h3 {
-    font-size: 1em;
-    margin-bottom: 0em;
+    font-size: 1.1em;
+    margin-bottom: 0.2em;
     margin-trim: 0em;
-    // text-transform: capitalize; 
+    text-transform: capitalize; 
+    letter-spacing: 0.1em;
   }
 
   .paper-item {
     margin-bottom: 0em;
+    font-size: 1em;
 
     .paper-status {
       color: #7bb36a;
       font-weight: bolder;
       margin-left: 1em;
-      // letter-spacing: 1px;
-    }
-
-    .paper-details {
-      font-size: 1em;
+      letter-spacing: 0.2em;
     }
 
     .paper-links {
       a {
         text-decoration: underline;
         margin-right: 1em;
-        font-size: 1em;
       }
     }
   }

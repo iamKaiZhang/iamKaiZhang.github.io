@@ -35,7 +35,7 @@ export const researchData = [
     papers: [
       {
         title: 'Data-Enabled Predictive Iterative Control',
-        authors: 'Kai Zhang, Riccardo Zuliani, Efe Balta, John Lygeros',
+        authors: 'Kai Zhang, Riccardo Zuliani, Efe C. Balta, John Lygeros',
         journal: 'IEEE Control Systems Letters',
         year: 2024,
         links: [

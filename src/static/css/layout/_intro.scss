@@ -9,6 +9,7 @@
 #intro {
 
   .logo {
+    width: 15em;
     border-bottom: 0;
     display: inline-block;
     margin: 0 0 (_size(element-margin) * 0.5) 0;
@@ -16,7 +17,7 @@
     position: relative;
 
     img {
-      // width: 15em;
+      margin: auto;
       border-radius: 50%;
       display: block;
     }
@@ -51,6 +52,13 @@
       p {
         font-size: 0.7em;
       }
+    }
+  }
+
+  @include breakpoint(medium) {
+    header {
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 

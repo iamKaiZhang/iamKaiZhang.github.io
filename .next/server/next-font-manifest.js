@@ -1,1 +1,0 @@
-self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/zhangkai/Desktop/projects/iamKaiZhang.github.io/app/layout":["static/media/630c17af355fa44e-s.p.woff2","static/media/9cf9c6e84ed13b5e-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
