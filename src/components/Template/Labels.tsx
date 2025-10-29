@@ -19,11 +19,11 @@ const Labels: React.FC<LabelsProps> = ({ labels, categories = [] }) => {
   const getLabelStyle = (category: string): React.CSSProperties => ({
     background: categories.find((cat) => cat.name === category)?.color,
     padding: '0.3em 0.8em',
-    margin: '0.3em',
+    margin: '0.4em',
     borderRadius: '3px',
     color: 'white',
     display: 'inline-block',
-    fontSize: '9pt',
+    fontSize: '0.7em',
     fontFamily: 'sans-serif',
   });
 

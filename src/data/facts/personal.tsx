@@ -6,14 +6,15 @@ import { StatData } from '../../components/Facts/types';
 
 interface AgeProps {
   time: Date;
+  additionalDivisor?: number;
 }
 
-const Age: React.FC<AgeProps> = ({ time }) => {
+const Age: React.FC<AgeProps> = ({ time, additionalDivisor = 1 }) => {
   const [age, setAge] = useState<string>('');
 
   const tick = () => {
     const divisor = 1000 * 60 * 60 * 24 * 365.2421897; // ms in an average year
-    setAge(((Date.now() - time.getTime()) / divisor).toFixed(11));
+    setAge(((Date.now() - time.getTime()) / divisor / additionalDivisor).toFixed(11));
   };
 
   useEffect(() => {
@@ -30,12 +31,12 @@ const Age: React.FC<AgeProps> = ({ time }) => {
 const data: StatData[] = [
   {
     key: 'age',
-    label: 'Current age',
-    value: <Age time={new Date('1999-06-22T18:30:00')} />,
+    label: 'Current age (π years)',
+    value: <Age time={new Date('1999-06-22T18:30:00')} additionalDivisor={3.14159265} />,
   },
   {
     key: 'phdage',
-    label: 'Current PhD age',
+    label: 'Current PhD age (years)',
     value: <Age time={new Date('2025-01-05T09:00:00')} />,
   },
   {
