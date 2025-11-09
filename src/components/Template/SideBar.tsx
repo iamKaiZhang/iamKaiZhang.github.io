@@ -20,7 +20,7 @@ const SideBar: React.FC<SideBarProps> = ({ showFooter = true }) => {
       <section id="intro">
         <Link href="/" className="logo">
           {(() => {
-            const images = ['/images/me01.jpg', '/images/me02.jpg'];
+            const images = ['/images/me01.jpg', '/images/me02.jpg', '/images/me03.jpg'];
             const today = new Date();
             const selectedImage = images[today.getHours() % images.length];
             return <Image src={selectedImage} alt="Kai Zhang" width={240} height={240} priority />;
