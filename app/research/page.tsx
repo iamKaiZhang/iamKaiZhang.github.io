@@ -22,7 +22,7 @@ export default function ResearchPage() {
             <h2>
               <Link href="/research">Research</Link>
             </h2>
-            <p>A selection of research projects that I&apos;m not too ashamed of.</p>
+            <p>A selection of my research projects that I&apos;m excited about.</p>
           </div>
         </header>
         {researchData.map((topic) => (

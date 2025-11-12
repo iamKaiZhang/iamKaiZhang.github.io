@@ -10,7 +10,7 @@ When I’m not thinking about algorithms, you’ll find me:
 - Hiking  
 - Snowboarding
 - For some reason I don't like skiing that much anymore
-- Playing board games
+- Board games
 
 # Random Facts
 
