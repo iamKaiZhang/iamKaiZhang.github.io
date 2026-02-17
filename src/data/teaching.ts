@@ -3,11 +3,14 @@ export const teachingMarkdown = `# Courses
 *Fall 2023, Fall 2025*  
 Duties: Tutorial sessions, Exam preparation
 - **Control Systems - Prof. Dr. Florian Dörfler, ETH Zürich**  
-*Spring 2025*  
+*Spring 2025, Spring 2026*  
 Duties: Exam preparation
 
 
 # Student Supervision
-- **<span style="color:#ff4500;">[OPEN PROJECT]</span>**, "[The “Give-and-Take” in Recommender Systems: A Karma Economy for Fair Exploration](https://sirop.org/app/3bcb1822-be85-4a63-b37b-275a4a695112)", with Stefania Ionescu
+- Sophia Lahrech, "Strategy-proof Learning in Refugee Allocation" (Semester Project 2026), with Stefania Ionescu
+- Idriss Benhallam, "Fair Redesign of Online Ad Auctions with a Karma Econ-
+omy" (Semester Project 2026), with Stefania Ionescu
+- Kim Kleinlogel, "The “Give-and-Take” in Recommender Systems: A Karma Economy for Fair Exploration" (Bachelor Thesis 2026), with Stefania Ionescu
 - Luise Lenné, "CO2 Karma Police" (Master Thesis 2025), with [Ezzat Elokda](https://www.elokda.info) and [Saverio Bolognani](https://www.bsaver.io)
 `;
