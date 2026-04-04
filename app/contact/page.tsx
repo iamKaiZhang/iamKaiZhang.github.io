@@ -35,7 +35,7 @@ export default function ContactPage() {
             <br />
             CH-8092 Zürich
           </p>
-</div>
+        </div>
         <ContactIcons />
       </article>
     </PageWrapper>
