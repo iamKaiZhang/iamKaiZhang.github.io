@@ -12,18 +12,17 @@ interface AgeProps {
 const Age: React.FC<AgeProps> = ({ time, additionalDivisor = 1 }) => {
   const [age, setAge] = useState<string>('');
 
-  const tick = () => {
-    const divisor = 1000 * 60 * 60 * 24 * 365.2421897; // ms in an average year
-    setAge(((Date.now() - time.getTime()) / divisor / additionalDivisor).toFixed(11));
-  };
-
   useEffect(() => {
+    const tick = () => {
+      const divisor = 1000 * 60 * 60 * 24 * 365.2421897; // ms in an average year
+      setAge(((Date.now() - time.getTime()) / divisor / additionalDivisor).toFixed(11));
+    };
     tick();
-    const timer = setInterval(() => tick(), 25);
+    const timer = setInterval(tick, 25);
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [time, additionalDivisor]);
 
   return <>{age}</>;
 };
