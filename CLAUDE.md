@@ -63,8 +63,24 @@ This is a personal portfolio/resume website built with Next.js and TypeScript, d
 - Custom domain support through CNAME file
 
 ### Important Notes
-- All pages must remain exactly the same as the original React site
 - The site uses static export (`output: 'export'`) for GitHub Pages compatibility
 - Client components use 'use client' directive
 - Google Analytics 4 is configured with NEXT_PUBLIC_GA_TRACKING_ID using @next/third-parties
 - Fonts are optimized using Next.js font optimization
+
+## Owner Preferences
+
+### About This Site
+- Personal portfolio website mixing research projects and personal interests
+- Forked from an external repository but fully owned and customized by the user
+
+### Working Style
+- **Always ask for confirmation before making any changes** — do not apply edits without explicit approval
+- Prefer clean, simple, readable code over preserving the original fork's style
+- Batch or increment commits whichever is more token-efficient
+- The user will explicitly flag any content or sections that should not be changed
+
+### Hard Rules
+- **Never open pull requests to the upstream/original forked repository**
+- Only push to this repository (`iamkaizhang/iamkaizhang.github.io`)
+- Do not add features or refactor beyond what is explicitly requested
