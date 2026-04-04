@@ -2,35 +2,28 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Runs on pushes targeting the main branch
   push:
     branches: ["main"]
-  # Allows manual deployment from Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
+# Only one deployment at a time; never cancel an in-progress deploy
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: github-pages
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # Fetch all history for proper git info
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,29 +33,22 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in Next.js config
-          static_site_generator: next
 
-      - name: Cache dependencies
+      - name: Cache Next.js build
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.npm
-            node_modules
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Next.js
+      - name: Build
         run: npm run build
         env:
           NODE_ENV: production
-          # Use environment variable for GA tracking ID
           NEXT_PUBLIC_GA_TRACKING_ID: ${{ vars.NEXT_PUBLIC_GA_TRACKING_ID }}
 
       - name: Verify build output
@@ -72,20 +58,15 @@ jobs:
             exit 1
           fi
           echo "Build successful. Generated $(find out -type f | wc -l) files."
-          du -sh out/
-          
-      - name: Ensure .nojekyll exists in output
-        run: |
-          if [ ! -f "out/.nojekyll" ]; then
-            cp public/.nojekyll out/.nojekyll || touch out/.nojekyll
-          fi
+
+      - name: Ensure .nojekyll exists
+        run: touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
-  # Deployment job
   deploy:
     name: Deploy
     environment:

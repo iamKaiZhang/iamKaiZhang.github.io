@@ -14,10 +14,6 @@ const routes: Route[] = [
     label: 'Home',
     path: '/',
   },
-  // {
-  //   label: 'CV',
-  //   path: '/resume',
-  // },
   {
     label: 'Research',
     path: '/research',
@@ -26,14 +22,6 @@ const routes: Route[] = [
     label: 'Teaching',
     path: '/teaching',
   },
-  // {
-  //   label: 'About',
-  //   path: '/about',
-  // },
-  // {
-  //   label: 'Stats',
-  //   path: '/stats',
-  // },
   {
     label: 'Contact',
     path: '/contact',
