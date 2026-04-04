@@ -73,6 +73,7 @@ This is a personal portfolio/resume website built with Next.js and TypeScript, d
 ### About This Site
 - Personal portfolio website mixing research projects and personal interests
 - Forked from an external repository but fully owned and customized by the user
+- Live at **zhangkai.io** (custom domain via GitHub Pages)
 
 ### Working Style
 - **Always ask for confirmation before making any changes** — do not apply edits without explicit approval
