@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import ContactIcons from '@/components/Contact/ContactIcons';
-import EmailLink from '@/components/Contact/EmailLink';
 
 import PageWrapper from '../components/PageWrapper';
 
@@ -36,8 +35,7 @@ export default function ContactPage() {
             <br />
             CH-8092 Zürich
           </p>
-          {/* <EmailLink /> */}
-        </div>
+</div>
         <ContactIcons />
       </article>
     </PageWrapper>
