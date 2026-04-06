@@ -279,6 +279,32 @@
       line-height: 1.8;
     }
 
+    #articleBody h1, #articleBody h2, #articleBody h3 {
+      margin-bottom: 0.6em;
+      margin-top: 1.4em;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    #articleBody h1 { font-size: 1.5rem; }
+    #articleBody h2 { font-size: 1.25rem; }
+    #articleBody h3 { font-size: 1.05rem; color: var(--muted); }
+
+    #articleBody ul {
+      margin-bottom: 1.2em;
+      padding-left: 1.4em;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+    #articleBody li { margin-bottom: 0.3em; }
+
+    #articleBody code {
+      background: var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.92em;
+      font-family: monospace;
+    }
+
     mark.highlight-word {
       background: var(--yellow);
       color: #1a1a1a;
@@ -382,6 +408,8 @@
       gap: 6px;
     }
     .popover-actions .btn {
+      flex: 1;
+      width: auto;
       font-size: 0.82rem;
       padding: 7px 10px;
       min-height: 36px;
@@ -623,7 +651,7 @@
   <div id="popoverText"></div>
   <textarea id="popoverNote" placeholder="Add a note… (optional)"></textarea>
   <div class="popover-actions">
-    <button class="btn" id="btnSaveNote" style="flex:1">Save note</button>
+    <button class="btn" id="btnSaveNote">Save note</button>
     <button class="btn" id="btnDeleteAnnotation">Delete</button>
   </div>
 </div>
@@ -897,12 +925,46 @@ function loadArticle() {
   rv.style.display = 'flex';
 }
 
+function renderMarkdownInline(str) {
+  // Escape HTML first, then apply inline markdown
+  return escapeHtml(str)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>');
+}
+
 function renderArticle(text) {
   const body = document.getElementById('articleBody');
-  const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
-  body.innerHTML = paragraphs.map(p =>
-    `<p>${escapeHtml(p.trim())}</p>`
-  ).join('');
+  const blocks = text.split(/\n\n+/);
+  const html = blocks.map(block => {
+    const trimmed = block.trim();
+    if (!trimmed) return '';
+
+    // Headings
+    const h3 = trimmed.match(/^###\s+(.+)/);
+    if (h3) return `<h3>${renderMarkdownInline(h3[1])}</h3>`;
+    const h2 = trimmed.match(/^##\s+(.+)/);
+    if (h2) return `<h2>${renderMarkdownInline(h2[1])}</h2>`;
+    const h1 = trimmed.match(/^#\s+(.+)/);
+    if (h1) return `<h1>${renderMarkdownInline(h1[1])}</h1>`;
+
+    // Unordered list (lines starting with - or *)
+    const lines = trimmed.split('\n');
+    const isListBlock = lines.every(l => /^[-*]\s/.test(l.trim()) || l.trim() === '');
+    if (isListBlock) {
+      const items = lines
+        .filter(l => l.trim())
+        .map(l => `<li>${renderMarkdownInline(l.replace(/^[-*]\s+/, ''))}</li>`)
+        .join('');
+      return `<ul>${items}</ul>`;
+    }
+
+    // Paragraph (preserve single line breaks within block)
+    const content = lines.map(renderMarkdownInline).join('<br>');
+    return `<p>${content}</p>`;
+  }).join('');
+
+  body.innerHTML = html;
 }
 
 function escapeHtml(str) {
