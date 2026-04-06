@@ -16,8 +16,10 @@
       --accent: #4a9eff;
       --yellow: #fef08a;
       --red: #fca5a5;
+      --green: #bbf7d0;
       --yellow-dark: #ca8a04;
       --red-dark: #dc2626;
+      --green-dark: #16a34a;
       --radius: 10px;
     }
 
@@ -319,6 +321,13 @@
       cursor: pointer;
       padding: 1px 0;
     }
+    mark.highlight-comment {
+      background: var(--green);
+      color: #1a1a1a;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 1px 0;
+    }
 
     /* ─── FLOATING TOOLBAR ─── */
     #floatingToolbar {
@@ -359,6 +368,7 @@
     }
     .dot-yellow { background: var(--yellow-dark); }
     .dot-red { background: var(--red-dark); }
+    .dot-green { background: var(--green-dark); }
 
     /* ─── POPOVER ─── */
     #popover {
@@ -643,6 +653,9 @@
   </button>
   <button class="toolbar-btn" id="btnAnnotateHard">
     <span class="dot dot-red"></span> Hard sentence
+  </button>
+  <button class="toolbar-btn" id="btnAnnotateComment">
+    <span class="dot dot-green"></span> Comment
   </button>
 </div>
 
@@ -1044,7 +1057,8 @@ function annotate(type) {
 
   const id = 'ann-' + (++annotationCounter);
   const mark = document.createElement('mark');
-  mark.className = type === 'word' ? 'highlight-word' : 'highlight-hard';
+  const classMap = { word: 'highlight-word', hard: 'highlight-hard', comment: 'highlight-comment' };
+  mark.className = classMap[type] || 'highlight-comment';
   mark.dataset.annotationId = id;
 
   try {
@@ -1063,6 +1077,7 @@ function annotate(type) {
 
 document.getElementById('btnAnnotateWord').addEventListener('click', () => annotate('word'));
 document.getElementById('btnAnnotateHard').addEventListener('click', () => annotate('hard'));
+document.getElementById('btnAnnotateComment').addEventListener('click', () => annotate('comment'));
 
 // ═══════════════════════════════════════
 // POPOVER
@@ -1150,33 +1165,29 @@ function renderSidebar() {
   const body = document.getElementById('sidebarBody');
   const words = Object.values(annotations).filter(a => a.type === 'word');
   const hard = Object.values(annotations).filter(a => a.type === 'hard');
+  const comments = Object.values(annotations).filter(a => a.type === 'comment');
 
-  if (words.length === 0 && hard.length === 0) {
+  if (words.length === 0 && hard.length === 0 && comments.length === 0) {
     body.innerHTML = '<p class="empty-state">No annotations yet.<br>Select text to annotate.</p>';
     return;
   }
 
+  const renderGroup = (label, items) => {
+    if (items.length === 0) return '';
+    let html = `<div class="sidebar-group"><div class="sidebar-group-label">${label} (${items.length})</div>`;
+    items.forEach(a => {
+      html += `<div class="sidebar-item" data-id="${a.id}">
+        <div class="item-text">${escapeHtml(a.text)}</div>
+        ${a.note ? `<div class="item-note">${escapeHtml(a.note)}</div>` : ''}
+      </div>`;
+    });
+    return html + '</div>';
+  };
+
   let html = '';
-  if (words.length > 0) {
-    html += `<div class="sidebar-group"><div class="sidebar-group-label">Unknown words (${words.length})</div>`;
-    words.forEach(a => {
-      html += `<div class="sidebar-item" data-id="${a.id}">
-        <div class="item-text">${escapeHtml(a.text)}</div>
-        ${a.note ? `<div class="item-note">${escapeHtml(a.note)}</div>` : ''}
-      </div>`;
-    });
-    html += '</div>';
-  }
-  if (hard.length > 0) {
-    html += `<div class="sidebar-group"><div class="sidebar-group-label">Hard sentences (${hard.length})</div>`;
-    hard.forEach(a => {
-      html += `<div class="sidebar-item" data-id="${a.id}">
-        <div class="item-text">${escapeHtml(a.text)}</div>
-        ${a.note ? `<div class="item-note">${escapeHtml(a.note)}</div>` : ''}
-      </div>`;
-    });
-    html += '</div>';
-  }
+  html += renderGroup('Unknown words', words);
+  html += renderGroup('Hard sentences', hard);
+  html += renderGroup('Comments', comments);
   body.innerHTML = html;
 
   body.querySelectorAll('.sidebar-item').forEach(item => {
@@ -1218,6 +1229,7 @@ document.getElementById('bottomSheetOverlay').addEventListener('click', closeBot
 document.getElementById('btnCopyClipboard').addEventListener('click', () => {
   const words = Object.values(annotations).filter(a => a.type === 'word');
   const hard = Object.values(annotations).filter(a => a.type === 'hard');
+  const comments = Object.values(annotations).filter(a => a.type === 'comment');
   let text = `Article: ${articleMeta.title || articleMeta.slug}\n`;
   text += `Date: ${articleMeta.date || ''}\n\n`;
   if (words.length > 0) {
@@ -1236,8 +1248,17 @@ document.getElementById('btnCopyClipboard').addEventListener('click', () => {
       if (a.note) text += `\n  Note: ${a.note}`;
       text += '\n';
     });
+    text += '\n';
   }
-  if (words.length === 0 && hard.length === 0) {
+  if (comments.length > 0) {
+    text += `COMMENTS (${comments.length})\n`;
+    comments.forEach(a => {
+      text += `- ${a.text}`;
+      if (a.note) text += `\n  Note: ${a.note}`;
+      text += '\n';
+    });
+  }
+  if (words.length === 0 && hard.length === 0 && comments.length === 0) {
     text += '(no annotations)';
   }
   navigator.clipboard.writeText(text).then(() => {
