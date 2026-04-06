@@ -819,6 +819,25 @@ async function saveAnnotationsToRepo(annotationsArr) {
   await ghPut(`contents/${filePath}`, `Update annotations for ${slug}`, content, sha);
 }
 
+async function saveArticleToRepo(meta) {
+  const slug = meta.slug;
+  if (!slug) throw new Error('No article loaded');
+  const filePath = `${ARTICLES_DIR}/${slug}.md`;
+  const lines = ['---', `title: ${meta.title || slug}`];
+  if (meta.date)       lines.push(`date: ${meta.date}`);
+  if (meta.difficulty) lines.push(`difficulty: ${meta.difficulty}`);
+  if (meta.source)     lines.push(`source: ${meta.source}`);
+  lines.push('---', '', meta.text);
+  let sha;
+  try {
+    const existing = await ghGet(`contents/${filePath}`);
+    sha = existing.sha;
+  } catch (e) {
+    if (!e.message.includes('Not Found') && !e.message.includes('404')) throw e;
+  }
+  await ghPut(`contents/${filePath}`, `Add article ${slug}`, toB64(lines.join('\n')), sha);
+}
+
 async function fetchAnnotationsFromRepo(slug) {
   const filePath = `${ANNOTATIONS_DIR}/${slug}.json`;
   try {
@@ -1013,7 +1032,7 @@ document.getElementById('btnStartReading').addEventListener('click', () => {
   }
   const slugBase = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const slug = date + '-' + slugBase;
-  articleMeta = { slug, title, date, difficulty, source, text };
+  articleMeta = { slug, title, date, difficulty, source, text, _pasted: true };
   loadArticle();
 });
 
@@ -1402,6 +1421,10 @@ document.getElementById('btnSaveToRepo').addEventListener('click', async () => {
   btn.disabled = true;
   btn.textContent = 'Saving…';
   try {
+    if (articleMeta._pasted) {
+      await saveArticleToRepo(articleMeta);
+      articleMeta._pasted = false; // don't re-upload article on subsequent saves
+    }
     await saveAnnotationsToRepo(Object.values(annotations));
     btn.textContent = 'Saved ✓';
     setTimeout(() => {
