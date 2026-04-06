@@ -332,7 +332,7 @@
     /* ─── FLOATING TOOLBAR ─── */
     #floatingToolbar {
       display: none;
-      position: absolute;
+      position: fixed;
       z-index: 100;
       background: var(--card);
       border: 1px solid var(--border);
@@ -1004,12 +1004,13 @@ document.getElementById('btnBack').addEventListener('click', () => {
 const floatingToolbar = document.getElementById('floatingToolbar');
 
 function positionToolbar(rect) {
-  // rect is a DOMRect from range.getBoundingClientRect()
+  // rect is a DOMRect (viewport-relative), toolbar is position:fixed
   const tbWidth = 180;
-  const tbHeight = 96;
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  let top = rect.top + scrollTop - tbHeight - 8;
-  if (top < scrollTop + 8) top = rect.bottom + scrollTop + 8;
+  const tbHeight = 140; // 3 buttons × ~44px + padding
+  const gap = 12;
+  // Prefer above the selection; fall back below only if no room
+  let top = rect.top - tbHeight - gap;
+  if (top < 8) top = rect.bottom + gap;
   let left = rect.left + rect.width / 2 - tbWidth / 2;
   left = Math.max(8, Math.min(left, window.innerWidth - tbWidth - 8));
   floatingToolbar.style.top = top + 'px';
