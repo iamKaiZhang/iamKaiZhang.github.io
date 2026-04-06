@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>German Reader</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a1a;
+      --card: #242424;
+      --border: #333;
+      --text: #e8e8e8;
+      --muted: #888;
+      --accent: #4a9eff;
+      --yellow: #fef08a;
+      --red: #fca5a5;
+      --yellow-dark: #ca8a04;
+      --red-dark: #dc2626;
+      --radius: 10px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── LOAD SCREEN ─── */
+    #loadScreen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 40px;
+    }
+
+    #loadHeader {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0 16px;
+    }
+
+    #loadHeader h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    #btnGear {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.3rem;
+      padding: 4px 8px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      transition: color 0.15s;
+    }
+    #btnGear:hover { color: var(--text); }
+
+    /* Settings panel */
+    #settingsPanel {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    #settingsPanel.open { display: block; }
+
+    #settingsPanel h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      outline: none;
+      font-family: inherit;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: var(--accent);
+    }
+    .field select option { background: var(--card); }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Main card */
+    #mainCard {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    /* Tab switcher */
+    .tab-switcher {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 12px 16px;
+      cursor: pointer;
+      min-height: 44px;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      font-family: inherit;
+    }
+    .tab-btn.active {
+      color: var(--text);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-panel { display: none; padding: 16px; }
+    .tab-panel.active { display: block; }
+
+    /* Browse tab */
+    #articleSelect {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      outline: none;
+      min-height: 44px;
+      font-family: inherit;
+    }
+    #articleSelect option { background: var(--card); }
+
+    .error-msg {
+      display: none;
+      color: #f87171;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: rgba(248, 113, 113, 0.1);
+      border-radius: 6px;
+    }
+    .error-msg.visible { display: block; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 10px 18px;
+      min-height: 44px;
+      cursor: pointer;
+      width: 100%;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.5; cursor: default; }
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+    }
+    .btn-save { margin-top: 4px; background: #16a34a; }
+
+    /* Hint text */
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* ─── READING VIEW ─── */
+    #readingView {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    #topbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    #topbar h2 {
+      flex: 1;
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      min-height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .topbar-btn:hover { color: var(--text); }
+
+    #articleBody {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 20px 18px 80px;
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    #articleBody p {
+      margin-bottom: 1.2em;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    mark.highlight-word {
+      background: var(--yellow);
+      color: #1a1a1a;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 1px 0;
+    }
+    mark.highlight-hard {
+      background: var(--red);
+      color: #1a1a1a;
+      border-radius: 2px;
+      cursor: pointer;
+      padding: 1px 0;
+    }
+
+    /* ─── FLOATING TOOLBAR ─── */
+    #floatingToolbar {
+      display: none;
+      position: absolute;
+      z-index: 100;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      overflow: hidden;
+      flex-direction: column;
+    }
+    #floatingToolbar.visible { display: flex; }
+
+    .toolbar-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 10px 16px;
+      min-height: 44px;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: background 0.1s;
+    }
+    .toolbar-btn:hover { background: var(--border); }
+    .toolbar-btn .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-yellow { background: var(--yellow-dark); }
+    .dot-red { background: var(--red-dark); }
+
+    /* ─── POPOVER ─── */
+    #popover {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      width: 260px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      padding: 14px;
+    }
+    #popover.visible { display: block; }
+
+    #popoverText {
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--bg);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+      max-height: 80px;
+      overflow-y: auto;
+      word-break: break-word;
+    }
+
+    #popoverNote {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 0.88rem;
+      padding: 7px 10px;
+      resize: vertical;
+      min-height: 60px;
+      outline: none;
+      font-family: inherit;
+      margin-bottom: 8px;
+    }
+    #popoverNote:focus { border-color: var(--accent); }
+
+    .popover-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .popover-actions .btn {
+      font-size: 0.82rem;
+      padding: 7px 10px;
+      min-height: 36px;
+    }
+    #btnDeleteAnnotation {
+      background: #7f1d1d;
+    }
+
+    /* ─── SIDEBAR ─── */
+    #sidebar {
+      position: fixed;
+      top: 0; right: 0;
+      width: min(320px, 90vw);
+      height: 100%;
+      background: var(--card);
+      border-left: 1px solid var(--border);
+      z-index: 150;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    #sidebar.open { transform: translateX(0); }
+
+    #sidebarHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    #sidebarHeader h3 { font-size: 0.95rem; font-weight: 600; }
+
+    #sidebarClose {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.2rem; cursor: pointer; min-height: 44px;
+      min-width: 44px; display: flex; align-items: center;
+      justify-content: center; border-radius: 8px;
+    }
+
+    #sidebarBody {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px;
+    }
+
+    .sidebar-group { margin-bottom: 16px; }
+    .sidebar-group-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding: 4px 4px 8px;
+    }
+
+    .sidebar-item {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .sidebar-item:hover { border-color: var(--border); }
+    .sidebar-item .item-text {
+      font-size: 0.88rem;
+      color: var(--text);
+      margin-bottom: 3px;
+      word-break: break-word;
+    }
+    .sidebar-item .item-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 149;
+    }
+    .sidebar-overlay.open { display: block; }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 0.88rem;
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    /* ─── BOTTOM SHEET ─── */
+    #bottomSheetOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 300;
+    }
+    #bottomSheetOverlay.open { display: block; }
+
+    #bottomSheet {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-radius: 16px 16px 0 0;
+      z-index: 301;
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
+      padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+    }
+    #bottomSheet.open { transform: translateY(0); }
+
+    #bottomSheet .sheet-handle {
+      width: 36px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 16px;
+    }
+
+    #bottomSheet .btn {
+      margin-bottom: 8px;
+    }
+    #bottomSheet .btn:last-child { margin-bottom: 0; }
+
+    #btnSaveToRepo { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ LOAD SCREEN ═══════════ -->
+<div id="loadScreen">
+
+  <div id="loadHeader">
+    <h1>🇩🇪 German Reader</h1>
+    <button id="btnGear" title="Settings">⚙</button>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="settingsPanel">
+    <h3>Settings</h3>
+    <div class="field">
+      <label>GitHub PAT (repo scope)</label>
+      <input type="password" id="inputPat" placeholder="ghp_…" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label>Repository (owner/name)</label>
+      <input type="text" id="inputRepo" placeholder="user/german-learning" />
+    </div>
+    <button class="btn btn-save" id="btnSaveSettings">Save settings</button>
+  </div>
+
+  <!-- Main card -->
+  <div id="mainCard">
+    <div class="tab-switcher">
+      <button class="tab-btn active" data-tab="browse">Browse articles</button>
+      <button class="tab-btn" data-tab="paste">Paste text</button>
+    </div>
+
+    <!-- Browse tab -->
+    <div class="tab-panel active" id="browseTab">
+      <p class="hint">Load an article from your GitHub repo.</p>
+      <select id="articleSelect"><option value="">— loading… —</option></select>
+      <div class="error-msg" id="browseError"></div>
+      <button class="btn" id="btnLoadArticle">Load article</button>
+    </div>
+
+    <!-- Paste tab -->
+    <div class="tab-panel" id="pasteTab">
+      <p class="hint">Paste any German text to start reading.</p>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="inputTitle" placeholder="Article title" />
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Difficulty</label>
+          <select id="inputDifficulty">
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1" selected>B1</option>
+            <option value="B2">B2</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="inputDate" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Source URL (optional)</label>
+        <input type="text" id="inputSource" placeholder="https://…" />
+      </div>
+      <div class="field">
+        <label>German text</label>
+        <textarea id="inputText" rows="8" placeholder="Paste German text here…"></textarea>
+      </div>
+      <button class="btn" id="btnStartReading">Start reading</button>
+    </div>
+  </div>
+
+</div><!-- /loadScreen -->
+
+
+<!-- ═══════════ READING VIEW ═══════════ -->
+<div id="readingView" style="display:none; flex-direction:column; height:100vh; height:100dvh;">
+
+  <div id="topbar">
+    <button class="topbar-btn" id="btnBack" title="Back">←</button>
+    <h2 id="articleTitle">Article</h2>
+    <button class="topbar-btn" id="btnSidebar" title="Annotations">☰</button>
+    <button class="topbar-btn" id="btnOverflow" title="More">…</button>
+  </div>
+
+  <div id="articleBody"></div>
+
+</div><!-- /readingView -->
+
+
+<!-- Floating toolbar (appended to body, positioned absolutely within scroll) -->
+<div id="floatingToolbar">
+  <button class="toolbar-btn" id="btnAnnotateWord">
+    <span class="dot dot-yellow"></span> Unknown word
+  </button>
+  <button class="toolbar-btn" id="btnAnnotateHard">
+    <span class="dot dot-red"></span> Hard sentence
+  </button>
+</div>
+
+<!-- Popover -->
+<div id="popover">
+  <div id="popoverText"></div>
+  <textarea id="popoverNote" placeholder="Add a note… (optional)"></textarea>
+  <div class="popover-actions">
+    <button class="btn" id="btnSaveNote" style="flex:1">Save note</button>
+    <button class="btn" id="btnDeleteAnnotation">Delete</button>
+  </div>
+</div>
+
+<!-- Sidebar overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <div id="sidebarHeader">
+    <h3>Annotations</h3>
+    <button id="sidebarClose">✕</button>
+  </div>
+  <div id="sidebarBody"></div>
+</div>
+
+<!-- Bottom sheet overlay -->
+<div id="bottomSheetOverlay"></div>
+
+<!-- Bottom sheet -->
+<div id="bottomSheet">
+  <div class="sheet-handle"></div>
+  <button class="btn" id="btnSaveToRepo">Save to repo</button>
+  <button class="btn btn-secondary" id="btnCopyClipboard">Copy annotations</button>
+</div>
+
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════
+// CONSTANTS & STATE
+// ═══════════════════════════════════════
+const GITHUB_REPO = 'iamKaiZhang/german-learning';
+const ARTICLES_DIR = 'articles';
+const ANNOTATIONS_DIR = 'annotations';
+
+let articleMeta = {};         // { slug, title, date, difficulty, source, text }
+let annotations = {};         // { [id]: { id, type, text, note } }
+let annotationCounter = 0;
+let activeAnnotationId = null;
+let selectionTimer = null;
+let articleListLoaded = false;
+
+// ═══════════════════════════════════════
+// GITHUB API
+// ═══════════════════════════════════════
+function ghPat() { return localStorage.getItem('gh_pat') || ''; }
+function ghRepo() { return localStorage.getItem('gh_repo') || GITHUB_REPO; }
+
+function toB64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function fromB64(b64) {
+  return decodeURIComponent(escape(atob(b64)));
+}
+
+async function ghGet(path) {
+  const url = `https://api.github.com/repos/${ghRepo()}/${path}`;
+  const headers = { 'Accept': 'application/vnd.github+json' };
+  if (ghPat()) headers['Authorization'] = `Bearer ${ghPat()}`;
+  const res = await fetch(url, { headers });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function ghPut(path, message, content, sha) {
+  const url = `https://api.github.com/repos/${ghRepo()}/${path}`;
+  const headers = {
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json',
+  };
+  if (ghPat()) headers['Authorization'] = `Bearer ${ghPat()}`;
+  const body = { message, content };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function fetchArticleIndex() {
+  const items = await ghGet(`contents/${ARTICLES_DIR}`);
+  if (!Array.isArray(items)) throw new Error('Unexpected response from GitHub');
+  return items
+    .filter(f => f.name.endsWith('.md'))
+    .map(f => ({
+      slug: f.name.replace(/\.md$/, ''),
+      name: f.name,
+      path: f.path,
+      sha: f.sha,
+    }))
+    .sort((a, b) => b.slug.localeCompare(a.slug));
+}
+
+async function fetchArticle(path, slug) {
+  const data = await ghGet(`contents/${path}`);
+  const raw = fromB64(data.content.replace(/\n/g, ''));
+  return parseArticleMd(raw, slug);
+}
+
+function parseArticleMd(raw, slug) {
+  const lines = raw.split('\n');
+  const meta = { slug, title: slug, date: '', difficulty: '', source: '' };
+  let i = 0;
+  if (lines[0] === '---') {
+    i = 1;
+    while (i < lines.length && lines[i] !== '---') {
+      const m = lines[i].match(/^(\w+):\s*(.+)/);
+      if (m) meta[m[1].trim()] = m[2].trim();
+      i++;
+    }
+    i++; // skip closing ---
+  }
+  // skip blank lines after frontmatter
+  while (i < lines.length && lines[i].trim() === '') i++;
+  meta.text = lines.slice(i).join('\n').trim();
+  return meta;
+}
+
+async function saveAnnotationsToRepo(annotationsArr) {
+  const slug = articleMeta.slug;
+  if (!slug) throw new Error('No article loaded');
+  const filePath = `${ANNOTATIONS_DIR}/${slug}.json`;
+  let sha;
+  try {
+    const existing = await ghGet(`contents/${filePath}`);
+    sha = existing.sha;
+  } catch (e) {
+    if (!e.message.includes('Not Found') && !e.message.includes('404')) throw e;
+  }
+  const content = toB64(JSON.stringify({ slug, annotations: annotationsArr }, null, 2));
+  await ghPut(`contents/${filePath}`, `Update annotations for ${slug}`, content, sha);
+}
+
+// ═══════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════
+function initSettings() {
+  const repo = localStorage.getItem('gh_repo') || GITHUB_REPO;
+  document.getElementById('inputRepo').value = repo;
+  const pat = localStorage.getItem('gh_pat');
+  if (pat) document.getElementById('inputPat').placeholder = '(saved)';
+}
+
+document.getElementById('btnGear').addEventListener('click', () => {
+  document.getElementById('settingsPanel').classList.toggle('open');
+});
+
+document.getElementById('btnSaveSettings').addEventListener('click', () => {
+  const pat = document.getElementById('inputPat').value.trim();
+  const repo = document.getElementById('inputRepo').value.trim();
+  if (pat) localStorage.setItem('gh_pat', pat);
+  localStorage.setItem('gh_repo', repo || GITHUB_REPO);
+  document.getElementById('settingsPanel').classList.remove('open');
+  document.getElementById('inputPat').value = '';
+  document.getElementById('inputPat').placeholder = '(saved)';
+  // Reload article list if on browse tab with new credentials
+  if (document.getElementById('browseTab').classList.contains('active')) {
+    articleListLoaded = false;
+    loadArticleList();
+  }
+});
+
+// ═══════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById(tab + 'Tab').classList.add('active');
+    if (tab === 'browse' && !articleListLoaded) loadArticleList();
+  });
+});
+
+// ═══════════════════════════════════════
+// BROWSE TAB
+// ═══════════════════════════════════════
+async function loadArticleList() {
+  const sel = document.getElementById('articleSelect');
+  const errEl = document.getElementById('browseError');
+  sel.innerHTML = '<option value="">— loading… —</option>';
+  errEl.classList.remove('visible');
+
+  try {
+    const articles = await fetchArticleIndex();
+    if (articles.length === 0) {
+      sel.innerHTML = '<option value="">No articles found</option>';
+      return;
+    }
+    sel.innerHTML = articles.map(a => {
+      const label = a.slug.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/-/g, ' ');
+      return `<option value='${JSON.stringify({path: a.path, slug: a.slug})}'>${a.slug.slice(0,10)} — ${label}</option>`;
+    }).join('');
+    articleListLoaded = true;
+  } catch (e) {
+    sel.innerHTML = '<option value="">— failed to load —</option>';
+    errEl.textContent = 'Could not load articles: ' + e.message;
+    errEl.classList.add('visible');
+  }
+}
+
+document.getElementById('btnLoadArticle').addEventListener('click', async () => {
+  const sel = document.getElementById('articleSelect');
+  const val = sel.value;
+  if (!val) return;
+  const btn = document.getElementById('btnLoadArticle');
+  btn.disabled = true;
+  btn.textContent = 'Loading…';
+  try {
+    const meta = JSON.parse(val);
+    const result = await fetchArticle(meta.path, meta.slug);
+    articleMeta = result;
+    loadArticle();
+  } catch (e) {
+    const errEl = document.getElementById('browseError');
+    errEl.textContent = 'Failed to load: ' + e.message;
+    errEl.classList.add('visible');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Load article';
+  }
+});
+
+// ═══════════════════════════════════════
+// PASTE TAB
+// ═══════════════════════════════════════
+// Set today's date as default
+document.getElementById('inputDate').value = new Date().toISOString().slice(0, 10);
+
+document.getElementById('btnStartReading').addEventListener('click', () => {
+  const title = document.getElementById('inputTitle').value.trim() || 'Untitled';
+  const difficulty = document.getElementById('inputDifficulty').value;
+  const source = document.getElementById('inputSource').value.trim();
+  const date = document.getElementById('inputDate').value || new Date().toISOString().slice(0,10);
+  const text = document.getElementById('inputText').value.trim();
+  if (!text) {
+    alert('Please paste some German text first.');
+    return;
+  }
+  const slugBase = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const slug = date + '-' + slugBase;
+  articleMeta = { slug, title, date, difficulty, source, text };
+  loadArticle();
+});
+
+// ═══════════════════════════════════════
+// LOAD ARTICLE → READING VIEW
+// ═══════════════════════════════════════
+function loadArticle() {
+  annotations = {};
+  annotationCounter = 0;
+  activeAnnotationId = null;
+
+  document.getElementById('articleTitle').textContent = articleMeta.title || articleMeta.slug;
+  renderArticle(articleMeta.text);
+
+  // Show/hide Save to repo
+  document.getElementById('btnSaveToRepo').style.display = ghPat() ? 'flex' : 'none';
+
+  document.getElementById('loadScreen').style.display = 'none';
+  const rv = document.getElementById('readingView');
+  rv.style.display = 'flex';
+}
+
+function renderArticle(text) {
+  const body = document.getElementById('articleBody');
+  const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
+  body.innerHTML = paragraphs.map(p =>
+    `<p>${escapeHtml(p.trim())}</p>`
+  ).join('');
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Back button
+document.getElementById('btnBack').addEventListener('click', () => {
+  document.getElementById('readingView').style.display = 'none';
+  document.getElementById('loadScreen').style.display = 'flex';
+  hideToolbar();
+  hidePopover();
+  closeSidebar();
+  closeBottomSheet();
+});
+
+// ═══════════════════════════════════════
+// TEXT SELECTION → FLOATING TOOLBAR
+// ═══════════════════════════════════════
+const floatingToolbar = document.getElementById('floatingToolbar');
+
+function positionToolbar(rect) {
+  // rect is a DOMRect from range.getBoundingClientRect()
+  const tbWidth = 180;
+  const tbHeight = 96;
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  let top = rect.top + scrollTop - tbHeight - 8;
+  if (top < scrollTop + 8) top = rect.bottom + scrollTop + 8;
+  let left = rect.left + rect.width / 2 - tbWidth / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tbWidth - 8));
+  floatingToolbar.style.top = top + 'px';
+  floatingToolbar.style.left = left + 'px';
+}
+
+function showToolbar() { floatingToolbar.classList.add('visible'); }
+function hideToolbar() { floatingToolbar.classList.remove('visible'); }
+
+function onSelectionChange() {
+  clearTimeout(selectionTimer);
+  selectionTimer = setTimeout(() => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+      hideToolbar();
+      return;
+    }
+    // Only show toolbar when inside articleBody
+    const body = document.getElementById('articleBody');
+    if (!body) return;
+    const range = sel.getRangeAt(0);
+    if (!body.contains(range.commonAncestorContainer)) {
+      hideToolbar();
+      return;
+    }
+    const rect = range.getBoundingClientRect();
+    positionToolbar(rect);
+    showToolbar();
+  }, 120);
+}
+
+document.addEventListener('mouseup', onSelectionChange);
+document.addEventListener('touchend', onSelectionChange);
+document.addEventListener('selectionchange', onSelectionChange);
+
+// ═══════════════════════════════════════
+// ANNOTATE
+// ═══════════════════════════════════════
+function annotate(type) {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed) return;
+  const range = sel.getRangeAt(0);
+  const selectedText = sel.toString().trim();
+  if (!selectedText) return;
+
+  const id = 'ann-' + (++annotationCounter);
+  const mark = document.createElement('mark');
+  mark.className = type === 'word' ? 'highlight-word' : 'highlight-hard';
+  mark.dataset.annotationId = id;
+
+  try {
+    range.surroundContents(mark);
+  } catch (e) {
+    // Selection spans multiple elements — extract and re-insert
+    const fragment = range.extractContents();
+    mark.appendChild(fragment);
+    range.insertNode(mark);
+  }
+
+  annotations[id] = { id, type, text: selectedText, note: '' };
+  sel.removeAllRanges();
+  hideToolbar();
+}
+
+document.getElementById('btnAnnotateWord').addEventListener('click', () => annotate('word'));
+document.getElementById('btnAnnotateHard').addEventListener('click', () => annotate('hard'));
+
+// ═══════════════════════════════════════
+// POPOVER
+// ═══════════════════════════════════════
+const popover = document.getElementById('popover');
+
+function showPopover(id, clientX, clientY) {
+  const ann = annotations[id];
+  if (!ann) return;
+  activeAnnotationId = id;
+
+  document.getElementById('popoverText').textContent = ann.text;
+  document.getElementById('popoverNote').value = ann.note || '';
+
+  const w = 260;
+  const h = 200;
+  const left = Math.max(8, Math.min(clientX - w / 2, window.innerWidth - w - 8));
+  const top = Math.min(clientY + 12, window.innerHeight - h - 8);
+
+  popover.style.left = left + 'px';
+  popover.style.top = Math.max(8, top) + 'px';
+  popover.classList.add('visible');
+}
+
+function hidePopover() {
+  popover.classList.remove('visible');
+  activeAnnotationId = null;
+}
+
+document.getElementById('articleBody').addEventListener('click', e => {
+  const mark = e.target.closest('mark[data-annotation-id]');
+  if (!mark) { hidePopover(); return; }
+  showPopover(mark.dataset.annotationId, e.clientX, e.clientY);
+});
+
+document.getElementById('btnSaveNote').addEventListener('click', () => {
+  if (!activeAnnotationId) return;
+  annotations[activeAnnotationId].note = document.getElementById('popoverNote').value.trim();
+  hidePopover();
+  updateSidebarIfOpen();
+});
+
+document.getElementById('btnDeleteAnnotation').addEventListener('click', () => {
+  if (!activeAnnotationId) return;
+  deleteAnnotation(activeAnnotationId);
+});
+
+function deleteAnnotation(id) {
+  // Unwrap all marks with this id
+  document.querySelectorAll(`mark[data-annotation-id="${id}"]`).forEach(mark => {
+    const parent = mark.parentNode;
+    while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+    parent.removeChild(mark);
+  });
+  delete annotations[id];
+  hidePopover();
+  updateSidebarIfOpen();
+}
+
+// Close popover on outside click
+document.addEventListener('click', e => {
+  if (!popover.classList.contains('visible')) return;
+  if (!popover.contains(e.target) && !e.target.closest('mark[data-annotation-id]')) {
+    hidePopover();
+  }
+});
+
+// ═══════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════
+function openSidebar() {
+  renderSidebar();
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarOverlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+function updateSidebarIfOpen() {
+  if (document.getElementById('sidebar').classList.contains('open')) renderSidebar();
+}
+
+function renderSidebar() {
+  const body = document.getElementById('sidebarBody');
+  const words = Object.values(annotations).filter(a => a.type === 'word');
+  const hard = Object.values(annotations).filter(a => a.type === 'hard');
+
+  if (words.length === 0 && hard.length === 0) {
+    body.innerHTML = '<p class="empty-state">No annotations yet.<br>Select text to annotate.</p>';
+    return;
+  }
+
+  let html = '';
+  if (words.length > 0) {
+    html += `<div class="sidebar-group"><div class="sidebar-group-label">Unknown words (${words.length})</div>`;
+    words.forEach(a => {
+      html += `<div class="sidebar-item" data-id="${a.id}">
+        <div class="item-text">${escapeHtml(a.text)}</div>
+        ${a.note ? `<div class="item-note">${escapeHtml(a.note)}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+  if (hard.length > 0) {
+    html += `<div class="sidebar-group"><div class="sidebar-group-label">Hard sentences (${hard.length})</div>`;
+    hard.forEach(a => {
+      html += `<div class="sidebar-item" data-id="${a.id}">
+        <div class="item-text">${escapeHtml(a.text)}</div>
+        ${a.note ? `<div class="item-note">${escapeHtml(a.note)}</div>` : ''}
+      </div>`;
+    });
+    html += '</div>';
+  }
+  body.innerHTML = html;
+
+  body.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const id = item.dataset.id;
+      const mark = document.querySelector(`mark[data-annotation-id="${id}"]`);
+      if (mark) {
+        mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        closeSidebar();
+        setTimeout(() => {
+          const rect = mark.getBoundingClientRect();
+          showPopover(id, rect.left + rect.width / 2, rect.bottom);
+        }, 350);
+      }
+    });
+  });
+}
+
+document.getElementById('btnSidebar').addEventListener('click', openSidebar);
+document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
+document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
+
+// ═══════════════════════════════════════
+// BOTTOM SHEET
+// ═══════════════════════════════════════
+function openBottomSheet() {
+  document.getElementById('bottomSheet').classList.add('open');
+  document.getElementById('bottomSheetOverlay').classList.add('open');
+}
+function closeBottomSheet() {
+  document.getElementById('bottomSheet').classList.remove('open');
+  document.getElementById('bottomSheetOverlay').classList.remove('open');
+}
+
+document.getElementById('btnOverflow').addEventListener('click', openBottomSheet);
+document.getElementById('bottomSheetOverlay').addEventListener('click', closeBottomSheet);
+
+// Copy to clipboard
+document.getElementById('btnCopyClipboard').addEventListener('click', () => {
+  const words = Object.values(annotations).filter(a => a.type === 'word');
+  const hard = Object.values(annotations).filter(a => a.type === 'hard');
+  let text = `Article: ${articleMeta.title || articleMeta.slug}\n`;
+  text += `Date: ${articleMeta.date || ''}\n\n`;
+  if (words.length > 0) {
+    text += `UNKNOWN WORDS (${words.length})\n`;
+    words.forEach(a => {
+      text += `- ${a.text}`;
+      if (a.note) text += ` → ${a.note}`;
+      text += '\n';
+    });
+    text += '\n';
+  }
+  if (hard.length > 0) {
+    text += `HARD SENTENCES (${hard.length})\n`;
+    hard.forEach(a => {
+      text += `- ${a.text}`;
+      if (a.note) text += `\n  Note: ${a.note}`;
+      text += '\n';
+    });
+  }
+  if (words.length === 0 && hard.length === 0) {
+    text += '(no annotations)';
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('btnCopyClipboard');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }).catch(() => {
+    alert('Could not copy — try manually.');
+  });
+});
+
+// Save to repo
+document.getElementById('btnSaveToRepo').addEventListener('click', async () => {
+  const btn = document.getElementById('btnSaveToRepo');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    await saveAnnotationsToRepo(Object.values(annotations));
+    btn.textContent = 'Saved ✓';
+    setTimeout(() => {
+      btn.textContent = 'Save to repo';
+      btn.disabled = false;
+    }, 2500);
+  } catch (e) {
+    btn.textContent = 'Save to repo';
+    btn.disabled = false;
+    alert('Save failed: ' + e.message);
+  }
+});
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+initSettings();
+// Load article list on start (browse tab is default)
+loadArticleList();
+</script>
+</body>
+</html>
