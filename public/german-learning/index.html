@@ -721,6 +721,7 @@ let annotationCounter = 0;
 let activeAnnotationId = null;
 let selectionTimer = null;
 let articleListLoaded = false;
+let savedRange = null;        // saved selection range for mobile annotation
 
 // ═══════════════════════════════════════
 // GITHUB API
@@ -1132,7 +1133,7 @@ function positionToolbar(rect) {
 }
 
 function showToolbar() { floatingToolbar.classList.add('visible'); }
-function hideToolbar() { floatingToolbar.classList.remove('visible'); }
+function hideToolbar() { floatingToolbar.classList.remove('visible'); savedRange = null; }
 
 function onSelectionChange() {
   clearTimeout(selectionTimer);
@@ -1153,6 +1154,7 @@ function onSelectionChange() {
     const rect = range.getBoundingClientRect();
     positionToolbar(rect);
     showToolbar();
+    savedRange = range.cloneRange();
   }, 120);
 }
 
@@ -1172,10 +1174,9 @@ function getSelectionTextOffset(range) {
 }
 
 function annotate(type) {
-  const sel = window.getSelection();
-  if (!sel || sel.isCollapsed) return;
-  const range = sel.getRangeAt(0);
-  const selectedText = sel.toString().trim();
+  const range = savedRange;
+  if (!range || range.collapsed) return;
+  const selectedText = range.toString().trim();
   if (!selectedText) return;
 
   const offset = getSelectionTextOffset(range);
@@ -1195,7 +1196,7 @@ function annotate(type) {
   }
 
   annotations[id] = { id, type, text: selectedText, note: '', offset, length: selectedText.length };
-  sel.removeAllRanges();
+  window.getSelection()?.removeAllRanges();
   hideToolbar();
 }
 
