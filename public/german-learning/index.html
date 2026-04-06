@@ -265,6 +265,17 @@
     }
     .topbar-btn:hover { color: var(--text); }
 
+    #annotationStatus {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 4px 14px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      min-height: 0;
+    }
+
     #articleBody {
       flex: 1;
       overflow-y: auto;
@@ -641,6 +652,8 @@
     <button class="topbar-btn" id="btnOverflow" title="More">…</button>
   </div>
 
+  <div id="annotationStatus"></div>
+
   <div id="articleBody"></div>
 
 </div><!-- /readingView -->
@@ -805,6 +818,90 @@ async function saveAnnotationsToRepo(annotationsArr) {
   await ghPut(`contents/${filePath}`, `Update annotations for ${slug}`, content, sha);
 }
 
+async function fetchAnnotationsFromRepo(slug) {
+  const filePath = `${ANNOTATIONS_DIR}/${slug}.json`;
+  try {
+    const data = await ghGet(`contents/${filePath}`);
+    const parsed = JSON.parse(fromB64(data.content.replace(/\n/g, '')));
+    return parsed.annotations || [];
+  } catch (e) {
+    if (e.message.includes('Not Found') || e.message.includes('404')) return null;
+    throw e;
+  }
+}
+
+function getRangeAtTextOffset(body, offset, length) {
+  let charCount = 0;
+  let startNode = null, startOff = 0, endNode = null, endOff = 0;
+  const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    const len = node.textContent.length;
+    if (!startNode && charCount + len > offset) {
+      startNode = node;
+      startOff = offset - charCount;
+    }
+    if (startNode && charCount + len >= offset + length) {
+      endNode = node;
+      endOff = offset + length - charCount;
+      break;
+    }
+    charCount += len;
+  }
+  if (!startNode || !endNode) return null;
+  const range = document.createRange();
+  range.setStart(startNode, startOff);
+  range.setEnd(endNode, endOff);
+  return range;
+}
+
+function reapplyAnnotations(annotationsArr) {
+  const body = document.getElementById('articleBody');
+  const classMap = { word: 'highlight-word', hard: 'highlight-hard', comment: 'highlight-comment' };
+
+  // Resolve offsets before any DOM changes (DOM mutations would invalidate text positions)
+  const bodyText = body.textContent;
+  const resolved = [];
+  for (const ann of annotationsArr) {
+    let offset = ann.offset;
+    let length = ann.length;
+    if (offset == null || length == null) {
+      // Fallback for annotations saved before offset tracking was added
+      const idx = bodyText.indexOf(ann.text);
+      if (idx === -1) continue;
+      offset = idx;
+      length = ann.text.length;
+    }
+    resolved.push({ ann, offset, length });
+  }
+
+  // Apply in descending offset order so earlier DOM positions aren't shifted by later insertions
+  resolved.sort((a, b) => b.offset - a.offset);
+
+  let applied = 0;
+  for (const { ann, offset, length } of resolved) {
+    const range = getRangeAtTextOffset(body, offset, length);
+    if (!range) continue;
+
+    const mark = document.createElement('mark');
+    mark.className = classMap[ann.type] || 'highlight-comment';
+    mark.dataset.annotationId = ann.id;
+    try {
+      range.surroundContents(mark);
+    } catch (e) {
+      const frag = range.extractContents();
+      mark.appendChild(frag);
+      range.insertNode(mark);
+    }
+
+    annotations[ann.id] = { id: ann.id, type: ann.type, text: ann.text, note: ann.note || '', offset, length };
+    const num = parseInt(ann.id.replace('ann-', ''), 10);
+    if (!isNaN(num) && num > annotationCounter) annotationCounter = num;
+    applied++;
+  }
+  return applied;
+}
+
 // ═══════════════════════════════════════
 // SETTINGS
 // ═══════════════════════════════════════
@@ -922,7 +1019,7 @@ document.getElementById('btnStartReading').addEventListener('click', () => {
 // ═══════════════════════════════════════
 // LOAD ARTICLE → READING VIEW
 // ═══════════════════════════════════════
-function loadArticle() {
+async function loadArticle() {
   annotations = {};
   annotationCounter = 0;
   activeAnnotationId = null;
@@ -934,8 +1031,25 @@ function loadArticle() {
   document.getElementById('btnSaveToRepo').style.display = ghPat() ? 'flex' : 'none';
 
   document.getElementById('loadScreen').style.display = 'none';
-  const rv = document.getElementById('readingView');
-  rv.style.display = 'flex';
+  document.getElementById('readingView').style.display = 'flex';
+
+  // Restore saved annotations if GitHub is configured
+  if (ghPat() && articleMeta.slug) {
+    const statusEl = document.getElementById('annotationStatus');
+    statusEl.textContent = 'Loading annotations…';
+    try {
+      const saved = await fetchAnnotationsFromRepo(articleMeta.slug);
+      if (saved && saved.length > 0) {
+        const applied = reapplyAnnotations(saved);
+        statusEl.textContent = applied > 0 ? `${applied} annotation(s) restored` : '';
+      } else {
+        statusEl.textContent = '';
+      }
+    } catch (e) {
+      statusEl.textContent = 'Could not load annotations';
+    }
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  }
 }
 
 function renderMarkdownInline(str) {
@@ -1049,6 +1163,14 @@ document.addEventListener('selectionchange', onSelectionChange);
 // ═══════════════════════════════════════
 // ANNOTATE
 // ═══════════════════════════════════════
+function getSelectionTextOffset(range) {
+  const body = document.getElementById('articleBody');
+  const preRange = document.createRange();
+  preRange.selectNodeContents(body);
+  preRange.setEnd(range.startContainer, range.startOffset);
+  return preRange.toString().length;
+}
+
 function annotate(type) {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed) return;
@@ -1056,6 +1178,7 @@ function annotate(type) {
   const selectedText = sel.toString().trim();
   if (!selectedText) return;
 
+  const offset = getSelectionTextOffset(range);
   const id = 'ann-' + (++annotationCounter);
   const mark = document.createElement('mark');
   const classMap = { word: 'highlight-word', hard: 'highlight-hard', comment: 'highlight-comment' };
@@ -1071,7 +1194,7 @@ function annotate(type) {
     range.insertNode(mark);
   }
 
-  annotations[id] = { id, type, text: selectedText, note: '' };
+  annotations[id] = { id, type, text: selectedText, note: '', offset, length: selectedText.length };
   sel.removeAllRanges();
   hideToolbar();
 }

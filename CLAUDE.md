@@ -49,6 +49,7 @@ This is a personal portfolio/resume website built with Next.js and TypeScript, d
 - `/src/data/` - Static data files (resume, projects, stats)
 - `/src/static/` - SCSS styles
 - `/public/` - Static assets (images, favicons)
+- `/public/german-learning/index.html` - Standalone German article reader (see below)
 
 ### Key Design Patterns
 1. **App Router**: File-based routing with layouts
@@ -67,6 +68,23 @@ This is a personal portfolio/resume website built with Next.js and TypeScript, d
 - Client components use 'use client' directive
 - Google Analytics 4 is configured with NEXT_PUBLIC_GA_TRACKING_ID using @next/third-parties
 - Fonts are optimized using Next.js font optimization
+
+## German Learning Feature
+
+A standalone, self-contained HTML app at `/public/german-learning/index.html` (served at `/german-learning/`). It is **not** a Next.js page — all HTML, CSS, and JS live in that single file (~1300 lines). Do not apply Next.js conventions to it.
+
+### What it does
+- Loads German articles from a GitHub repo (`iamKaiZhang/german-learning`, configurable) or accepts pasted text
+- Lets the user highlight text with three annotation types: **word** (yellow), **hard sentence** (red), **comment** (green)
+- Saves/loads annotations to `annotations/{slug}.json` in the GitHub repo via the GitHub Contents API
+- Requires a GitHub PAT stored in `localStorage` (`gh_pat`) for write access
+
+### Key implementation details
+- **State**: `annotations` object (`{ [id]: { id, type, text, note, offset, length } }`), `articleMeta`, `annotationCounter`
+- **Annotation offset**: each annotation stores `offset` (character index into `articleBody.textContent`) and `length` for precise re-application after page reload
+- **Re-applying saved annotations**: `reapplyAnnotations()` resolves character offsets via `getRangeAtTextOffset()` (TreeWalker over text nodes); falls back to `textContent.indexOf(text)` for older annotations saved without offset
+- **Article rendering**: `renderArticle()` parses a simple markdown subset into DOM; annotations are `<mark data-annotation-id="…">` elements wrapping the selected text
+- **GitHub API helpers**: `ghGet()`, `ghPut()`, `fetchArticle()`, `saveAnnotationsToRepo()`, `fetchAnnotationsFromRepo()`
 
 ## Owner Preferences
 
