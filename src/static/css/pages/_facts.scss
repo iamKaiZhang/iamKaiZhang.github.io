@@ -1,4 +1,21 @@
-/* Facts page — warm theme + illustrations */
+/* Facts page — cartoon font + illustrations */
+
+body.facts-page {
+  #facts header .title h2,
+  #facts header .title p,
+  .facts-content h3,
+  .facts-content p,
+  .facts-content li {
+    font-family: var(--font-caveat, cursive);
+    font-size: 1.15em;
+    line-height: 1.5;
+  }
+
+  #facts header .title h2 {
+    font-size: 2.5em;
+    letter-spacing: 0.04em;
+  }
+}
 
 #facts {
   position: relative;

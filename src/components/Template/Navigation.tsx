@@ -31,14 +31,10 @@ const Navigation: React.FC = () => (
           ))}
       </ul>
     </nav>
-    <div className="main">
-      <ul>
-        <li>
-          <ThemeToggle />
-        </li>
-      </ul>
+    <div className="header-right">
+      <ThemeToggle />
+      <Hamburger />
     </div>
-    <Hamburger />
   </header>
 );
 

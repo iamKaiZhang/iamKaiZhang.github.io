@@ -1,15 +1,15 @@
-// Day theme (Palette 3: blue-grey + warm sand) — default
+// Day theme — warm cream/amber (global default)
 :root {
-  --clr-bg: #faf6ee;
-  --clr-bg-alt: #f0e8d8;
-  --clr-fg: #64788a;
-  --clr-fg-bold: #373c47;
-  --clr-fg-light: #9caba9;
-  --clr-border: rgba(100, 120, 138, 0.25);
-  --clr-border-bg: rgba(100, 120, 138, 0.08);
-  --clr-border-alt: rgba(100, 120, 138, 0.5);
-  --clr-accent: #64788a;
-  --clr-accent-05: rgba(100, 120, 138, 0.05);
+  --clr-bg: #fffaf4;
+  --clr-bg-alt: #fff3e0;
+  --clr-fg: #7a5c42;
+  --clr-fg-bold: #3d2010;
+  --clr-fg-light: #c8a882;
+  --clr-border: rgba(220, 140, 60, 0.25);
+  --clr-border-bg: rgba(220, 140, 60, 0.08);
+  --clr-border-alt: rgba(220, 140, 60, 0.5);
+  --clr-accent: #e07b2a;
+  --clr-accent-05: rgba(224, 123, 42, 0.05);
 }
 
 // Night theme (Palette 5: dark slate + cool grey)
@@ -24,18 +24,4 @@
   --clr-border-alt: rgba(75, 92, 106, 0.65);
   --clr-accent: #9caba9;
   --clr-accent-05: rgba(156, 171, 169, 0.05);
-}
-
-// Facts page theme — body class overrides day/night (higher specificity via body.facts-page)
-body.facts-page {
-  --clr-bg: #fffaf4;
-  --clr-bg-alt: #fff3e0;
-  --clr-fg: #7a5c42;
-  --clr-fg-bold: #3d2010;
-  --clr-fg-light: #c8a882;
-  --clr-border: rgba(220, 140, 60, 0.25);
-  --clr-border-bg: rgba(220, 140, 60, 0.08);
-  --clr-border-alt: rgba(220, 140, 60, 0.5);
-  --clr-accent: #e07b2a;
-  --clr-accent-05: rgba(224, 123, 42, 0.05);
 }
