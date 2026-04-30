@@ -15,27 +15,27 @@ export interface LabelsProps {
   categories?: Category[];
 }
 
-const Labels: React.FC<LabelsProps> = ({ labels, categories = [] }) => {
-  const getLabelStyle = (category: string): React.CSSProperties => ({
-    background: categories.find((cat) => cat.name === category)?.color,
-    padding: '0.3em 0.8em',
-    margin: '0.4em',
-    borderRadius: '3px',
-    color: 'white',
-    display: 'inline-block',
-    fontSize: '0.7em',
-    fontFamily: 'sans-serif',
-  });
-
-  return (
-    <div className="labels" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5em' }}>
-      {labels.map((label) => (
-        <span key={label.title} style={getLabelStyle(label.category[0])}>
-          {label.title}
-        </span>
-      ))}
-    </div>
-  );
+const pillStyle: React.CSSProperties = {
+  display: 'inline-block',
+  padding: '0.3em 0.85em',
+  borderRadius: '100px',
+  border: '1px solid var(--clr-accent)',
+  color: 'var(--clr-fg-bold)',
+  background: 'var(--clr-accent-05)',
+  fontSize: '0.72em',
+  fontFamily: 'var(--font-source-sans, sans-serif)',
+  letterSpacing: '0.03em',
+  whiteSpace: 'nowrap' as const,
 };
+
+const Labels: React.FC<LabelsProps> = ({ labels }) => (
+  <div className="labels" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45em' }}>
+    {labels.map((label) => (
+      <span key={label.title} style={pillStyle}>
+        {label.title}
+      </span>
+    ))}
+  </div>
+);
 
 export default Labels;

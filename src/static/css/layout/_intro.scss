@@ -18,7 +18,7 @@
     img {
       margin: auto;
       border-radius: 50%;
-      box-shadow: 0 0 0 3px _palette(bg), 0 0 0 5px _palette(accent);
+      box-shadow: none;
       display: block;
       transition: box-shadow 0.2s ease;
     }
