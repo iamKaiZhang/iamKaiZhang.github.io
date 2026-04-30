@@ -18,7 +18,9 @@
     img {
       margin: auto;
       border-radius: 50%;
+      box-shadow: 0 0 0 3px _palette(bg), 0 0 0 5px _palette(accent);
       display: block;
+      transition: box-shadow 0.2s ease;
     }
   }
 

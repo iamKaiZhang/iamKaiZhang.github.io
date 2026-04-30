@@ -1,6 +1,7 @@
 @import-normalize;
 
 @import 'libs/vars';
+@import 'libs/theme-vars';
 @import 'libs/functions';
 @import 'libs/mixins';
 @import 'libs/skel';
@@ -65,6 +66,7 @@
 @import 'layout/menu';
 
 @import 'pages/contact';
+@import 'pages/facts';
 @import 'pages/notFound';
 @import 'pages/resume';
 @import 'pages/skills';

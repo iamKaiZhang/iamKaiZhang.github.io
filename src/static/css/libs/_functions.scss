@@ -19,11 +19,11 @@
   @return val($misc, $keys...);
 }
 
-/// Gets a palette value.
-/// @param {string} $keys Key(s).
-/// @return {string} Value.
-@function _palette($keys...) {
-  @return val($palette, $keys...);
+/// Gets a palette value as a CSS custom property reference.
+/// @param {string} $key Key.
+/// @return {string} CSS var() reference.
+@function _palette($key) {
+  @return var(--clr-#{$key});
 }
 
 /// Gets a size value.

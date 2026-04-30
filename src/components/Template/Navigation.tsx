@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import routes from '../../data/routes';
 import Hamburger from './Hamburger';
+import ThemeToggle from './ThemeToggle';
 
 // Websites Navbar, displays routes defined in 'src/data/routes'
 const Navigation: React.FC = () => (
@@ -30,6 +31,13 @@ const Navigation: React.FC = () => (
           ))}
       </ul>
     </nav>
+    <div className="main">
+      <ul>
+        <li>
+          <ThemeToggle />
+        </li>
+      </ul>
+    </div>
     <Hamburger />
   </header>
 );

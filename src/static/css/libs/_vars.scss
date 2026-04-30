@@ -42,15 +42,15 @@ $font: (
   kerning-heading: 0.25em,
 );
 
-// Palette.
+// Palette — resolved via CSS custom properties in _theme-vars.scss
 $palette: (
-  bg: #ffffff,
-  bg-alt: #f4f4f4,
-  fg: #646464,
-  fg-bold: #3c3b3b,
-  fg-light: #aaaaaa,
-  border: rgba(160, 160, 160, 0.3),
-  border-bg: rgba(160, 160, 160, 0.075),
-  border-alt: rgba(160, 160, 160, 0.65),
-  accent: #2e59ba,
+  bg: #faf6ee,
+  bg-alt: #f0e8d8,
+  fg: #64788a,
+  fg-bold: #373c47,
+  fg-light: #9caba9,
+  border: rgba(100, 120, 138, 0.25),
+  border-bg: rgba(100, 120, 138, 0.08),
+  border-alt: rgba(100, 120, 138, 0.5),
+  accent: #64788a,
 );

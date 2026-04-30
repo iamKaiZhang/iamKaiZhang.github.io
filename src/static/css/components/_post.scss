@@ -10,8 +10,16 @@
   @include padding(_size(section-spacing), _size(section-spacing));
   background: _palette(bg);
   border: solid 1px _palette(border);
+  border-left: solid 3px _palette(accent);
+  border-radius: 3px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   margin: 0 0 _size(section-spacing) 0;
   position: relative;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
 
   > header {
     @include vendor('display', 'flex');
@@ -29,7 +37,15 @@
 
       h2 {
         font-weight: _font(weight-heading-extrabold);
-        font-size: 1.5em;
+        font-size: 1.65em;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+
+      p {
+        color: _palette(fg-light);
+        font-size: 0.85em;
+        margin-top: 0.4em;
       }
 
       > :last-child {
@@ -53,13 +69,17 @@
       }
 
       .published {
+        background: _palette(border-bg);
+        border: solid 1px _palette(border);
+        border-radius: 2em;
         color: _palette(fg-bold);
-        display: block;
+        display: inline-block;
         font-family: _font(family-heading);
-        font-size: 0.7em;
+        font-size: 0.65em;
         font-weight: _font(weight-heading-bold);
         letter-spacing: _font(kerning-heading);
         margin-top: 0.5em;
+        padding: 0.3em 0.9em;
         text-transform: uppercase;
         white-space: nowrap;
       }

@@ -5,6 +5,7 @@ import { Raleway, Source_Sans_3 } from 'next/font/google';
 
 import GoogleAnalytics from '@/components/Template/GoogleAnalytics';
 import Navigation from '@/components/Template/Navigation';
+import { ThemeProvider } from '@/context/ThemeContext';
 import '@/static/css/main.scss';
 
 const sourceSans = Source_Sans_3({
@@ -60,14 +61,31 @@ export const metadata: Metadata = {
   },
 };
 
+const themeInitScript = `
+(function(){
+  var h = new Date().getHours();
+  document.documentElement.setAttribute('data-theme', h >= 6 && h < 20 ? 'day' : 'night');
+})();
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sourceSans.variable} ${raleway.variable}`}>
+    <html
+      lang="en"
+      className={`${sourceSans.variable} ${raleway.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Set theme before first paint to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
-        <div id="wrapper">
-          <Navigation />
-          {children}
-        </div>
+        <ThemeProvider>
+          <div id="wrapper">
+            <Navigation />
+            {children}
+          </div>
+        </ThemeProvider>
         <GoogleAnalytics />
       </body>
     </html>
