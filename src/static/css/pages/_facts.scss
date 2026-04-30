@@ -1,74 +1,33 @@
-/* Facts page — cartoon font + illustrations */
+/* Facts page — handwriting font */
 
 body.facts-page {
   #facts header .title h2,
   #facts header .title p,
   .facts-content h3,
   .facts-content p,
-  .facts-content li {
-    font-family: var(--font-caveat, cursive);
-    font-size: 1.15em;
+  .facts-content li,
+  .facts-content td,
+  .facts-content th {
+    font-family: var(--font-patrick-hand, cursive);
+    font-size: 1.1em;
     line-height: 1.5;
   }
 
   #facts header .title h2 {
     font-size: 2.5em;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
   }
 }
 
 #facts {
-  position: relative;
-  overflow: hidden;
-
   > header .title h2 a {
     color: _palette(accent);
   }
 }
 
-/* Illustration container */
-.facts-illustrations {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
 .facts-content {
   position: relative;
   z-index: 1;
-}
-
-/* Shared illustration style */
-.facts-illus {
-  color: _palette(fg-light);
-  opacity: 0.55;
-  position: absolute;
-}
-
-.facts-illus--sheldon {
-  bottom: 20px;
-  right: -10px;
-  width: 140px;
-  transform: scaleX(-1); // faces left
-}
-
-.facts-illus--scales {
-  top: 40px;
-  right: 20px;
-  width: 90px;
-}
-
-.facts-illus--coins {
-  top: 60px;
-  left: 10px;
-  width: 70px;
-}
-
-.facts-illus--muay {
-  bottom: 30px;
-  left: 20px;
-  width: 90px;
 }
 
 /* Interactive Arcanine */
@@ -176,7 +135,6 @@ body.facts-page {
 
     &:last-child {
       color: _palette(fg-bold);
-      font-family: 'Courier New', monospace;
       font-weight: 700;
       text-align: right;
     }

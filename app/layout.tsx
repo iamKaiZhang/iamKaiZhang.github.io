@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { Metadata } from 'next';
-import { Caveat, Raleway, Source_Sans_3 } from 'next/font/google';
+import { Patrick_Hand, Raleway, Source_Sans_3 } from 'next/font/google';
 
 import GoogleAnalytics from '@/components/Template/GoogleAnalytics';
 import Navigation from '@/components/Template/Navigation';
@@ -22,10 +22,10 @@ const raleway = Raleway({
   display: 'swap',
 });
 
-const caveat = Caveat({
-  weight: ['400', '600'],
+const patrickHand = Patrick_Hand({
+  weight: ['400'],
   subsets: ['latin'],
-  variable: '--font-caveat',
+  variable: '--font-patrick-hand',
   display: 'swap',
 });
 
@@ -79,7 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${sourceSans.variable} ${raleway.variable} ${caveat.variable}`}
+      className={`${sourceSans.variable} ${raleway.variable} ${patrickHand.variable}`}
       suppressHydrationWarning
     >
       <head>
