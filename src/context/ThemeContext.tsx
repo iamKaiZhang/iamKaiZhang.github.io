@@ -20,7 +20,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(autoTheme);
 
   useEffect(() => {
+    const now = new Date();
+    const slot = Math.floor((now.getHours() * 60 + now.getMinutes()) / 10) % 4;
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-day-theme', String(slot));
   }, [theme]);
 
   const toggle = useCallback(() => setTheme((t) => (t === 'day' ? 'night' : 'day')), []);
