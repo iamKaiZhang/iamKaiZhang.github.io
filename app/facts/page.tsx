@@ -23,8 +23,8 @@ export default function FactsPage() {
               <Link href="/facts">Random Facts</Link>
             </h2>
             <p>
-              The random facts about me are small yet certain proofs that I'm unlike anyone else in
-              this world.
+              The random facts about me are small yet certain proofs that I&apos;m unlike anyone
+              else in this world.
             </p>
           </div>
         </header>
