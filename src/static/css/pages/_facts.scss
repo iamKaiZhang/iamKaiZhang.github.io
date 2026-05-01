@@ -110,12 +110,11 @@
   }
 
   td {
-    font-size: 0.9em;
-    padding: 0.7em 0.5em;
+    font-size: 1em;
+    padding: 0.75em 0.5em;
 
     &:last-child {
       color: _palette(fg-bold);
-      font-weight: 700;
       text-align: right;
     }
   }
