@@ -5,87 +5,157 @@
   z-index: 1;
 }
 
-/* Interactive Arcanine */
-.arcanine-wrapper {
-  color: _palette(accent);
+/* Interactive Dog Mascot */
+.dog-mascot-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 2em 0 1em;
+}
+
+.dog-wrap {
+  position: relative;
+  width: min(300px, 80vw);
+  aspect-ratio: 1.5 / 1;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.dog-svg {
   cursor: pointer;
-  opacity: 0.85;
-  pointer-events: all;
-  position: fixed;
-  bottom: 2em;
-  right: 2em;
-  width: 160px;
-  z-index: 50;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  height: 100%;
+  overflow: visible;
+  width: 100%;
+}
 
-  &:hover {
-    opacity: 1;
+/* SVG element classes */
+.dog-line {
+  fill: none;
+  stroke: _palette(accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 5;
+}
+
+.dog-line-thin {
+  fill: none;
+  stroke: _palette(accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3.2;
+}
+
+.dog-fill-soft {
+  fill: color-mix(in srgb, _palette(accent) 14%, transparent);
+  stroke: none;
+}
+
+.dog-eye,
+.dog-nose {
+  fill: _palette(accent);
+}
+
+.dog-shadow {
+  fill: color-mix(in srgb, _palette(accent) 10%, transparent);
+}
+
+.dog-heart {
+  opacity: 0;
+}
+
+.dog-heart-fill {
+  fill: color-mix(in srgb, _palette(accent) 70%, transparent);
+}
+
+/* Draggable bone */
+.dog-bone-wrap {
+  cursor: grab;
+  position: absolute;
+  touch-action: none;
+  transition: transform 0.15s ease;
+
+  &:active {
+    cursor: grabbing;
+    transform: scale(1.08) rotate(-5deg);
   }
-
-  svg {
-    display: block;
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
-  }
 }
 
-.arcanine--happy {
-  animation: arcanine-wag 0.4s ease infinite alternate;
+.dog-bone-path {
+  fill: _palette(bg);
+  stroke: _palette(accent);
+  stroke-linejoin: round;
+  stroke-width: 5;
 }
 
-.arcanine--jump {
-  animation: arcanine-jump 0.7s ease forwards;
-}
-
-.arcanine--eat {
-  animation: arcanine-bounce 0.5s ease infinite alternate;
-}
-
-@keyframes arcanine-wag {
-  from { transform: rotate(-4deg); }
-  to   { transform: rotate(4deg); }
-}
-
-@keyframes arcanine-jump {
-  0%   { transform: translateY(0); }
-  40%  { transform: translateY(-32px) rotate(-6deg); }
-  70%  { transform: translateY(-18px) rotate(4deg); }
-  100% { transform: translateY(0) rotate(0); }
-}
-
-@keyframes arcanine-bounce {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-6px); }
-}
-
-/* Tooltip bubble */
-.arcanine-tooltip {
-  background: _palette(bg);
-  border: 1.5px solid _palette(accent);
-  border-radius: 1em;
-  bottom: calc(100% + 8px);
-  color: _palette(accent);
-  font-family: 'Raleway', sans-serif;
-  font-size: 0.7em;
-  font-weight: 700;
-  left: 50%;
-  padding: 0.3em 0.8em;
+/* Hint label */
+.dog-hint {
+  bottom: 6px;
+  color: _palette(fg-light);
+  font-family: _font(family-heading);
+  font-size: 0.65em;
+  left: 12px;
+  letter-spacing: _font(kerning-heading);
+  opacity: 0.65;
   pointer-events: none;
   position: absolute;
-  transform: translateX(-50%);
-  white-space: nowrap;
-
-  &::after {
-    border: 6px solid transparent;
-    border-top-color: _palette(accent);
-    bottom: -13px;
-    content: '';
-    left: 50%;
-    position: absolute;
-    transform: translateX(-50%);
-  }
 }
+
+/* Keyframes */
+@keyframes dogBreath {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50%       { transform: translateY(1px) scaleY(0.985); }
+}
+
+@keyframes tailWag {
+  0%, 100% { transform: rotate(-5deg); }
+  50%       { transform: rotate(8deg); }
+}
+
+@keyframes dogBlink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96%, 98%      { transform: scaleY(0.1); }
+}
+
+@keyframes heartPop {
+  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
+  25%  { opacity: 1; transform: translateY(-12px) scale(1.1); }
+  80%  { opacity: 1; transform: translateY(-22px) scale(1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.8); }
+}
+
+@keyframes dogChew {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(2px) rotate(-1deg); }
+}
+
+/* Base animations */
+.dog-body-group {
+  animation: dogBreath 2.8s ease-in-out infinite;
+  transform-box: view-box;
+  transform-origin: 160px 135px;
+}
+
+.dog-tail {
+  animation: tailWag 1.3s ease-in-out infinite;
+  transform-box: view-box;
+  transform-origin: 224px 94px;
+}
+
+.dog-eye-group {
+  animation: dogBlink 4.5s infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.dog-head {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.08s ease-out;
+}
+
+/* State overrides */
+.dog-wrap.is-eating .dog-head  { animation: dogChew 0.28s ease-in-out infinite; }
+.dog-wrap.is-happy  .dog-heart { animation: heartPop 1.2s ease-out 1 forwards; }
+.dog-wrap.is-excited .dog-tail { animation-duration: 0.45s; }
 
 /* Table redesign for facts */
 #facts table {
@@ -100,7 +170,7 @@
     }
 
     &:nth-child(even) {
-      background: rgba(0, 0, 0, 0.045);
+      background: rgba(0, 0, 0, 0.01);
     }
   }
 

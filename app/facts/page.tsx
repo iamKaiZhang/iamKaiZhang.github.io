@@ -3,7 +3,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import InteractiveArcanine from '@/components/Facts/InteractiveArcanine';
+import InteractiveDog from '@/components/Facts/InteractiveDog';
 import Personal from '@/components/Facts/Personal';
 import TextFacts from '@/components/Facts/TextFacts';
 
@@ -33,11 +33,9 @@ export default function FactsPage() {
         <div className="facts-content">
           <Personal />
           <TextFacts />
+          <InteractiveDog />
         </div>
       </article>
-
-      {/* Arcanine is fixed-position, lives outside the article flow */}
-      <InteractiveArcanine />
     </PageWrapper>
   );
 }

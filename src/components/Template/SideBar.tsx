@@ -44,7 +44,7 @@ const SideBar: React.FC<SideBarProps> = ({ showFooter = true }) => {
       {showFooter && (
         <section id="footer">
           <ContactIcons />
-          <p className="copyright">&copy; 2025 Kai Zhang (NO. 131085e).</p>
+          <p className="copyright">&copy; 2026 Kai Zhang (NO. 131085e).</p>
         </section>
       )}
     </section>
