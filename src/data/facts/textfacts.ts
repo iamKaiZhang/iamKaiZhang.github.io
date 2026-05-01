@@ -3,6 +3,6 @@ export const textFactsMarkdown = `
 - I love my name. *It's simple*.
 - Among all non-Italian speakers in my lab, I have the strongest Italian accent when speaking English.
 - My favorite movie: *La La Land*.
-- My favorite pokemon: *NO.059*.
+- My favorite pokemon: [*NO.059*](/images/facts/arcanine.png).
 - [Lugano, the beautiful Swiss city, is the sister city of my hometown Hangzhou.](https://www.ehangzhou.gov.cn/2018-06/15/c_243457.htm)
 `;

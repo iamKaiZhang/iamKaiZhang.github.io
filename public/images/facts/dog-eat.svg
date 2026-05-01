@@ -1,0 +1,35 @@
+<svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .line{fill:none;stroke:#f26a21;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round}
+    .thin{fill:none;stroke:#f26a21;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
+    .fill{fill:#fff5ed}
+    .cream{fill:#fffdf9}
+    .eye,.nose{fill:#f26a21}
+    .shadow{fill:#f26a21;opacity:.12}
+  </style>
+  <ellipse class="shadow" cx="179" cy="218" rx="122" ry="12"/>
+  <path class="fill" d="M106 176C119 143 156 129 204 133C246 137 269 158 264 187C258 216 209 225 151 215C113 209 96 195 106 176Z"/>
+  <path class="line" d="M106 176C119 143 156 129 204 133C246 137 269 158 264 187C258 216 209 225 151 215C113 209 96 195 106 176Z"/>
+  <path class="line" d="M232 136C258 92 305 105 289 145C312 153 292 188 252 178C228 172 218 153 232 136Z"/>
+  <path class="thin" d="M258 125C274 139 272 160 254 170"/>
+  <g transform="translate(-8 38) rotate(-10 102 130)">
+    <path class="fill" d="M66 130C52 96 70 65 101 60C132 56 158 76 162 107C166 139 141 163 106 166C84 168 70 153 66 130Z"/>
+    <path class="line" d="M66 130C52 96 70 65 101 60C132 56 158 76 162 107C166 139 141 163 106 166C84 168 70 153 66 130Z"/>
+    <path class="line" d="M74 94L60 48L96 80"/>
+    <path class="line" d="M116 65L134 34L150 83"/>
+    <path class="line" d="M86 69C91 49 104 52 104 68C115 47 129 54 121 74"/>
+    <path class="line" d="M67 123C51 123 45 133 55 141C43 145 44 158 58 162"/>
+    <path class="line" d="M149 120C164 123 166 136 153 142C166 149 158 162 143 161"/>
+    <ellipse class="eye" cx="89" cy="133" rx="3.8" ry="4.7"/>
+    <ellipse class="eye" cx="119" cy="129" rx="3.8" ry="4.7"/>
+    <ellipse class="nose" cx="78" cy="150" rx="7" ry="5"/>
+    <path class="thin" d="M84 154C96 161 114 161 126 151"/>
+  </g>
+  <path class="line" d="M118 195C106 216 89 221 78 212C73 208 77 199 87 196"/>
+  <path class="line" d="M151 197C139 219 119 224 108 214C104 209 108 200 119 197"/>
+  <path class="line" d="M223 193C222 213 212 224 198 222"/>
+  <path class="line" d="M254 187C265 204 264 219 250 223"/>
+  <path class="thin" d="M55 213L106 199"/>
+  <circle class="cream" cx="52" cy="214" r="7.5" stroke="#f26a21" stroke-width="2.8"/>
+  <circle class="cream" cx="108" cy="198" r="7.5" stroke="#f26a21" stroke-width="2.8"/>
+</svg>

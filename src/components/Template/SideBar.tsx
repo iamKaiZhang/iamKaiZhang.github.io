@@ -14,10 +14,12 @@ interface SideBarProps {
   showFooter?: boolean;
 }
 
-const IMAGES = ['/images/me01.jpg', '/images/me02.jpg', '/images/me03.jpg'];
+const IMAGES = ['/images/me01.jpg', '/images/me02.jpg', '/images/me03.jpg', '/images/me04.jpg'];
 
 const SideBar: React.FC<SideBarProps> = ({ showFooter = true }) => {
-  const selectedImage = IMAGES[new Date().getHours() % IMAGES.length];
+  const now = new Date();
+  const slot = Math.floor((now.getHours() * 60 + now.getMinutes()) / 10) % IMAGES.length;
+  const selectedImage = IMAGES[slot];
 
   return (
     <section id="sidebar">

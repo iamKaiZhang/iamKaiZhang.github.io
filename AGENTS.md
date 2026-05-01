@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
 ## Development Commands
 
@@ -100,7 +100,6 @@ A standalone, self-contained HTML app at `/public/german-learning/index.html` (s
 - The user will explicitly flag any content or sections that should not be changed
 
 ### Hard Rules
-- **Don't add or commit unless explicitly requested**
 - **Never open pull requests to the upstream/original forked repository**
 - Only push to this repository (`iamkaizhang/iamkaizhang.github.io`)
 - Do not add features or refactor beyond what is explicitly requested

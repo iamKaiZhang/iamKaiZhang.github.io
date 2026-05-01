@@ -1,7 +1,7 @@
 // Register each color as a typed CSS property so the browser can
 // smoothly interpolate between values when the theme changes.
-@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #fffaf4; }
-@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #fff3e0; }
+@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #fefcf8; }
+@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #fdf6ec; }
 @property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #7a5c42; }
 @property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #3d2010; }
 @property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #c8a882; }
@@ -27,19 +27,19 @@
 }
 
 // ─── Photo 0: me01.jpg — Venice at sunset ─────────────────────────────────────
-// Warm amber, golden orange sky, the default day palette
+// Light warm cream, golden sky — less red, barely tinted
 :root,
 [data-day-theme='0'] {
-  --clr-bg: #fffaf4;
-  --clr-bg-alt: #fff3e0;
-  --clr-fg: #7a5c42;
-  --clr-fg-bold: #3d2010;
-  --clr-fg-light: #c8a882;
-  --clr-border: rgba(220, 140, 60, 0.25);
-  --clr-border-bg: rgba(220, 140, 60, 0.08);
-  --clr-border-alt: rgba(220, 140, 60, 0.5);
-  --clr-accent: #e07b2a;
-  --clr-accent-05: rgba(224, 123, 42, 0.05);
+  --clr-bg: #fefcf8;
+  --clr-bg-alt: #fdf6ec;
+  --clr-fg: #7a6050;
+  --clr-fg-bold: #3a2818;
+  --clr-fg-light: #c0a888;
+  --clr-border: rgba(200, 130, 50, 0.2);
+  --clr-border-bg: rgba(200, 130, 50, 0.07);
+  --clr-border-alt: rgba(200, 130, 50, 0.42);
+  --clr-accent: #d4742a;
+  --clr-accent-05: rgba(212, 116, 42, 0.05);
 }
 
 // ─── Photo 1: me02.jpg — Iceland mountains ────────────────────────────────────
@@ -70,6 +70,21 @@
   --clr-border-alt: rgba(100, 120, 160, 0.45);
   --clr-accent: #6888b0;
   --clr-accent-05: rgba(104, 136, 176, 0.05);
+}
+
+// ─── Photo 3: me04.jpg — Iceland lava field ───────────────────────────────────
+// Light volcanic grey, overcast sky, dark slate text
+[data-day-theme='3'] {
+  --clr-bg: #e6e7e9;
+  --clr-bg-alt: #d8d9dc;
+  --clr-fg: #2e3238;
+  --clr-fg-bold: #141618;
+  --clr-fg-light: #6a7078;
+  --clr-border: rgba(40, 44, 52, 0.22);
+  --clr-border-bg: rgba(40, 44, 52, 0.08);
+  --clr-border-alt: rgba(40, 44, 52, 0.45);
+  --clr-accent: #4a5060;
+  --clr-accent-05: rgba(74, 80, 96, 0.05);
 }
 
 // ─── Night theme: always wins (declared last) ──────────────────────────────────

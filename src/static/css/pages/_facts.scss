@@ -9,19 +9,24 @@
 .dog-mascot-wrapper {
   display: flex;
   justify-content: center;
-  padding: 2em 0 1em;
+  padding: 2.25em 0 1.25em;
 }
 
 .dog-wrap {
+  --dog-eye-x: 0px;
+  --dog-eye-y: 0px;
+  --dog-head-rotate: 0deg;
+  --dog-head-x: 0px;
+  --dog-head-y: 0px;
+
   position: relative;
-  width: min(300px, 80vw);
-  aspect-ratio: 1.5 / 1;
+  width: min(380px, 84vw);
+  aspect-ratio: 18 / 13;
   pointer-events: auto;
   user-select: none;
 }
 
 .dog-svg {
-  cursor: pointer;
   height: 100%;
   overflow: visible;
   width: 100%;
@@ -33,7 +38,7 @@
   stroke: _palette(accent);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 5;
+  stroke-width: 4.4;
 }
 
 .dog-line-thin {
@@ -41,11 +46,11 @@
   stroke: _palette(accent);
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 3.2;
+  stroke-width: 2.7;
 }
 
 .dog-fill-soft {
-  fill: color-mix(in srgb, _palette(accent) 14%, transparent);
+  fill: color-mix(in srgb, _palette(accent) 10%, _palette(bg));
   stroke: none;
 }
 
@@ -54,28 +59,181 @@
   fill: _palette(accent);
 }
 
+.dog-eye-whites {
+  fill: _palette(bg);
+  opacity: 0.86;
+  stroke: none;
+}
+
 .dog-shadow {
-  fill: color-mix(in srgb, _palette(accent) 10%, transparent);
+  fill: color-mix(in srgb, _palette(accent) 12%, transparent);
 }
 
 .dog-heart {
   opacity: 0;
+  transform-box: view-box;
+  transform-origin: 300px 70px;
 }
 
 .dog-heart-fill {
-  fill: color-mix(in srgb, _palette(accent) 70%, transparent);
+  fill: color-mix(in srgb, _palette(accent) 18%, _palette(bg));
+}
+
+.dog-spark {
+  opacity: 0.8;
+  transform-box: view-box;
+  transform-origin: 36px 156px;
+}
+
+.dog-standing-pose,
+.dog-eating-pose {
+  transition: opacity 0.18s ease;
+}
+
+.dog-eating-pose {
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: 178px 176px;
+}
+
+.dog-eye-pupils {
+  transform: translate(var(--dog-eye-x), var(--dog-eye-y));
+  transform-box: view-box;
+  transition: transform 0.08s ease-out;
 }
 
 /* Draggable bone */
 .dog-bone-wrap {
   cursor: grab;
+  height: 38px;
   position: absolute;
   touch-action: none;
-  transition: transform 0.15s ease;
+  transition:
+    filter 0.16s ease,
+    opacity 0.16s ease,
+    transform 0.16s ease;
+  width: 64px;
+  z-index: 2;
 
   &:active {
     cursor: grabbing;
-    transform: scale(1.08) rotate(-5deg);
+  }
+}
+
+.dog-bone-svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.dog-wrap.is-dragging .dog-bone-wrap {
+  filter: drop-shadow(0 5px 8px color-mix(in srgb, _palette(accent) 24%, transparent));
+  transform: scale(1.08) rotate(-6deg);
+}
+
+.dog-wrap.is-near-drop .dog-bone-wrap {
+  filter: drop-shadow(0 0 10px color-mix(in srgb, _palette(accent) 36%, transparent));
+  transform: scale(0.96) rotate(3deg);
+}
+
+.dog-wrap.is-bone-hidden .dog-bone-wrap {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-12px, 8px) scale(0.25);
+}
+
+.dog-wrap.is-bone-hidden .dog-hint {
+  opacity: 0;
+}
+
+.dog-bone-wrap:focus-visible {
+  outline: 2px solid _palette(accent);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.dog-wrap.is-focused .dog-mouth-smile {
+  stroke-width: 3.1;
+}
+
+.dog-wrap.is-near-drop .dog-mouth-smile {
+  stroke-width: 4;
+}
+
+.dog-wrap.is-eating .dog-standing-pose {
+  opacity: 0;
+}
+
+.dog-wrap.is-eating .dog-eating-pose {
+  opacity: 1;
+}
+
+.dog-wrap.is-happy .dog-eye-pupils {
+  transform: translate(1px, -1px);
+}
+
+.dog-wrap.is-happy .dog-mouth-smile {
+  stroke-width: 3.8;
+}
+
+.dog-wrap.is-happy .dog-spark {
+  animation: sparklePop 1.2s ease-out both;
+}
+
+.dog-wrap.is-dragging .dog-body-group {
+  animation-duration: 1.4s;
+}
+
+.dog-wrap.is-dragging .dog-tail,
+.dog-wrap.is-happy .dog-tail {
+  animation-duration: 0.42s;
+}
+
+.dog-wrap.is-eating .dog-eating-pose {
+  animation: dogEatBob 0.3s ease-in-out infinite;
+}
+
+.dog-wrap.is-eating .dog-chew-line {
+  animation: dogChew 0.26s ease-in-out infinite;
+}
+
+.dog-wrap.is-happy .dog-heart {
+  animation: heartPop 1.3s ease-out 1 forwards;
+}
+
+.dog-wrap.is-happy .dog-head {
+  --dog-eye-x: 0px;
+  --dog-eye-y: -1px;
+  --dog-head-rotate: 5deg;
+  --dog-head-x: 1px;
+  --dog-head-y: -3px;
+}
+
+.dog-wrap.is-eating .dog-shadow {
+  transform: scaleX(0.92);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.dog-bone-end {
+  fill: _palette(bg);
+  stroke: _palette(accent);
+  stroke-width: 3;
+}
+
+.dog-eaten-bone {
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dog-body-group,
+  .dog-tail,
+  .dog-eye-group,
+  .dog-spark,
+  .dog-wrap.is-eating .dog-chew-line,
+  .dog-wrap.is-eating .dog-eating-pose,
+  .dog-wrap.is-happy .dog-heart {
+    animation: none;
   }
 }
 
@@ -91,12 +249,13 @@
   bottom: 6px;
   color: _palette(fg-light);
   font-family: _font(family-heading);
-  font-size: 0.65em;
+  font-size: 0.68em;
   left: 12px;
-  letter-spacing: _font(kerning-heading);
+  letter-spacing: 0;
   opacity: 0.65;
   pointer-events: none;
   position: absolute;
+  transition: opacity 0.16s ease;
 }
 
 /* Keyframes */
@@ -116,28 +275,39 @@
 }
 
 @keyframes heartPop {
-  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
-  25%  { opacity: 1; transform: translateY(-12px) scale(1.1); }
-  80%  { opacity: 1; transform: translateY(-22px) scale(1); }
-  100% { opacity: 0; transform: translateY(-30px) scale(0.8); }
+  0%   { opacity: 0; transform: translateY(10px) scale(0.4); }
+  25%  { opacity: 1; transform: translateY(-3px) scale(1.08); }
+  80%  { opacity: 1; transform: translateY(-13px) scale(1); }
+  100% { opacity: 0; transform: translateY(-23px) scale(0.82); }
 }
 
 @keyframes dogChew {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(2px); }
+}
+
+@keyframes dogEatBob {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%       { transform: translateY(2px) rotate(-1deg); }
+  50%      { transform: translateY(1px) rotate(-0.8deg); }
+}
+
+@keyframes sparklePop {
+  0%   { opacity: 0; transform: scale(0.72) rotate(0deg); }
+  35%  { opacity: 1; transform: scale(1.08) rotate(8deg); }
+  100% { opacity: 0.5; transform: scale(1) rotate(0deg); }
 }
 
 /* Base animations */
 .dog-body-group {
   animation: dogBreath 2.8s ease-in-out infinite;
   transform-box: view-box;
-  transform-origin: 160px 135px;
+  transform-origin: 180px 160px;
 }
 
 .dog-tail {
   animation: tailWag 1.3s ease-in-out infinite;
   transform-box: view-box;
-  transform-origin: 224px 94px;
+  transform-origin: 235px 114px;
 }
 
 .dog-eye-group {
@@ -147,15 +317,11 @@
 }
 
 .dog-head {
-  transform-box: fill-box;
-  transform-origin: center;
+  transform: translate(var(--dog-head-x), var(--dog-head-y)) rotate(var(--dog-head-rotate));
+  transform-box: view-box;
+  transform-origin: 106px 130px;
   transition: transform 0.08s ease-out;
 }
-
-/* State overrides */
-.dog-wrap.is-eating .dog-head  { animation: dogChew 0.28s ease-in-out infinite; }
-.dog-wrap.is-happy  .dog-heart { animation: heartPop 1.2s ease-out 1 forwards; }
-.dog-wrap.is-excited .dog-tail { animation-duration: 0.45s; }
 
 /* Table redesign for facts */
 #facts table {

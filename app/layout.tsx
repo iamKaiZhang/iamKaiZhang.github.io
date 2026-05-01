@@ -63,9 +63,11 @@ export const metadata: Metadata = {
 
 const themeInitScript = `
 (function(){
-  var h = new Date().getHours();
+  var now = new Date();
+  var h = now.getHours();
+  var slot = Math.floor((h * 60 + now.getMinutes()) / 10) % 4;
   document.documentElement.setAttribute('data-theme', h >= 6 && h < 20 ? 'day' : 'night');
-  document.documentElement.setAttribute('data-day-theme', String(h % 3));
+  document.documentElement.setAttribute('data-day-theme', String(slot));
 })();
 `;
 

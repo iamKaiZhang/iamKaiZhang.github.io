@@ -3,7 +3,6 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import InteractiveDog from '@/components/Facts/InteractiveDog';
 import Personal from '@/components/Facts/Personal';
 import TextFacts from '@/components/Facts/TextFacts';
 
@@ -24,7 +23,7 @@ export default function FactsPage() {
               <Link href="/facts">Random Facts</Link>
             </h2>
             <p>
-              The random facts about me are small yet certain proofs that I am unlike anyone else in
+              The random facts about me are small yet certain proofs that I'm unlike anyone else in
               this world.
             </p>
           </div>
@@ -33,7 +32,6 @@ export default function FactsPage() {
         <div className="facts-content">
           <Personal />
           <TextFacts />
-          <InteractiveDog />
         </div>
       </article>
     </PageWrapper>

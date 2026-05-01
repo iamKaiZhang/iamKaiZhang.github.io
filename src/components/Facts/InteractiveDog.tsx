@@ -2,149 +2,284 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+const BONE_START = { x: 18, y: 18 };
+const SVG_SIZE = { width: 360, height: 260 };
+const SVG_MOUTH = { x: 82, y: 150 };
+const FEED_DISTANCE = 64;
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
 export default function InteractiveDog() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<SVGGElement>(null);
   const boneRef = useRef<HTMLDivElement>(null);
-  const hintRef = useRef<HTMLSpanElement>(null);
+  const eatingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const happyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const draggingRef = useRef(false);
-  const bonePosRef = useRef({ x: 12, y: 12 });
+  const bonePosRef = useRef(BONE_START);
   const boneOffsetRef = useRef({ x: 0, y: 0 });
-  const eatingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [isDragging, setIsDragging] = useState(false);
   const [isEating, setIsEating] = useState(false);
   const [isHappy, setIsHappy] = useState(false);
-  const [isExcited, setIsExcited] = useState(false);
+  const [isFocused, setIsFocused] = useState(true);
+  const [isNearDrop, setIsNearDrop] = useState(false);
+  const [isBoneHidden, setIsBoneHidden] = useState(false);
+
+  const clearTimers = useCallback(() => {
+    if (eatingTimerRef.current) clearTimeout(eatingTimerRef.current);
+    if (happyTimerRef.current) clearTimeout(happyTimerRef.current);
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+  }, []);
 
   const clientToLocal = useCallback((clientX: number, clientY: number) => {
     const rect = wrapRef.current!.getBoundingClientRect();
     return { x: clientX - rect.left, y: clientY - rect.top };
   }, []);
 
-  const setHeadLookAt = useCallback((localX: number, localY: number) => {
-    const head = headRef.current;
+  const setHeadPose = useCallback(
+    (headX: number, headY: number, headRotate: number, eyeX: number, eyeY: number) => {
+      const head = headRef.current;
+      if (!head) return;
+
+      head.style.setProperty('--dog-head-x', `${headX}px`);
+      head.style.setProperty('--dog-head-y', `${headY}px`);
+      head.style.setProperty('--dog-head-rotate', `${headRotate}deg`);
+      head.style.setProperty('--dog-eye-x', `${eyeX}px`);
+      head.style.setProperty('--dog-eye-y', `${eyeY}px`);
+    },
+    [],
+  );
+
+  const localToSvg = useCallback((localX: number, localY: number) => {
     const wrap = wrapRef.current;
-    if (!head || !wrap) return;
+    if (!wrap) return { x: SVG_MOUTH.x, y: SVG_MOUTH.y };
+
     const rect = wrap.getBoundingClientRect();
-    const svgX = (localX / rect.width) * 320;
-    const svgY = (localY / rect.height) * 220;
-    const dx = svgX - 88;
-    const dy = svgY - 104;
-    const rotate = Math.max(-8, Math.min(8, dx * 0.035));
-    const tx = Math.max(-3, Math.min(3, dx * 0.015));
-    const ty = Math.max(-2, Math.min(2, dy * 0.012));
-    head.style.transform = `translate(${tx}px, ${ty}px) rotate(${rotate}deg)`;
+    return {
+      x: (localX / rect.width) * SVG_SIZE.width,
+      y: (localY / rect.height) * SVG_SIZE.height,
+    };
   }, []);
 
-  const isBoneNearMouth = useCallback(() => {
+  const setGaze = useCallback(
+    (localX: number, localY: number) => {
+      if (isEating || isHappy) return;
+
+      const target = localToSvg(localX, localY);
+      const dx = target.x - 106;
+      const dy = target.y - 130;
+
+      setHeadPose(
+        clamp(dx * 0.024, -5.5, 5.5),
+        clamp(dy * 0.017, -3.5, 4),
+        clamp(dx * 0.034, -9, 9),
+        clamp(dx * 0.026, -4.5, 4.5),
+        clamp(dy * 0.02, -3.2, 3.2),
+      );
+    },
+    [isEating, isHappy, localToSvg, setHeadPose],
+  );
+
+  const getBoneCenter = useCallback(() => {
     const wrap = wrapRef.current;
     const bone = boneRef.current;
-    if (!wrap || !bone) return false;
+    if (!wrap || !bone) return null;
+
     const wrapRect = wrap.getBoundingClientRect();
     const boneRect = bone.getBoundingClientRect();
-    const boneCenter = {
+
+    return {
       x: boneRect.left + boneRect.width / 2 - wrapRect.left,
       y: boneRect.top + boneRect.height / 2 - wrapRect.top,
     };
-    const mouth = {
-      x: wrapRect.width * 0.22,
-      y: wrapRect.height * 0.53,
-    };
-    return Math.hypot(boneCenter.x - mouth.x, boneCenter.y - mouth.y) < 65;
   }, []);
 
-  const showHappy = useCallback(() => {
-    setIsEating(false);
-    setIsHappy(true);
-    setIsExcited(true);
-    setTimeout(() => setIsHappy(false), 1300);
-    setTimeout(() => setIsExcited(false), 2200);
-  }, []);
+  const setGazeToBone = useCallback(() => {
+    const boneCenter = getBoneCenter();
+    if (boneCenter) setGaze(boneCenter.x, boneCenter.y);
+  }, [getBoneCenter, setGaze]);
+
+  const isBoneNearMouth = useCallback(() => {
+    const wrap = wrapRef.current;
+    const boneCenter = getBoneCenter();
+    if (!wrap || !boneCenter) return false;
+
+    const rect = wrap.getBoundingClientRect();
+    const mouth = {
+      x: (SVG_MOUTH.x / SVG_SIZE.width) * rect.width,
+      y: (SVG_MOUTH.y / SVG_SIZE.height) * rect.height,
+    };
+
+    return Math.hypot(boneCenter.x - mouth.x, boneCenter.y - mouth.y) < FEED_DISTANCE;
+  }, [getBoneCenter]);
+
+  const moveBone = useCallback(
+    (x: number, y: number) => {
+      const wrap = wrapRef.current;
+      const bone = boneRef.current;
+      if (!wrap || !bone) return;
+
+      const maxX = wrap.clientWidth - bone.offsetWidth;
+      const maxY = wrap.clientHeight - bone.offsetHeight;
+      const next = {
+        x: clamp(x, 0, maxX),
+        y: clamp(y, 0, maxY),
+      };
+
+      bonePosRef.current = next;
+      bone.style.left = `${next.x}px`;
+      bone.style.top = `${next.y}px`;
+      setGaze(next.x + bone.offsetWidth / 2, next.y + bone.offsetHeight / 2);
+    },
+    [setGaze],
+  );
+
+  const resetBone = useCallback(() => {
+    moveBone(BONE_START.x, BONE_START.y);
+    setIsBoneHidden(false);
+    setIsFocused(true);
+    requestAnimationFrame(setGazeToBone);
+  }, [moveBone, setGazeToBone]);
 
   const startEating = useCallback(() => {
-    if (eatingTimerRef.current) clearTimeout(eatingTimerRef.current);
+    clearTimers();
+    setIsDragging(false);
+    setIsNearDrop(false);
+    setIsFocused(false);
+    setIsBoneHidden(true);
     setIsEating(true);
-    setIsExcited(true);
-    if (boneRef.current) boneRef.current.style.opacity = '0';
-    if (hintRef.current) hintRef.current.style.opacity = '0';
+    setIsHappy(false);
+    setHeadPose(0, 0, 0, 0, 0);
 
     eatingTimerRef.current = setTimeout(() => {
-      showHappy();
-      setTimeout(() => {
-        bonePosRef.current = { x: 12, y: 12 };
-        if (boneRef.current) {
-          boneRef.current.style.left = '12px';
-          boneRef.current.style.top = '12px';
-          boneRef.current.style.opacity = '1';
-        }
-        if (hintRef.current) hintRef.current.style.opacity = '0.65';
-      }, 900);
-    }, 1200);
-  }, [showHappy]);
+      setIsEating(false);
+      setIsHappy(true);
+      setHeadPose(1, -3, 5, 0, -1);
+    }, 1150);
+
+    happyTimerRef.current = setTimeout(() => {
+      setIsHappy(false);
+      setIsFocused(true);
+    }, 2700);
+
+    resetTimerRef.current = setTimeout(resetBone, 3300);
+  }, [clearTimers, resetBone, setHeadPose]);
 
   useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      const wrap = wrapRef.current;
-      if (!wrap || draggingRef.current) return;
-      const rect = wrap.getBoundingClientRect();
-      if (
-        e.clientX >= rect.left &&
-        e.clientX <= rect.right &&
-        e.clientY >= rect.top &&
-        e.clientY <= rect.bottom
-      ) {
-        setHeadLookAt(e.clientX - rect.left, e.clientY - rect.top);
-      }
+    requestAnimationFrame(setGazeToBone);
+
+    const onResize = () => requestAnimationFrame(setGazeToBone);
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      clearTimers();
+      window.removeEventListener('resize', onResize);
     };
-    window.addEventListener('mousemove', onMouseMove);
-    return () => window.removeEventListener('mousemove', onMouseMove);
-  }, [setHeadLookAt]);
+  }, [clearTimers, setGazeToBone]);
+
+  const onWrapPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (draggingRef.current || isEating || isHappy) return;
+
+      const local = clientToLocal(e.clientX, e.clientY);
+      setIsFocused(true);
+      setGaze(local.x, local.y);
+    },
+    [clientToLocal, isEating, isHappy, setGaze],
+  );
+
+  const onWrapPointerLeave = useCallback(() => {
+    if (draggingRef.current || isEating || isHappy) return;
+    setGazeToBone();
+  }, [isEating, isHappy, setGazeToBone]);
 
   const onBonePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      if (isEating || isHappy) return;
+
+      clearTimers();
       draggingRef.current = true;
+      setIsDragging(true);
+      setIsFocused(true);
+      setIsNearDrop(false);
       e.currentTarget.setPointerCapture(e.pointerId);
-      const p = clientToLocal(e.clientX, e.clientY);
+
+      const local = clientToLocal(e.clientX, e.clientY);
       boneOffsetRef.current = {
-        x: p.x - bonePosRef.current.x,
-        y: p.y - bonePosRef.current.y,
+        x: local.x - bonePosRef.current.x,
+        y: local.y - bonePosRef.current.y,
       };
-      setIsExcited(true);
+      setGaze(local.x, local.y);
     },
-    [clientToLocal],
+    [clearTimers, clientToLocal, isEating, isHappy, setGaze],
   );
 
   const onBonePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!draggingRef.current) return;
-      const p = clientToLocal(e.clientX, e.clientY);
-      const x = p.x - boneOffsetRef.current.x;
-      const y = p.y - boneOffsetRef.current.y;
-      bonePosRef.current = { x, y };
-      if (boneRef.current) {
-        boneRef.current.style.left = `${x}px`;
-        boneRef.current.style.top = `${y}px`;
-      }
-      setHeadLookAt(p.x, p.y);
+
+      const local = clientToLocal(e.clientX, e.clientY);
+      moveBone(local.x - boneOffsetRef.current.x, local.y - boneOffsetRef.current.y);
+      setIsNearDrop(isBoneNearMouth());
     },
-    [clientToLocal, setHeadLookAt],
+    [clientToLocal, isBoneNearMouth, moveBone],
   );
 
-  const onBonePointerUp = useCallback(() => {
+  const onBoneKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (isEating || isHappy) return;
+
+      const step = e.shiftKey ? 24 : 12;
+      const current = bonePosRef.current;
+      let next = current;
+
+      if (e.key === 'ArrowLeft') next = { ...current, x: current.x - step };
+      if (e.key === 'ArrowRight') next = { ...current, x: current.x + step };
+      if (e.key === 'ArrowUp') next = { ...current, y: current.y - step };
+      if (e.key === 'ArrowDown') next = { ...current, y: current.y + step };
+
+      if (next !== current) {
+        e.preventDefault();
+        setIsFocused(true);
+        moveBone(next.x, next.y);
+        setIsNearDrop(isBoneNearMouth());
+      }
+
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (isBoneNearMouth()) startEating();
+      }
+    },
+    [isBoneNearMouth, isEating, isHappy, moveBone, startEating],
+  );
+
+  const finishDrag = useCallback(() => {
+    if (!draggingRef.current) return;
+
     draggingRef.current = false;
+    setIsDragging(false);
+
     if (isBoneNearMouth()) {
       startEating();
-    } else {
-      setIsExcited(false);
+      return;
     }
-  }, [isBoneNearMouth, startEating]);
+
+    setIsNearDrop(false);
+    setIsFocused(true);
+    setGazeToBone();
+  }, [isBoneNearMouth, setGazeToBone, startEating]);
 
   const wrapClass = [
     'dog-wrap',
+    isFocused && 'is-focused',
+    isDragging && 'is-dragging',
     isEating && 'is-eating',
     isHappy && 'is-happy',
-    isExcited && 'is-excited',
+    isNearDrop && 'is-near-drop',
+    isBoneHidden && 'is-bone-hidden',
   ]
     .filter(Boolean)
     .join(' ');
@@ -154,142 +289,202 @@ export default function InteractiveDog() {
       <div
         ref={wrapRef}
         className={wrapClass}
-        onMouseEnter={() => setIsExcited(true)}
-        onMouseLeave={() => !draggingRef.current && setIsExcited(false)}
-        aria-label="Interactive dog mascot — drag the bone to feed it"
+        onPointerLeave={onWrapPointerLeave}
+        onPointerMove={onWrapPointerMove}
+        aria-label="Interactive dog mascot. Drag the bone to feed the dog."
       >
-        <svg className="dog-svg" viewBox="0 0 320 220" role="img" aria-hidden="true">
-          {/* Shadow */}
-          <ellipse className="dog-shadow" cx="164" cy="178" rx="112" ry="13" />
+        <svg className="dog-svg" viewBox="0 0 360 260" role="img" aria-hidden="true">
+          <ellipse className="dog-shadow" cx="178" cy="217" rx="104" ry="12" />
 
-          <g className="dog-body-group">
-            {/* Tail */}
+          <g className="dog-standing-pose">
             <g className="dog-tail">
               <path
-                className="dog-line"
-                d="M224 92 C255 52, 294 76, 271 111 C292 115, 280 153, 243 148 C226 145, 219 130, 225 115"
+                className="dog-fill-soft"
+                d="M235 114 C260 68, 308 80, 292 121 C314 130, 296 171, 254 162 C229 157, 220 134, 235 114 Z"
               />
-              <path className="dog-line-thin" d="M252 91 C263 101, 261 119, 249 132" />
+              <path
+                className="dog-line"
+                d="M235 114 C260 68, 308 80, 292 121 C314 130, 296 171, 254 162 C229 157, 220 134, 235 114 Z"
+              />
+              <path className="dog-line-thin" d="M259 103 C276 116, 275 139, 256 151" />
             </g>
 
-            {/* Body */}
-            <path
-              className="dog-fill-soft"
-              d="M92 133 C104 95, 166 83, 217 100 C238 108, 251 136, 239 163 C215 177, 131 176, 98 165 C87 158, 86 145, 92 133 Z"
-            />
-            <path
-              className="dog-line"
-              d="M88 136 C100 94, 167 82, 220 101 C246 111, 254 143, 237 164 C213 178, 128 178, 98 166 C87 158, 83 147, 88 136 Z"
-            />
-
-            {/* Body fur details */}
-            <path className="dog-line-thin" d="M151 102 C162 108, 166 117, 165 128" />
-            <path className="dog-line-thin" d="M177 101 C190 110, 196 122, 195 135" />
-            <path className="dog-line-thin" d="M205 112 C213 124, 215 138, 211 151" />
-            <path className="dog-line-thin" d="M112 151 C126 158, 145 160, 165 158" />
-
-            {/* Legs */}
-            <path
-              className="dog-line"
-              d="M108 157 C101 174, 91 184, 78 184 C72 183, 70 177, 75 171 C82 163, 93 159, 108 157 Z"
-            />
-            <path
-              className="dog-line"
-              d="M136 157 C130 176, 119 187, 105 185 C99 184, 98 178, 102 172 C109 164, 121 160, 136 157 Z"
-            />
-            <path
-              className="dog-line"
-              d="M210 158 C210 177, 201 188, 190 187 C183 186, 181 180, 185 173 C190 164, 199 159, 210 158 Z"
-            />
-            <path
-              className="dog-line"
-              d="M235 154 C244 169, 244 184, 233 187 C226 189, 222 184, 224 176 C226 166, 230 160, 235 154 Z"
-            />
-
-            {/* Chest fluff */}
-            <path
-              className="dog-line"
-              d="M94 126 C82 124, 75 132, 80 143 C68 144, 65 157, 77 164 C85 170, 99 167, 106 158"
-            />
-          </g>
-
-          {/* Head — tracks cursor via inline transform */}
-          <g className="dog-head" ref={headRef}>
-            <path
-              className="dog-fill-soft"
-              d="M54 104 C43 77, 61 52, 91 52 C121 53, 140 77, 132 105 C124 133, 84 146, 62 127 C54 120, 50 113, 54 104 Z"
-            />
-            <path
-              className="dog-line"
-              d="M58 103 C44 78, 60 52, 89 51 C121 50, 142 78, 132 107 C122 136, 84 148, 61 127 C53 120, 50 111, 58 103 Z"
-            />
-
-            {/* Ears */}
-            <path className="dog-line" d="M59 75 L48 35 L76 61" />
-            <path className="dog-line-thin" d="M58 65 L54 47 L69 61" />
-            <path className="dog-line" d="M96 55 L107 27 L124 65" />
-            <path className="dog-line-thin" d="M101 58 L108 41 L117 64" />
-            <path className="dog-line" d="M72 58 C74 42, 86 44, 87 55 C96 38, 106 45, 101 62" />
-
-            {/* Cheek fluff */}
-            <path className="dog-line" d="M58 97 C45 96, 39 103, 47 111 C37 113, 36 124, 48 127" />
-            <path
-              className="dog-line"
-              d="M122 96 C137 98, 139 109, 127 114 C139 120, 134 132, 120 131"
-            />
-
-            {/* Eyes */}
-            <g className="dog-eye-group">
-              <ellipse className="dog-eye" cx="77" cy="101" rx="4.4" ry="5.4" />
-              <ellipse className="dog-eye" cx="105" cy="98" rx="4.4" ry="5.4" />
+            <g className="dog-body-group">
+              <path
+                className="dog-fill-soft"
+                d="M108 154 C116 116, 151 98, 196 103 C236 108, 258 134, 251 170 C244 205, 199 216, 149 205 C117 198, 100 178, 108 154 Z"
+              />
+              <path
+                className="dog-line"
+                d="M108 154 C116 116, 151 98, 196 103 C236 108, 258 134, 251 170 C244 205, 199 216, 149 205 C117 198, 100 178, 108 154 Z"
+              />
+              <path className="dog-line-thin" d="M160 113 C173 123, 178 137, 174 152" />
+              <path className="dog-line-thin" d="M194 112 C210 125, 215 141, 210 158" />
+              <path className="dog-line-thin" d="M130 169 C148 180, 177 182, 202 176" />
+              <path
+                className="dog-line"
+                d="M122 184 C116 205, 104 218, 89 216 C82 215, 80 208, 86 202 C95 193, 109 187, 122 184 Z"
+              />
+              <path
+                className="dog-line"
+                d="M153 187 C148 209, 135 222, 120 220 C113 219, 111 212, 117 204 C126 194, 140 189, 153 187 Z"
+              />
+              <path
+                className="dog-line"
+                d="M218 184 C220 206, 210 221, 195 220 C188 219, 185 212, 190 204 C197 193, 208 187, 218 184 Z"
+              />
+              <path
+                className="dog-line"
+                d="M245 176 C256 194, 256 213, 242 219 C234 222, 229 216, 231 206 C234 194, 239 184, 245 176 Z"
+              />
             </g>
 
-            {/* Nose & mouth */}
-            <ellipse className="dog-nose" cx="62" cy="115" rx="6" ry="4.8" />
-            <path className="dog-line-thin" d="M67 119 C76 128, 92 128, 101 117" />
+            <g className="dog-head" ref={headRef}>
+              <path
+                className="dog-fill-soft"
+                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+              />
+              <path
+                className="dog-line"
+                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+              />
+              <path className="dog-line" d="M74 94 L60 48 L96 80" />
+              <path className="dog-line-thin" d="M74 84 L67 61 L87 79" />
+              <path className="dog-line" d="M116 65 L134 34 L150 83" />
+              <path className="dog-line-thin" d="M123 70 L133 50 L143 81" />
+              <path
+                className="dog-line"
+                d="M86 69 C91 49, 104 52, 104 68 C115 47, 129 54, 121 74"
+              />
+              <path
+                className="dog-line"
+                d="M67 123 C51 123, 45 133, 55 141 C43 145, 44 158, 58 162"
+              />
+              <path
+                className="dog-line"
+                d="M149 120 C164 123, 166 136, 153 142 C166 149, 158 162, 143 161"
+              />
 
-            {/* Brow marks */}
-            <path className="dog-line-thin" d="M74 89 C80 84, 87 84, 92 88" />
-            <path className="dog-line-thin" d="M101 85 C108 80, 116 82, 121 88" />
+              <g className="dog-eye-group">
+                <g className="dog-eye-whites">
+                  <ellipse cx="91" cy="130" rx="8" ry="6.5" />
+                  <ellipse cx="123" cy="126" rx="8" ry="6.5" />
+                </g>
+                <g className="dog-eye-pupils">
+                  <ellipse className="dog-eye" cx="91" cy="130" rx="4.1" ry="5" />
+                  <ellipse className="dog-eye" cx="123" cy="126" rx="4.1" ry="5" />
+                </g>
+              </g>
+
+              <ellipse className="dog-nose" cx="79" cy="148" rx="7" ry="5" />
+              <path
+                className="dog-line-thin dog-mouth-smile"
+                d="M86 152 C97 163, 117 163, 129 149"
+              />
+              <path className="dog-line-thin" d="M84 116 C91 111, 100 112, 105 117" />
+              <path className="dog-line-thin" d="M116 112 C125 108, 135 111, 140 117" />
+            </g>
           </g>
 
-          {/* Sparkle */}
-          <path
-            className="dog-line-thin"
-            d="M34 100 L39 110 L49 115 L39 120 L34 130 L29 120 L19 115 L29 110 Z"
-          />
+          <g className="dog-eating-pose" aria-hidden="true">
+            <path
+              className="dog-fill-soft"
+              d="M106 176 C119 143, 156 129, 204 133 C246 137, 269 158, 264 187 C258 216, 209 225, 151 215 C113 209, 96 195, 106 176 Z"
+            />
+            <path
+              className="dog-line"
+              d="M106 176 C119 143, 156 129, 204 133 C246 137, 269 158, 264 187 C258 216, 209 225, 151 215 C113 209, 96 195, 106 176 Z"
+            />
+            <path
+              className="dog-line"
+              d="M232 136 C258 92, 305 105, 289 145 C312 153, 292 188, 252 178 C228 172, 218 153, 232 136 Z"
+            />
+            <path className="dog-line-thin" d="M258 125 C274 139, 272 160, 254 170" />
+            <g transform="translate(-8 38) rotate(-10 102 130)">
+              <path
+                className="dog-fill-soft"
+                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+              />
+              <path
+                className="dog-line"
+                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+              />
+              <path className="dog-line" d="M74 94 L60 48 L96 80" />
+              <path className="dog-line" d="M116 65 L134 34 L150 83" />
+              <path
+                className="dog-line"
+                d="M86 69 C91 49, 104 52, 104 68 C115 47, 129 54, 121 74"
+              />
+              <path
+                className="dog-line"
+                d="M67 123 C51 123, 45 133, 55 141 C43 145, 44 158, 58 162"
+              />
+              <path
+                className="dog-line"
+                d="M149 120 C164 123, 166 136, 153 142 C166 149, 158 162, 143 161"
+              />
+              <ellipse className="dog-eye" cx="89" cy="133" rx="3.8" ry="4.7" />
+              <ellipse className="dog-eye" cx="119" cy="129" rx="3.8" ry="4.7" />
+              <ellipse className="dog-nose" cx="78" cy="150" rx="7" ry="5" />
+              <path className="dog-line-thin dog-chew-line" d="M84 154 C96 161, 114 161, 126 151" />
+            </g>
+            <path
+              className="dog-line"
+              d="M118 195 C106 216, 89 221, 78 212 C73 208, 77 199, 87 196"
+            />
+            <path
+              className="dog-line"
+              d="M151 197 C139 219, 119 224, 108 214 C104 209, 108 200, 119 197"
+            />
+            <path className="dog-line" d="M223 193 C222 213, 212 224, 198 222" />
+            <path className="dog-line" d="M254 187 C265 204, 264 219, 250 223" />
+            <path className="dog-line-thin dog-eaten-bone" d="M55 213 L106 199" />
+            <circle className="dog-bone-end" cx="52" cy="214" r="7.5" />
+            <circle className="dog-bone-end" cx="108" cy="198" r="7.5" />
+          </g>
 
-          {/* Heart (shown on is-happy) */}
-          <g className="dog-heart">
+          <g className="dog-heart" aria-hidden="true">
             <path
               className="dog-heart-fill"
-              d="M252 42 C252 33, 265 31, 269 41 C274 31, 288 34, 287 44 C286 56, 269 66, 269 66 C269 66, 252 55, 252 42 Z"
+              d="M276 57 C276 44, 293 41, 300 55 C308 40, 327 46, 325 62 C323 80, 300 94, 300 94 C300 94, 276 75, 276 57 Z"
+            />
+            <path
+              className="dog-line-thin"
+              d="M276 57 C276 44, 293 41, 300 55 C308 40, 327 46, 325 62 C323 80, 300 94, 300 94 C300 94, 276 75, 276 57 Z"
+            />
+          </g>
+
+          <g className="dog-spark" aria-hidden="true">
+            <path
+              className="dog-line-thin"
+              d="M36 138 L42 150 L54 156 L42 162 L36 174 L30 162 L18 156 L30 150 Z"
             />
           </g>
         </svg>
 
-        {/* Draggable bone */}
         <div
           ref={boneRef}
           className="dog-bone-wrap"
-          style={{ left: '12px', top: '12px' }}
+          style={{ left: `${BONE_START.x}px`, top: `${BONE_START.y}px` }}
+          onPointerCancel={finishDrag}
           onPointerDown={onBonePointerDown}
+          onKeyDown={onBoneKeyDown}
           onPointerMove={onBonePointerMove}
-          onPointerUp={onBonePointerUp}
+          onPointerUp={finishDrag}
           role="button"
           tabIndex={0}
           aria-label="Drag the bone to the dog"
         >
-          <svg viewBox="0 0 90 52" width="52" height="32">
+          <svg className="dog-bone-svg" viewBox="0 0 120 72" aria-hidden="true">
             <path
               className="dog-bone-path"
-              d="M21 13 C14 4, 2 9, 6 20 C-2 25, 3 38, 15 35 C18 48, 34 44, 31 32 L59 20 C64 29, 78 28, 77 17 C89 13, 86 -1, 74 4 C67 -5, 53 2, 58 13 L30 24 C30 19, 26 15, 21 13 Z"
+              d="M28 21 C21 8, 6 13, 10 27 C-3 33, 4 52, 20 47 C24 64, 45 58, 41 41 L79 27 C86 42, 107 39, 105 22 C121 16, 113 -3, 97 5 C88 -8, 69 2, 76 18 L38 32 C38 27, 33 22, 28 21 Z"
             />
           </svg>
         </div>
 
-        <span ref={hintRef} className="dog-hint" aria-hidden="true">
-          drag the bone ✦
+        <span className="dog-hint" aria-hidden="true">
+          drag the bone
         </span>
       </div>
     </div>

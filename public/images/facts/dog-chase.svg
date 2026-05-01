@@ -1,0 +1,40 @@
+<svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .line{fill:none;stroke:#f26a21;stroke-width:4.4;stroke-linecap:round;stroke-linejoin:round}
+    .thin{fill:none;stroke:#f26a21;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
+    .fill{fill:#fff5ed}
+    .cream{fill:#fffdf9}
+    .eye,.nose{fill:#f26a21}
+    .shadow{fill:#f26a21;opacity:.12}
+  </style>
+  <ellipse class="shadow" cx="180" cy="218" rx="122" ry="11"/>
+  <g transform="translate(16 17) rotate(-3 180 160)">
+    <path class="fill" d="M221 123C248 83 293 92 284 129C306 137 287 168 251 160C229 155 217 140 221 123Z"/>
+    <path class="line" d="M221 123C248 83 293 92 284 129C306 137 287 168 251 160C229 155 217 140 221 123Z"/>
+    <path class="fill" d="M101 166C119 136 155 124 200 127C239 130 263 148 259 174C253 203 207 214 147 205C112 200 94 183 101 166Z"/>
+    <path class="line" d="M101 166C119 136 155 124 200 127C239 130 263 148 259 174C253 203 207 214 147 205C112 200 94 183 101 166Z"/>
+    <path class="thin" d="M159 132C174 140 179 151 176 164"/>
+    <path class="thin" d="M194 132C209 141 214 153 209 168"/>
+    <path class="line" d="M113 187C99 198 82 199 70 188"/>
+    <path class="line" d="M148 190C134 207 114 209 101 198"/>
+    <path class="line" d="M215 185C230 199 249 200 263 188"/>
+    <path class="line" d="M241 172C259 179 275 172 282 158"/>
+  </g>
+  <g transform="translate(-8 27) rotate(-11 102 130)">
+    <path class="fill" d="M66 130C52 96 70 65 101 60C132 56 158 76 162 107C166 139 141 163 106 166C84 168 70 153 66 130Z"/>
+    <path class="line" d="M66 130C52 96 70 65 101 60C132 56 158 76 162 107C166 139 141 163 106 166C84 168 70 153 66 130Z"/>
+    <path class="line" d="M74 94L60 48L96 80"/>
+    <path class="line" d="M116 65L134 34L150 83"/>
+    <path class="line" d="M86 69C91 49 104 52 104 68C115 47 129 54 121 74"/>
+    <path class="line" d="M67 123C51 123 45 133 55 141C43 145 44 158 58 162"/>
+    <path class="line" d="M149 120C164 123 166 136 153 142C166 149 158 162 143 161"/>
+    <ellipse class="cream" cx="91" cy="130" rx="8" ry="6.5"/>
+    <ellipse class="cream" cx="123" cy="126" rx="8" ry="6.5"/>
+    <ellipse class="eye" cx="87" cy="131" rx="4.1" ry="5"/>
+    <ellipse class="eye" cx="119" cy="127" rx="4.1" ry="5"/>
+    <ellipse class="nose" cx="79" cy="148" rx="7" ry="5"/>
+    <path class="thin" d="M86 152C98 160 116 160 128 149"/>
+  </g>
+  <path class="thin" d="M285 199C296 196 306 189 313 178"/>
+  <path class="thin" d="M306 215C318 212 328 205 335 195"/>
+</svg>

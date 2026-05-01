@@ -6,10 +6,10 @@ I am a PhD student at [Automatic Control Laboratory (IfA)](https://control.ee.et
 
 When I’m not thinking about algorithms, you’ll find me:
 
-- Singing  
-- Hiking  
+- Singing   
 - Snowboarding
 - For some reason I don't like skiing that much anymore
+- Thai Boxing
 - Board games
 
 # Random Facts
