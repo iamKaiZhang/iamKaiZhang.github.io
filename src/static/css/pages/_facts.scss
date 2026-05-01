@@ -100,7 +100,7 @@
     }
 
     &:nth-child(even) {
-      background: _palette(bg-alt);
+      background: rgba(0, 0, 0, 0.045);
     }
   }
 
@@ -110,7 +110,7 @@
 
     &:last-child {
       color: _palette(fg-bold);
-      text-align: right;
+      text-align: left;
     }
   }
 }
