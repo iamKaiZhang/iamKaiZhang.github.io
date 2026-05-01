@@ -8,7 +8,7 @@ const routes: Route[] = [
   {
     index: true,
     label: 'Kai Zhang',
-    path: '/',
+    path: '/facts',
   },
   {
     label: 'Home',

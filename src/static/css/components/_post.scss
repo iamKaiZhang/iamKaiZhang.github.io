@@ -10,7 +10,6 @@
   @include padding(_size(section-spacing), _size(section-spacing));
   background: _palette(bg);
   border: solid 1px _palette(border);
-  border-left: solid 3px _palette(accent);
   border-radius: 3px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   margin: 0 0 _size(section-spacing) 0;
