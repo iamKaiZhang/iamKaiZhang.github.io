@@ -21,7 +21,7 @@ export default function FactsPage() {
         <header>
           <div className="title">
             <h2>
-              <Link href="/facts">Facts</Link>
+              <Link href="/facts">Random Facts</Link>
             </h2>
             <p>
               The random facts about me are small yet certain proofs that I am unlike anyone else in
