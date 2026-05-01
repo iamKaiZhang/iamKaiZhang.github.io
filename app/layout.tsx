@@ -65,6 +65,7 @@ const themeInitScript = `
 (function(){
   var h = new Date().getHours();
   document.documentElement.setAttribute('data-theme', h >= 6 && h < 20 ? 'day' : 'night');
+  document.documentElement.setAttribute('data-day-theme', String(h % 3));
 })();
 `;
 

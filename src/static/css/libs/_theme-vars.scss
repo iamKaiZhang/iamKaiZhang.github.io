@@ -1,5 +1,35 @@
-// Day theme — warm cream/amber (global default)
+// Register each color as a typed CSS property so the browser can
+// smoothly interpolate between values when the theme changes.
+@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #fffaf4; }
+@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #fff3e0; }
+@property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #7a5c42; }
+@property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #3d2010; }
+@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #c8a882; }
+@property --clr-border     { syntax: '<color>'; inherits: true; initial-value: rgba(220, 140, 60, 0.25); }
+@property --clr-border-bg  { syntax: '<color>'; inherits: true; initial-value: rgba(220, 140, 60, 0.08); }
+@property --clr-border-alt { syntax: '<color>'; inherits: true; initial-value: rgba(220, 140, 60, 0.5); }
+@property --clr-accent     { syntax: '<color>'; inherits: true; initial-value: #e07b2a; }
+@property --clr-accent-05  { syntax: '<color>'; inherits: true; initial-value: rgba(224, 123, 42, 0.05); }
+
+// Smooth transition across all palette shifts (day themes + day↔night toggle)
 :root {
+  transition:
+    --clr-bg        1.2s ease,
+    --clr-bg-alt    1.2s ease,
+    --clr-fg        1.0s ease,
+    --clr-fg-bold   1.0s ease,
+    --clr-fg-light  1.0s ease,
+    --clr-border    1.0s ease,
+    --clr-border-bg 1.0s ease,
+    --clr-border-alt 1.0s ease,
+    --clr-accent    0.8s ease,
+    --clr-accent-05 0.8s ease;
+}
+
+// ─── Photo 0: me01.jpg — Venice at sunset ─────────────────────────────────────
+// Warm amber, golden orange sky, the default day palette
+:root,
+[data-day-theme='0'] {
   --clr-bg: #fffaf4;
   --clr-bg-alt: #fff3e0;
   --clr-fg: #7a5c42;
@@ -12,7 +42,37 @@
   --clr-accent-05: rgba(224, 123, 42, 0.05);
 }
 
-// Night theme (Palette 5: dark slate + cool grey)
+// ─── Photo 1: me02.jpg — Iceland mountains ────────────────────────────────────
+// Earthy olive-grey, mossy cliffs, overcast cool daylight
+[data-day-theme='1'] {
+  --clr-bg: #f5f5ef;
+  --clr-bg-alt: #eaeae0;
+  --clr-fg: #5e6050;
+  --clr-fg-bold: #2e3020;
+  --clr-fg-light: #a2a480;
+  --clr-border: rgba(140, 145, 100, 0.28);
+  --clr-border-bg: rgba(140, 145, 100, 0.09);
+  --clr-border-alt: rgba(140, 145, 100, 0.55);
+  --clr-accent: #889060;
+  --clr-accent-05: rgba(136, 144, 96, 0.05);
+}
+
+// ─── Photo 2: me03.jpg — Overcast ocean ──────────────────────────────────────
+// Cool lavender-grey sky, calm coastal blues
+[data-day-theme='2'] {
+  --clr-bg: #f4f6f9;
+  --clr-bg-alt: #e8ecf4;
+  --clr-fg: #5c6878;
+  --clr-fg-bold: #2a3548;
+  --clr-fg-light: #9aabbc;
+  --clr-border: rgba(100, 120, 160, 0.22);
+  --clr-border-bg: rgba(100, 120, 160, 0.07);
+  --clr-border-alt: rgba(100, 120, 160, 0.45);
+  --clr-accent: #6888b0;
+  --clr-accent-05: rgba(104, 136, 176, 0.05);
+}
+
+// ─── Night theme: always wins (declared last) ──────────────────────────────────
 [data-theme='night'] {
   --clr-bg: #11212d;
   --clr-bg-alt: #06141b;
