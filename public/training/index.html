@@ -419,7 +419,9 @@ async function loadAll(){
       loadJson('targets.json',DEFAULT_TARGETS),loadJson('foods.json',{}),
       loadJson('log.json',[]),loadJson('workouts.json',[])
     ]);
-    state.targets={calories:(tg.data&&+tg.data.calories)||DEFAULT_TARGETS.calories};state.sha['targets.json']=tg.sha;
+    state.targets={calories:(tg.data&&+tg.data.calories)||DEFAULT_TARGETS.calories};
+    if(tg.data&&tg.data.protein_g!=null&&tg.data.carbs_g!=null&&tg.data.fat_g!=null){state.targets.protein_g=+tg.data.protein_g;state.targets.carbs_g=+tg.data.carbs_g;state.targets.fat_g=+tg.data.fat_g}
+    state.sha['targets.json']=tg.sha;
     state.foods=fd.data&&typeof fd.data==='object'?fd.data:{};state.sha['foods.json']=fd.sha;
     state.log=Array.isArray(lg.data)?lg.data:[];state.sha['log.json']=lg.sha;
     state.workouts=Array.isArray(wk.data)?wk.data:[];state.sha['workouts.json']=wk.sha;
