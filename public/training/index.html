@@ -371,12 +371,21 @@ const ON_TARGET_BAND=0.1;
 var state={targets:{...DEFAULT_TARGETS},foods:{},log:[],workouts:[],sha:{}};
 var activeDate=todayISO();
 
+/* log.json is JSON Lines (one entry per line); other files are plain JSON.
+   The reader auto-detects a legacy JSON array so old data migrates in place. */
+function parseFile(path,text){
+  if(path==='log.json'){text=text.trim();if(!text)return [];return text[0]==='['?JSON.parse(text):text.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l))}
+  return JSON.parse(text);
+}
+function serializeFile(path,data){
+  return path==='log.json'?(data.map(e=>JSON.stringify(e)).join('\n')+(data.length?'\n':'')):JSON.stringify(data,null,2);
+}
 async function loadJson(path,fallback){
-  try{const d=await ghGet(`contents/${path}`);return{data:JSON.parse(fromB64(d.content.replace(/\n/g,''))),sha:d.sha}}
+  try{const d=await ghGet(`contents/${path}`);return{data:parseFile(path,fromB64(d.content.replace(/\n/g,''))),sha:d.sha}}
   catch(e){if(/Not Found|404/.test(e.message))return{data:fallback,sha:null};throw e}
 }
 async function saveJson(path,data,message){
-  const res=await ghPut(`contents/${path}`,message,toB64(JSON.stringify(data,null,2)),state.sha[path]||undefined);
+  const res=await ghPut(`contents/${path}`,message,toB64(serializeFile(path,data)),state.sha[path]||undefined);
   state.sha[path]=res.content.sha;
 }
 async function loadAll(){
