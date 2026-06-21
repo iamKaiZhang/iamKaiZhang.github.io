@@ -54,7 +54,7 @@ input[type="checkbox"]{width:auto;accent-color:var(--accent);cursor:pointer;vert
 /* masthead */
 .masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:1.2rem;padding-bottom:1rem;border-bottom:2px solid var(--fg);flex-wrap:wrap}
 .masthead h1{font-family:var(--f-head);font-weight:900;font-size:clamp(1.6rem,4vw,2.6rem);line-height:0.95;letter-spacing:-0.03em;text-transform:uppercase}
-.masthead .date-line{font-family:var(--f-mono);font-size:0.76rem;letter-spacing:0.08em;color:var(--fg-2);margin-top:0.45rem;text-transform:uppercase}
+.masthead .date-line{font-family:var(--f-mono);font-size:0.76rem;letter-spacing:0.08em;color:var(--fg-2);margin-top:0.6rem;text-transform:uppercase}
 .masthead-controls{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
 
 section{margin-top:clamp(1.6rem,4vh,2.8rem)}
@@ -64,16 +64,20 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .hero{display:grid;grid-template-columns:1.3fr 1fr;gap:clamp(1.4rem,4vw,2.6rem);align-items:end}
 .hero-figure{display:flex;align-items:baseline;gap:0.55rem;flex-wrap:wrap}
 .hero-num{font-family:var(--f-head);font-weight:900;font-size:clamp(2.8rem,8vw,5rem);line-height:0.9;letter-spacing:-0.04em;font-variant-numeric:tabular-nums}
-.hero-unit{font-family:var(--f-mono);font-size:clamp(0.85rem,1.6vw,1.05rem);letter-spacing:0.05em;color:var(--fg-2)}
+.hero-unit{font-family:var(--f-mono);font-size:clamp(0.85rem,1.6vw,1.05rem);letter-spacing:0.05em;color:var(--fg-2);white-space:nowrap}
 .goal-breakdown{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.05em;color:var(--fg-2);margin-top:0.5rem;text-transform:uppercase}
 .remaining{font-family:var(--f-mono);font-size:0.82rem;letter-spacing:0.06em;margin-top:0.5rem;color:var(--accent);text-transform:uppercase}
 .bar-track{height:10px;background:var(--bg-alt);border:1px solid var(--border);margin-top:0.7rem;overflow:hidden}
 .bar-fill{height:100%;background:var(--accent);width:0;transition:width .7s cubic-bezier(.16,1,.3,1)}
+.bar-fill.over{background:repeating-linear-gradient(135deg,var(--accent-hi) 0 6px,#b23415 6px 12px)}
 .macros{display:grid;gap:1rem}
 .macro-head{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-mono);font-size:0.78rem;letter-spacing:0.05em;margin-bottom:0.35rem}
-.macro-head .v{color:var(--fg-2)}
-.macro-line{height:4px;background:var(--bg-alt);position:relative}
+.macro-head .v{color:var(--fg-2);white-space:nowrap}
+.macro-line{height:6px;background:var(--bg-alt);position:relative}
 .macro-line>span{position:absolute;left:0;top:0;height:100%;background:var(--fg);width:0;transition:width .7s cubic-bezier(.16,1,.3,1)}
+.macro-line>span.ml-protein{background:var(--accent)}
+.macro-line>span.ml-carbs{background:var(--fg)}
+.macro-line>span.ml-fat{background:var(--fg-2)}
 
 /* kpis */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border)}
@@ -492,11 +496,12 @@ function render(){
   $('#goal-breakdown').textContent=active>0?`${base.toLocaleString()} base + ${active.toLocaleString()} exercise`:`${base.toLocaleString()} base goal`;
   $('#remaining').textContent=rem>=0?`${rem.toLocaleString()} kcal remaining`:`${Math.abs(rem).toLocaleString()} kcal over`;
   $('#intake-fill').style.width=Math.min(100,(eaten/goal)*100)+'%';
+  $('#intake-fill').classList.toggle('over',eaten>goal);
 
   const mt=macroTargets();
-  $('#macros').innerHTML=[['Protein',t.protein_g,mt.protein_g],['Carbs',t.carbs_g,mt.carbs_g],['Fat',t.fat_g,mt.fat_g]].map(([n,v,m])=>`
+  $('#macros').innerHTML=[['Protein',t.protein_g,mt.protein_g,'protein'],['Carbs',t.carbs_g,mt.carbs_g,'carbs'],['Fat',t.fat_g,mt.fat_g,'fat']].map(([n,v,m,key])=>`
     <div class="macro-row"><div class="macro-head"><span>${n}</span><span class="v">${Math.round(v)} / ${m} g</span></div>
-    <div class="macro-line"><span data-w="${Math.min(100,m?(v/m)*100:0)}"></span></div></div>`).join('');
+    <div class="macro-line"><span class="ml-${key}" data-w="${Math.min(100,m?(v/m)*100:0)}"></span></div></div>`).join('');
   requestAnimationFrame(()=>document.querySelectorAll('.macro-line>span').forEach(s=>s.style.width=s.dataset.w+'%'));
 
   countUp($('#kpi-streak'),streak());
