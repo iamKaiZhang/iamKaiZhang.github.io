@@ -132,7 +132,9 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .meal-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--border);padding-bottom:0.35rem;margin-bottom:0.35rem}
 .meal-sub{font-family:var(--f-mono);font-size:0.7rem;color:var(--fg-2);letter-spacing:0.02em}
 .food-row{display:grid;grid-template-columns:1fr auto auto auto;gap:0.5rem;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border)}
-.food-row .name{font-weight:600;font-size:0.9rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.food-row .food-info{min-width:0}
+.food-row .name{font-weight:600;font-size:0.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.food-row .food-sub{font-family:var(--f-mono);font-size:0.68rem;color:var(--fg-3);letter-spacing:0.02em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .food-row .qty{display:flex;gap:0.25rem;align-items:center}
 .food-row .qty-in{width:3.3rem;padding:0.3rem 0.35rem;font-size:0.8rem;text-align:right}
 .food-row .unit-in{width:auto;padding:0.3rem 0.25rem;font-size:0.76rem}
@@ -524,8 +526,13 @@ function renderStrip(){
 const MEALS=['breakfast','lunch','dinner','snack'],MEAL_LABEL={breakfast:'Breakfast',lunch:'Lunch',dinner:'Dinner',snack:'Snack'};
 function logRow(e){
   const food=state.foods[e.food_id],hasServing=!!(food&&food.serving_g),unit=e.unit||'g';
+  const servNote=food&&food.serving_g?` · 1 srv = ${food.serving_g} g${food.serving_label&&!/^\s*[\d.]+\s*g\b/i.test(food.serving_label)?` (${esc(food.serving_label)})`:''}`:'';
+  const sub=`${Math.round(e.grams||0)} g${servNote} · P${Math.round(e.protein_g||0)} C${Math.round(e.carbs_g||0)} F${Math.round(e.fat_g||0)}`;
   return `<div class="food-row">
-    <span class="name" title="${esc(e.food)}">${esc(e.food)}</span>
+    <div class="food-info">
+      <div class="name" title="${esc(e.food)}">${esc(e.food)}</div>
+      <div class="food-sub">${sub}</div>
+    </div>
     <span class="qty">
       <input class="qty-in" type="number" min="0" step="${unit==='g'?'10':'0.5'}" value="${e.qty!=null?e.qty:''}" data-id="${esc(e.id)}" aria-label="Quantity" />
       <select class="unit-in" data-id="${esc(e.id)}" aria-label="Unit">
