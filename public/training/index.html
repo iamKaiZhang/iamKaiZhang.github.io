@@ -371,14 +371,16 @@ const ON_TARGET_BAND=0.1;
 var state={targets:{...DEFAULT_TARGETS},foods:{},log:[],workouts:[],sha:{}};
 var activeDate=todayISO();
 
-/* log.json is JSON Lines (one entry per line); other files are plain JSON.
-   The reader auto-detects a legacy JSON array so old data migrates in place. */
+/* log.json and workouts.json are JSON Lines (one record per line); foods.json and
+   targets.json are plain JSON. The reader auto-detects a legacy JSON array so old
+   data migrates in place on the next save. */
+const JSONL_FILES=new Set(['log.json','workouts.json']);
 function parseFile(path,text){
-  if(path==='log.json'){text=text.trim();if(!text)return [];return text[0]==='['?JSON.parse(text):text.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l))}
+  if(JSONL_FILES.has(path)){text=text.trim();if(!text)return [];return text[0]==='['?JSON.parse(text):text.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l))}
   return JSON.parse(text);
 }
 function serializeFile(path,data){
-  return path==='log.json'?(data.map(e=>JSON.stringify(e)).join('\n')+(data.length?'\n':'')):JSON.stringify(data,null,2);
+  return JSONL_FILES.has(path)?(data.map(e=>JSON.stringify(e)).join('\n')+(data.length?'\n':'')):JSON.stringify(data,null,2);
 }
 async function loadJson(path,fallback){
   try{const d=await ghGet(`contents/${path}`);return{data:parseFile(path,fromB64(d.content.replace(/\n/g,''))),sha:d.sha}}
