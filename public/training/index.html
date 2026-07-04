@@ -22,6 +22,7 @@
   --f-head:"Barlow","Noto Sans SC",system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,monospace;
   --pad:clamp(1.1rem,3.5vw,2.5rem); --maxw:1180px;
+  --r:8px; --r-sm:6px; --r-pill:999px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
@@ -31,7 +32,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-head);font-weight:
 .kicker{font-family:var(--f-mono);font-size:0.78rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--fg-2)}
 .kicker.accent{color:var(--accent)}
 
-button,.btn{font-family:var(--f-mono);font-size:0.76rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg);background:transparent;border:1px solid var(--border);border-radius:0;padding:0.55rem 0.9rem;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .05s ease}
+button,.btn{font-family:var(--f-mono);font-size:0.76rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg);background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);padding:0.55rem 0.9rem;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .05s ease}
 button:hover,.btn:hover{background:var(--bg-alt);border-color:var(--fg-2)}
 button:active,.btn:active{transform:translateY(1px)}
 button:disabled{opacity:0.5;cursor:default;transform:none}
@@ -39,13 +40,13 @@ button.primary{background:var(--accent);border-color:var(--accent);color:var(--i
 button.primary:hover{background:var(--accent-hi);border-color:var(--accent-hi)}
 .icon-btn{padding:0.5rem 0.7rem;font-size:0.95rem;line-height:1}
 label.field{display:block;font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-2);margin-bottom:0.3rem}
-input,select{font-family:var(--f-mono);font-size:0.9rem;color:var(--fg);background:var(--bg-alt);border:1px solid var(--border);border-radius:0;padding:0.5rem 0.6rem;width:100%}
+input,select{font-family:var(--f-mono);font-size:0.9rem;color:var(--fg);background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--r-sm);padding:0.5rem 0.6rem;width:100%}
 input:focus,select:focus{outline:none;border-color:var(--accent)}
 input[type="date"]{color-scheme:dark}
 input[type="checkbox"]{width:auto;accent-color:var(--accent);cursor:pointer;vertical-align:middle}
 
 /* connect screen */
-#connect{max-width:460px;margin:8vh auto;border:1px solid var(--border);padding:1.75rem}
+#connect{max-width:460px;margin:8vh auto;border:1px solid var(--border);border-radius:var(--r);padding:1.75rem}
 #connect h1{font-family:var(--f-head);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;font-size:clamp(1.8rem,5vw,2.6rem);line-height:0.95;margin-bottom:0.4rem}
 #connect p{color:var(--fg-2);font-size:0.9rem;margin-bottom:1.4rem}
 #connect .field{margin-bottom:1rem}
@@ -67,20 +68,20 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .hero-unit{font-family:var(--f-mono);font-size:clamp(0.85rem,1.6vw,1.05rem);letter-spacing:0.05em;color:var(--fg-2);white-space:nowrap}
 .goal-breakdown{font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.05em;color:var(--fg-2);margin-top:0.5rem;text-transform:uppercase}
 .remaining{font-family:var(--f-mono);font-size:0.82rem;letter-spacing:0.06em;margin-top:0.5rem;color:var(--accent);text-transform:uppercase}
-.bar-track{height:10px;background:var(--bg-alt);border:1px solid var(--border);margin-top:0.7rem;overflow:hidden}
-.bar-fill{height:100%;background:var(--accent);width:0;transition:width .7s cubic-bezier(.16,1,.3,1)}
+.bar-track{height:10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--r-pill);margin-top:0.7rem;overflow:hidden}
+.bar-fill{height:100%;background:var(--accent);width:0;border-radius:var(--r-pill);transition:width .7s cubic-bezier(.16,1,.3,1)}
 .bar-fill.over{background:repeating-linear-gradient(135deg,var(--accent-hi) 0 6px,#b23415 6px 12px)}
 .macros{display:grid;gap:1rem}
 .macro-head{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--f-mono);font-size:0.78rem;letter-spacing:0.05em;margin-bottom:0.35rem}
 .macro-head .v{color:var(--fg-2);white-space:nowrap}
-.macro-line{height:6px;background:var(--bg-alt);position:relative}
+.macro-line{height:6px;background:var(--bg-alt);position:relative;border-radius:var(--r-pill);overflow:hidden}
 .macro-line>span{position:absolute;left:0;top:0;height:100%;background:var(--fg);width:0;transition:width .7s cubic-bezier(.16,1,.3,1)}
 .macro-line>span.ml-protein{background:var(--accent)}
 .macro-line>span.ml-carbs{background:var(--fg)}
 .macro-line>span.ml-fat{background:var(--fg-2)}
 
 /* kpis */
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .kpi{padding:1rem 1.1rem;border-right:1px solid var(--border)}
 .kpi:last-child{border-right:none}
 .kpi-num{font-family:var(--f-mono);font-weight:500;font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:-0.01em;font-variant-numeric:tabular-nums}
@@ -96,11 +97,11 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .bar:hover{fill:var(--accent-hi)!important}
 .bar.active{stroke:var(--fg);stroke-width:1}
 .chart-wrap.preload .bar{transform:scaleY(0)}
-#chart-tip{position:absolute;pointer-events:none;background:var(--bg-alt);border:1px solid var(--fg-2);padding:0.35rem 0.5rem;font-family:var(--f-mono);font-size:0.7rem;color:var(--fg);white-space:nowrap;transform:translate(-50%,-120%);opacity:0;transition:opacity .12s ease;z-index:5;letter-spacing:0.03em}
+#chart-tip{position:absolute;pointer-events:none;background:var(--bg-alt);border:1px solid var(--fg-2);border-radius:var(--r-sm);padding:0.35rem 0.5rem;font-family:var(--f-mono);font-size:0.7rem;color:var(--fg);white-space:nowrap;transform:translate(-50%,-120%);opacity:0;transition:opacity .12s ease;z-index:5;letter-spacing:0.03em}
 #chart-tip.show{opacity:1}
 
 /* 7-day strip */
-.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:1.1rem}
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:1.1rem}
 .strip-cell{background:var(--bg);padding:0.65rem 0.35rem;text-align:center;cursor:pointer;transition:background .15s ease}
 .strip-cell:hover{background:var(--bg-alt)}
 .strip-cell.active{outline:1px solid var(--accent);outline-offset:-1px}
@@ -114,7 +115,7 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .add-food{position:relative;margin-bottom:1.5rem}
 .add-food-bar{display:grid;grid-template-columns:auto 1fr;gap:0.5rem}
 .add-food-bar select{width:auto}
-.search-results{position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--bg);border:1px solid var(--fg-2);z-index:20;max-height:300px;overflow:auto;display:none}
+.search-results{position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--bg);border:1px solid var(--fg-2);border-radius:var(--r-sm);z-index:20;max-height:300px;overflow:auto;display:none}
 .search-results.show{display:block}
 .res{display:grid;grid-template-columns:auto 1fr auto;gap:0.6rem;align-items:baseline;padding:0.5rem 0.6rem;cursor:pointer;border-bottom:1px solid var(--border)}
 .res:last-child{border-bottom:none}
@@ -126,7 +127,7 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .res-note{font-family:var(--f-mono);font-size:0.7rem;color:var(--fg-3);padding:0.5rem 0.6rem;letter-spacing:0.03em}
 .linklike{border:none;background:none;color:var(--accent);padding:0.5rem 0;margin-right:1.5rem;font-family:var(--f-mono);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer}
 .linklike:hover{background:none;text-decoration:underline}
-.newfood{display:none;border:1px solid var(--border);padding:1rem;margin-top:0.4rem}
+.newfood{display:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;margin-top:0.4rem}
 .newfood.open{display:block}
 .nf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem}
 .nf-grid .full{grid-column:1/-1}
@@ -161,8 +162,34 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .save-bar{margin-top:1.6rem;padding-top:1.2rem;border-top:1px solid var(--border)}
 .save-bar button{width:100%}
 
+/* body composition */
+.bodycomp{margin-top:1.3rem}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--r-pill);overflow:hidden}
+.seg button{border:none;border-radius:0;background:transparent;padding:0.4rem 0.85rem;color:var(--fg-2)}
+.seg button:hover{background:var(--bg-alt);border-color:transparent}
+.seg button.on{background:var(--accent);color:var(--ink-on-accent)}
+.bc-trends{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.bc-card{background:var(--bg);padding:1.1rem 1.15rem;position:relative}
+.bc-head{display:flex;align-items:baseline;justify-content:space-between;gap:0.5rem}
+.bc-label{font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-2)}
+.bc-delta{font-family:var(--f-mono);font-size:0.7rem;letter-spacing:0.03em;color:var(--fg-2);white-space:nowrap}
+.bc-val{font-family:var(--f-head);font-weight:900;font-size:2rem;letter-spacing:-0.03em;line-height:1;margin-top:0.4rem;font-variant-numeric:tabular-nums}
+.bc-val .u{font-family:var(--f-mono);font-size:0.8rem;font-weight:500;color:var(--fg-2);margin-left:0.2rem;letter-spacing:0.02em}
+.bc-spark{margin-top:0.55rem;position:relative}
+.bc-spark svg{display:block;width:100%;height:auto;overflow:visible}
+.bc-tip{position:absolute;pointer-events:none;background:var(--bg-alt);border:1px solid var(--fg-2);border-radius:var(--r-sm);padding:0.3rem 0.45rem;font-family:var(--f-mono);font-size:0.68rem;color:var(--fg);white-space:nowrap;transform:translate(-50%,-120%);opacity:0;transition:opacity .12s ease;z-index:5;letter-spacing:0.03em}
+.bc-tip.show{opacity:1}
+.bc-tip .d{color:var(--fg-2)}
+.bc-tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-top:0.9rem}
+.bc-tile{background:var(--bg);padding:0.8rem 0.85rem}
+.bc-tile .tn{font-family:var(--f-mono);font-size:1.05rem;font-weight:500;font-variant-numeric:tabular-nums}
+.bc-tile .tn .u{font-size:0.66rem;color:var(--fg-2);margin-left:0.1rem}
+.bc-tile .tt{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg-2);margin-top:0.28rem}
+.bc-tile .tdlt{font-family:var(--f-mono);font-size:0.62rem;color:var(--fg-3);margin-top:0.2rem;letter-spacing:0.03em}
+.bc-empty{font-family:var(--f-mono);font-size:0.76rem;color:var(--fg-3);letter-spacing:0.03em;padding:1.3rem;border:1px solid var(--border);border-radius:var(--r);text-align:center}
+
 /* panels */
-.panel{border:1px solid var(--border);padding:1.2rem;margin-top:1.3rem;display:none}
+.panel{border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-top:1.3rem;display:none}
 .panel.open{display:block}
 .settings-grid{display:grid;gap:0.9rem;max-width:520px}
 .t-auto{display:flex;align-items:center;gap:0.5rem;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.04em;color:var(--fg-2);margin-bottom:0.9rem;cursor:pointer}
@@ -171,7 +198,7 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 
 footer{margin-top:clamp(2rem,5vh,3.2rem);padding-top:1.1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.06em;color:var(--fg-3);text-transform:uppercase}
 
-#toast{position:fixed;bottom:1.1rem;right:1.1rem;background:var(--bg-alt);border:1px solid var(--border);padding:0.6rem 0.9rem;font-family:var(--f-mono);font-size:0.74rem;letter-spacing:0.05em;color:var(--fg);opacity:0;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease;z-index:50;pointer-events:none}
+#toast{position:fixed;bottom:1.1rem;right:1.1rem;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--r-sm);padding:0.6rem 0.9rem;font-family:var(--f-mono);font-size:0.74rem;letter-spacing:0.05em;color:var(--fg);opacity:0;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease;z-index:50;pointer-events:none}
 #toast.show{opacity:1;transform:none}
 #toast.err{border-color:var(--accent);color:var(--accent)}
 
@@ -188,10 +215,13 @@ footer{margin-top:clamp(2rem,5vh,3.2rem);padding-top:1.1rem;border-top:1px solid
   .kpi:nth-child(2){border-right:none}
   .kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--border)}
   .add-grid.activity{grid-template-columns:1fr 1fr}
+  .bc-trends{grid-template-columns:1fr}
+  .bc-tiles{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:480px){
   .add-grid.activity,.nf-grid{grid-template-columns:1fr 1fr}
   .add-food-bar{grid-template-columns:1fr}
+  .bc-tiles{grid-template-columns:repeat(2,1fr)}
 }
 @media(prefers-reduced-motion:reduce){
   .reveal{animation:none;opacity:1;transform:none}
@@ -346,6 +376,18 @@ footer{margin-top:clamp(2rem,5vh,3.2rem);padding-top:1.1rem;border-top:1px solid
     </div>
   </section>
 
+  <section class="bodycomp reveal" aria-label="Body composition">
+    <div class="section-label"><span class="kicker">Body composition</span>
+      <div class="seg" id="bc-horizon" role="tablist" aria-label="Time window">
+        <button type="button" data-h="30">30D</button>
+        <button type="button" data-h="90" class="on">90D</button>
+        <button type="button" data-h="9999">ALL</button>
+      </div>
+    </div>
+    <div class="bc-trends" id="bc-trends"></div>
+    <div class="bc-tiles" id="bc-tiles"></div>
+  </section>
+
   <footer>
     <span id="foot-repo">Stored in GitHub</span>
     <span class="kicker">Broadside</span>
@@ -381,17 +423,18 @@ async function ghPut(path,message,content,sha){
    foods:   { key: { name, barcode?, kcal_100g, protein_g_100g, carbs_g_100g, fat_g_100g, serving_g?, serving_label? } }
    log:     [ { id, date, time, meal, food, food_id, qty, unit('serving'|'g'), grams, kcal, protein_g, carbs_g, fat_g, note } ]
    workouts:[ { id, date, name, active_kcal, total_kcal, note } ]   one per day (id = date)
-   targets: { calories }   macros derived 30/40/30; goal = calories + active_kcal of the day */
+   targets: { calories }   macros derived 30/40/30; goal = calories + active_kcal of the day
+   body:    [ { id, date, time, weight_kg, body_fat_pct, muscle_kg, water_pct, protein_pct, visceral_fat, bmr_kcal, bone_mass_kg, bmi, note } ]  smart-scale readings (read-only here) */
 const DEFAULT_TARGETS={calories:2200};
 const MACRO_SPLIT={protein:0.30,carbs:0.40,fat:0.30};
 const ON_TARGET_BAND=0.1;
-var state={targets:{...DEFAULT_TARGETS},foods:{},log:[],workouts:[],sha:{}};
+var state={targets:{...DEFAULT_TARGETS},foods:{},log:[],workouts:[],body:[],sha:{}};
 var activeDate=todayISO();
 
 /* log.json and workouts.json are JSON Lines (one record per line); foods.json and
    targets.json are plain JSON. The reader auto-detects a legacy JSON array so old
    data migrates in place on the next save. */
-const JSONL_FILES=new Set(['log.json','workouts.json']);
+const JSONL_FILES=new Set(['log.json','workouts.json','body.json']);
 function parseFile(path,text){
   if(JSONL_FILES.has(path)){text=text.trim();if(!text)return [];return text[0]==='['?JSON.parse(text):text.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l))}
   return JSON.parse(text);
@@ -415,9 +458,9 @@ async function loadAll(){
     if(!chk.ok){toast(chk.status===404?`Cannot read ${ghRepo()}. Check the token has access to this repo.`:`Repo access failed (HTTP ${chk.status}).`,true);return}
   }catch(e){toast('Network error reaching GitHub.',true);return}
   try{
-    const [tg,fd,lg,wk]=await Promise.all([
+    const [tg,fd,lg,wk,bd]=await Promise.all([
       loadJson('targets.json',DEFAULT_TARGETS),loadJson('foods.json',{}),
-      loadJson('log.json',[]),loadJson('workouts.json',[])
+      loadJson('log.json',[]),loadJson('workouts.json',[]),loadJson('body.json',[])
     ]);
     state.targets={calories:(tg.data&&+tg.data.calories)||DEFAULT_TARGETS.calories};
     if(tg.data&&tg.data.protein_g!=null&&tg.data.carbs_g!=null&&tg.data.fat_g!=null){state.targets.protein_g=+tg.data.protein_g;state.targets.carbs_g=+tg.data.carbs_g;state.targets.fat_g=+tg.data.fat_g}
@@ -425,6 +468,7 @@ async function loadAll(){
     state.foods=fd.data&&typeof fd.data==='object'?fd.data:{};state.sha['foods.json']=fd.sha;
     state.log=Array.isArray(lg.data)?lg.data:[];state.sha['log.json']=lg.sha;
     state.workouts=Array.isArray(wk.data)?wk.data:[];state.sha['workouts.json']=wk.sha;
+    state.body=Array.isArray(bd.data)?bd.data:[];state.sha['body.json']=bd.sha;
     const draft=readDraft();
     if(draft&&draft.dirtyPaths&&draft.dirtyPaths.length){
       if(draft.foods)state.foods=draft.foods;if(draft.log)state.log=draft.log;if(draft.workouts)state.workouts=draft.workouts;if(draft.targets)state.targets=draft.targets;
@@ -512,7 +556,7 @@ function render(){
   countUp($('#kpi-avg'),avgKcal7());
   $('#kpi-ontarget').textContent=`${onTargetDays7()}/7`;
 
-  renderChart();renderStrip();renderLog();
+  renderChart();renderStrip();renderLog();renderBody();
 }
 
 const ACCENT='#e85d26',HINT='#505048',BAR='#3a3a36',MONO="'IBM Plex Mono',monospace";
@@ -525,7 +569,7 @@ function renderChart(){
     const h=max?(d.k/max)*plotH:0,x=padL+i*step+(step-bw)/2,y=padT+plotH-h;
     const fill=d.s===today?ACCENT:BAR,cls='bar'+(d.s===activeDate?' active':'');
     const lbl=(i%2===0)?`<text x="${x+bw/2}" y="${H-8}" fill="${HINT}" font-family="${MONO}" font-size="10" text-anchor="middle">${d.s.slice(8)}</text>`:'';
-    return `<rect class="${cls}" data-date="${d.s}" data-kcal="${d.k}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" fill="${fill}" style="transition-delay:${i*25}ms"/>${lbl}`;
+    return `<rect class="${cls}" data-date="${d.s}" data-kcal="${d.k}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="2.5" fill="${fill}" style="transition-delay:${i*25}ms"/>${lbl}`;
   }).join('');
   const ty=padT+plotH-(target/max)*plotH;
   const line=`<line x1="${padL}" y1="${ty.toFixed(1)}" x2="${W-padR}" y2="${ty.toFixed(1)}" stroke="${ACCENT}" stroke-width="1" stroke-dasharray="4 4"/><text x="${W-padR}" y="${(ty-6).toFixed(1)}" fill="${ACCENT}" font-family="${MONO}" font-size="10" text-anchor="end">BASE ${target.toLocaleString()}</text>`;
@@ -539,6 +583,54 @@ function renderStrip(){
     return `<div class="strip-cell ${onTarget(s)?'ontarget':''} ${s===activeDate?'active':''}" data-date="${s}">
       <div class="d">${wdLetter(s)} ${s.slice(8)}</div><div class="pct">${has?pct+'%':'--'}</div>
       <div class="act ${a>0?'on':'off'}">${a>0?a+' act':'rest'}</div></div>`;
+  }).join('');
+}
+
+/* ═══════════ BODY COMPOSITION (read-only trends from body.json) ═══════════ */
+const BC_METRICS=[{key:'weight_kg',label:'Weight',unit:'kg',dec:1},{key:'body_fat_pct',label:'Body fat',unit:'%',dec:1},{key:'muscle_kg',label:'Muscle mass',unit:'kg',dec:1}];
+const BC_TILES=[{key:'water_pct',label:'Water',unit:'%',dec:1},{key:'protein_pct',label:'Protein',unit:'%',dec:1},{key:'visceral_fat',label:'Visceral fat',unit:'',dec:0},{key:'bmr_kcal',label:'BMR',unit:'kcal',dec:0},{key:'bone_mass_kg',label:'Bone mass',unit:'kg',dec:2},{key:'bmi',label:'BMI',unit:'',dec:1}];
+var bcHorizon=90,bcCharts={};
+function bcNum(v,dec){return (+v).toLocaleString('en-GB',{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function bcShort(s){return new Date(s+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
+function bcSorted(){return state.body.filter(e=>e&&e.date).slice().sort((a,b)=>((a.date+(a.time||''))<(b.date+(b.time||''))?-1:1))}
+function bcWindow(){const all=bcSorted();if(bcHorizon>=9999)return all;const cut=addDays(todayISO(),-bcHorizon);return all.filter(e=>e.date>=cut)}
+function renderBody(){
+  const trends=$('#bc-trends'),tiles=$('#bc-tiles');if(!trends)return;
+  const data=bcWindow();bcCharts={};
+  if(!data.length){trends.style.display='block';trends.innerHTML=`<div class="bc-empty">${state.body.length?'No readings in this window — try a longer range.':'No body-composition readings yet. They load from body.json.'}</div>`;tiles.innerHTML='';return}
+  trends.style.display='';
+  const W=300,H=84,p=8;
+  trends.innerHTML=BC_METRICS.map(m=>{
+    const series=data.filter(e=>e[m.key]!=null&&!isNaN(+e[m.key])).map(e=>({date:e.date,v:+e[m.key]}));
+    if(!series.length)return `<div class="bc-card"><div class="bc-head"><span class="bc-label">${m.label}</span></div><div class="bc-val">--</div></div>`;
+    const vals=series.map(s=>s.v),last=vals[vals.length-1],dv=last-vals[0];
+    const min=Math.min(...vals),max=Math.max(...vals),span=(max-min)||1;
+    const X=i=>p+(W-2*p)*(vals.length<2?0.5:i/(vals.length-1)),Y=v=>p+(H-2*p)*(1-(v-min)/span);
+    const xs=vals.map((v,i)=>X(i)),ys=vals.map(Y);
+    const line=xs.map((x,i)=>(i?'L':'M')+x.toFixed(1)+' '+ys[i].toFixed(1)).join(' ');
+    const area=`M${xs[0].toFixed(1)} ${H-p} `+xs.map((x,i)=>'L'+x.toFixed(1)+' '+ys[i].toFixed(1)).join(' ')+` L${xs[xs.length-1].toFixed(1)} ${H-p} Z`;
+    const gid='bcg-'+m.key;
+    bcCharts[m.key]={xs,ys,vals,dates:series.map(s=>s.date),dec:m.dec,unit:m.unit,W,H};
+    const dtxt=vals.length<2?'':((dv>=0?'▲ +':'▼ ')+bcNum(Math.abs(dv),m.dec)+' '+m.unit);
+    const dcol=Math.abs(dv)<1e-9?'var(--fg-2)':(dv>0?'var(--accent)':'var(--fg-2)');
+    return `<div class="bc-card" data-metric="${m.key}">
+      <div class="bc-head"><span class="bc-label">${m.label}</span><span class="bc-delta" style="color:${dcol}">${dtxt}</span></div>
+      <div class="bc-val">${bcNum(last,m.dec)}<span class="u">${m.unit}</span></div>
+      <div class="bc-spark"><div class="bc-tip"></div><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${m.label} trend">
+        <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity="0.22"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
+        <line x1="${p}" y1="${H-p}" x2="${W-p}" y2="${H-p}" stroke="var(--border)" stroke-width="1"/>
+        <path d="${area}" fill="url(#${gid})"/>
+        <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="${xs[xs.length-1].toFixed(1)}" cy="${ys[ys.length-1].toFixed(1)}" r="3.6" fill="var(--accent)" stroke="var(--bg)" stroke-width="2"/></svg></div>
+    </div>`;
+  }).join('');
+  const last=data[data.length-1],first=data[0];
+  tiles.innerHTML=BC_TILES.map(t=>{
+    const lv=last[t.key];
+    if(lv==null||isNaN(+lv))return `<div class="bc-tile"><div class="tn">--</div><div class="tt">${t.label}</div></div>`;
+    const fv=first[t.key],dv=(+lv)-(+fv);
+    const d=(fv==null||isNaN(+fv)||Math.abs(dv)<(t.dec?5e-3:0.5))?'no change':((dv>0?'+':'')+bcNum(dv,t.dec)+(t.unit?' '+t.unit:''));
+    return `<div class="bc-tile"><div class="tn">${bcNum(lv,t.dec)}${t.unit?`<span class="u">${t.unit}</span>`:''}</div><div class="tt">${t.label}</div><div class="tdlt">${d} · window</div></div>`;
   }).join('');
 }
 const MEALS=['breakfast','lunch','dinner','snack'],MEAL_LABEL={breakfast:'Breakfast',lunch:'Lunch',dinner:'Dinner',snack:'Snack'};
@@ -682,6 +774,17 @@ function bind(){
     tip.style.left=(br.left-wr.left+br.width/2)+'px';tip.style.top=(br.top-wr.top)+'px';tip.classList.add('show');
   });
   $('#chart').addEventListener('mouseleave',()=>tip.classList.remove('show'));
+
+  $('#bc-horizon').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;bcHorizon=+b.dataset.h;document.querySelectorAll('#bc-horizon button').forEach(x=>x.classList.toggle('on',x===b));renderBody()});
+  $('#bc-trends').addEventListener('mousemove',e=>{
+    const card=e.target.closest('.bc-card');if(!card)return;const c=bcCharts[card.dataset.metric];
+    const svg=card.querySelector('.bc-spark svg'),bcTip=card.querySelector('.bc-tip');if(!c||!svg||!bcTip)return;
+    const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*c.W;
+    let bi=0,bd=1e9;c.xs.forEach((x,i)=>{const d=Math.abs(x-px);if(d<bd){bd=d;bi=i}});
+    bcTip.innerHTML=`${bcNum(c.vals[bi],c.dec)} ${c.unit} <span class="d">· ${bcShort(c.dates[bi])}</span>`;
+    bcTip.style.left=(c.xs[bi]/c.W*r.width)+'px';bcTip.style.top=(c.ys[bi]/c.H*r.height)+'px';bcTip.classList.add('show');
+  });
+  $('#bc-trends').addEventListener('mouseleave',()=>document.querySelectorAll('.bc-tip').forEach(t=>t.classList.remove('show')));
 
   $('#food-search').addEventListener('input',onSearchInput);
   $('#food-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(lastResults.length)addFoodEntry(lastResults[0])}});
