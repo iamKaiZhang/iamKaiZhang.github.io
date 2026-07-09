@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Training Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Training Plan viewer. Broadside theme (matches /training/).
+   Standalone static page. Reads training_plan.md and sessions/
+   from the private iamKaiZhang/personal-training repo via the
+   GitHub Contents API (read-only — logging stays with the
+   CLAUDE.md workflow). Shares the /training/ PAT in localStorage.
+   ============================================================ */
+:root{
+  --bg:#111111; --bg-alt:#1a1a18; --accent:#e85d26; --accent-hi:#f06a31;
+  --ink-on-accent:#111111; --fg:#f0ece5; --fg-2:#888880; --fg-3:#505048; --border:#282826;
+  --f-head:"Barlow","Noto Sans SC",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --pad:clamp(1.1rem,3.5vw,2.5rem); --maxw:1180px;
+  --r:8px; --r-sm:6px; --r-pill:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-head);font-weight:500;line-height:1.4;-webkit-font-smoothing:antialiased;padding:var(--pad)}
+.wrap{max-width:var(--maxw);margin:0 auto}
+
+.kicker{font-family:var(--f-mono);font-size:0.78rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--fg-2)}
+.kicker.accent{color:var(--accent)}
+
+button,.btn{font-family:var(--f-mono);font-size:0.76rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--fg);background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);padding:0.55rem 0.9rem;cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .05s ease}
+button:hover,.btn:hover{background:var(--bg-alt);border-color:var(--fg-2)}
+button:active,.btn:active{transform:translateY(1px)}
+a.btn{text-decoration:none;display:inline-block}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--ink-on-accent)}
+button.primary:hover{background:var(--accent-hi);border-color:var(--accent-hi)}
+label.field{display:block;font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg-2);margin-bottom:0.3rem}
+input{font-family:var(--f-mono);font-size:0.9rem;color:var(--fg);background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--r-sm);padding:0.5rem 0.6rem;width:100%}
+input:focus{outline:none;border-color:var(--accent)}
+
+/* connect screen (same as /training/; shares the stored PAT) */
+#connect{max-width:460px;margin:8vh auto;border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;display:none}
+#connect h1{font-family:var(--f-head);font-weight:900;text-transform:uppercase;letter-spacing:-0.03em;font-size:clamp(1.8rem,5vw,2.6rem);line-height:0.95;margin-bottom:0.4rem}
+#connect p{color:var(--fg-2);font-size:0.9rem;margin-bottom:1.4rem}
+#connect .field{margin-bottom:1rem}
+#connect .hint{font-family:var(--f-mono);font-size:0.68rem;color:var(--fg-3);margin-top:1rem;letter-spacing:0.04em;line-height:1.6}
+
+/* masthead */
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:1.2rem;padding-bottom:1rem;border-bottom:2px solid var(--fg);flex-wrap:wrap}
+.masthead h1{font-family:var(--f-head);font-weight:900;font-size:clamp(1.6rem,4vw,2.6rem);line-height:0.95;letter-spacing:-0.03em;text-transform:uppercase}
+.masthead .date-line{font-family:var(--f-mono);font-size:0.76rem;letter-spacing:0.08em;color:var(--fg-2);margin-top:0.6rem;text-transform:uppercase}
+.masthead-controls{display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap}
+
+section{margin-top:clamp(1.6rem,4vh,2.8rem)}
+.section-label{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:0.5rem;margin-bottom:1.1rem;gap:0.6rem;flex-wrap:wrap}
+
+/* view toggle */
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--r-pill);overflow:hidden}
+.seg button{border:none;border-radius:0;background:transparent;padding:0.4rem 0.85rem;color:var(--fg-2)}
+.seg button:hover{background:var(--bg-alt);border-color:transparent}
+.seg button.on{background:var(--accent);color:var(--ink-on-accent)}
+
+/* rotation strip */
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(96px,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow-x:auto}
+.strip-cell{background:var(--bg);padding:0.65rem 0.45rem;text-align:center;cursor:pointer;transition:background .15s ease}
+.strip-cell:hover{background:var(--bg-alt)}
+.strip-cell.active{outline:1px solid var(--accent);outline-offset:-1px}
+.strip-cell .d{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.08em;color:var(--fg-2);text-transform:uppercase;white-space:nowrap}
+.strip-cell .lbl{font-family:var(--f-mono);font-size:0.78rem;margin:0.4rem 0;white-space:nowrap}
+.strip-cell .st{font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase}
+.strip-cell .st.done{color:var(--accent)}
+.strip-cell .st.plan{color:var(--fg-3)}
+
+/* session cards */
+.day-card{border:1px solid var(--border);border-radius:var(--r);margin-top:0.9rem;overflow:hidden}
+.day-head{display:flex;align-items:baseline;justify-content:space-between;gap:0.8rem;padding:0.85rem 1.05rem;cursor:pointer;flex-wrap:wrap;transition:background .15s ease}
+.day-head:hover{background:var(--bg-alt)}
+.day-head .left{display:flex;align-items:baseline;gap:0.8rem;flex-wrap:wrap}
+.day-head .date{font-family:var(--f-mono);font-size:0.74rem;letter-spacing:0.08em;color:var(--fg-2);text-transform:uppercase;white-space:nowrap}
+.day-head .title{font-family:var(--f-head);font-weight:900;text-transform:uppercase;letter-spacing:-0.01em;font-size:1.05rem}
+.day-head .mode{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--fg-3);text-transform:uppercase;border:1px solid var(--border);border-radius:var(--r-pill);padding:0.12rem 0.5rem;white-space:nowrap}
+.status-pill{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;border-radius:var(--r-pill);padding:0.18rem 0.6rem;white-space:nowrap}
+.status-pill.done{background:var(--accent);color:var(--ink-on-accent)}
+.status-pill.plan{border:1px solid var(--border);color:var(--fg-2)}
+.day-body{display:none;border-top:1px solid var(--border);padding:1.05rem;background:var(--bg)}
+.day-card.open .day-body{display:block}
+.day-card.today{border-color:var(--accent)}
+
+/* rendered markdown */
+.md h2{font-family:var(--f-head);font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;font-size:1.3rem;margin:1.4rem 0 0.6rem}
+.md h3{font-family:var(--f-mono);font-size:0.78rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin:1.2rem 0 0.55rem}
+.md h4{font-family:var(--f-mono);font-size:0.74rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg);margin:1rem 0 0.45rem}
+.md :first-child{margin-top:0}
+.md p{font-size:0.9rem;color:var(--fg);margin:0.55rem 0;line-height:1.55}
+.md em{color:var(--fg-2);font-style:italic}
+.md strong{font-weight:700}
+.md code{font-family:var(--f-mono);font-size:0.82em;background:var(--bg-alt);border:1px solid var(--border);border-radius:4px;padding:0.05em 0.3em}
+.md a{color:var(--accent)}
+.md ul{margin:0.55rem 0 0.55rem 1.1rem}
+.md li{font-size:0.9rem;margin:0.3rem 0;line-height:1.5}
+.md hr{border:none;border-top:1px solid var(--border);margin:1.3rem 0}
+.tbl-wrap{overflow-x:auto;margin:0.6rem 0;border:1px solid var(--border);border-radius:var(--r-sm)}
+.md table{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:0.78rem}
+.md th{text-align:left;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;font-size:0.64rem;color:var(--fg-2);background:var(--bg-alt);padding:0.5rem 0.65rem;border-bottom:1px solid var(--border);white-space:nowrap}
+.md td{padding:0.45rem 0.65rem;border-bottom:1px solid var(--border);vertical-align:top}
+.md tr:last-child td{border-bottom:none}
+.md td:first-child{color:var(--fg);font-weight:500}
+.md td{color:var(--fg-2)}
+
+.empty{font-family:var(--f-mono);font-size:0.76rem;color:var(--fg-3);letter-spacing:0.03em;padding:1.3rem;border:1px solid var(--border);border-radius:var(--r);text-align:center;margin-top:0.9rem}
+.linklike{border:none;background:none;color:var(--accent);padding:0.5rem 0;font-family:var(--f-mono);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer}
+.linklike:hover{background:none;text-decoration:underline}
+
+footer{margin-top:clamp(2rem,5vh,3.2rem);padding-top:1.1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;font-family:var(--f-mono);font-size:0.68rem;letter-spacing:0.06em;color:var(--fg-3);text-transform:uppercase}
+
+#toast{position:fixed;bottom:1.1rem;right:1.1rem;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--r-sm);padding:0.6rem 0.9rem;font-family:var(--f-mono);font-size:0.74rem;letter-spacing:0.05em;color:var(--fg);opacity:0;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease;z-index:50;pointer-events:none}
+#toast.show{opacity:1;transform:none}
+#toast.err{border-color:var(--accent);color:var(--accent)}
+
+.reveal{opacity:0;transform:translateY(12px);animation:rise .55s cubic-bezier(.16,1,.3,1) forwards}
+.reveal:nth-child(2){animation-delay:.05s}.reveal:nth-child(3){animation-delay:.1s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+@media(max-width:600px){
+  .day-head .left{gap:0.5rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{animation:none;opacity:1;transform:none}
+  .strip-cell,#toast{transition:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ CONNECT SCREEN ═══════════ -->
+<div id="connect">
+  <h1>Training Plan</h1>
+  <p>Connect a GitHub token to read your training plan. If you already connected on the Log page, this is shared automatically.</p>
+  <div class="field"><label class="field" for="c-pat">GitHub PAT</label><input type="password" id="c-pat" placeholder="github_pat_… or ghp_…" autocomplete="off" /></div>
+  <div class="field"><label class="field" for="c-repo">Data repository (owner/name)</label><input type="text" id="c-repo" value="iamKaiZhang/personal-training" /></div>
+  <button class="primary" id="c-connect" style="width:100%">Connect</button>
+  <div class="hint">Fine-grained token, this repo only, Contents: read. Stored in this browser only, never committed.</div>
+</div>
+
+<!-- ═══════════ PLAN VIEW ═══════════ -->
+<div class="wrap" id="app" style="display:none">
+
+  <header class="masthead reveal">
+    <div>
+      <h1>Training Plan</h1>
+      <div class="date-line" id="mode-line">Loading…</div>
+    </div>
+    <div class="masthead-controls">
+      <a class="btn" href="../">&larr; Log</a>
+      <div class="seg" id="view-seg" role="tablist" aria-label="View">
+        <button type="button" data-v="sessions" class="on">Sessions</button>
+        <button type="button" data-v="program">Program</button>
+      </div>
+      <button id="btn-refresh" title="Re-pull from GitHub">&#8635;</button>
+    </div>
+  </header>
+
+  <section class="reveal" id="view-sessions" aria-label="Planned and completed sessions">
+    <div class="section-label"><span class="kicker accent">Rotation</span><span class="kicker" id="rotation-note"></span></div>
+    <div class="strip" id="strip"></div>
+    <div id="days"></div>
+    <div style="margin-top:0.6rem"><button type="button" class="linklike" id="btn-older" style="display:none">Show older sessions</button></div>
+  </section>
+
+  <section class="reveal" id="view-program" aria-label="Program reference" style="display:none">
+    <div class="section-label"><span class="kicker accent">Program</span><span class="kicker">training_plan.md</span></div>
+    <div class="md" id="program-md"></div>
+  </section>
+
+  <footer>
+    <span id="foot-repo">Stored in GitHub</span>
+    <span class="kicker">Broadside</span>
+  </footer>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════ GITHUB API (same storage keys as /training/) ═══════════ */
+const DEFAULT_REPO='iamKaiZhang/personal-training';
+function ghPat(){return localStorage.getItem('pt_gh_pat')||''}
+function ghRepo(){return localStorage.getItem('pt_gh_repo')||DEFAULT_REPO}
+function fromB64(b){return decodeURIComponent(escape(atob(b)))}
+async function ghGet(path){
+  const headers={'Accept':'application/vnd.github+json'};
+  if(ghPat())headers['Authorization']=`Bearer ${ghPat()}`;
+  const res=await fetch(`https://api.github.com/repos/${ghRepo()}/${path}`,{headers});
+  if(!res.ok){const e=await res.json().catch(()=>({}));const err=new Error(e.message||`HTTP ${res.status}`);err.status=res.status;throw err}
+  return res.json();
+}
+
+/* ═══════════ STATE ═══════════ */
+var sessions=[];      // [{date,label,mode,status,statusRaw,md}] ascending by date
+var programMd='';     // raw training_plan.md
+var showAll=false;
+const RECENT_N=14;    // collapse anything older than the last N sessions behind "show older"
+
+/* ═══════════ HELPERS ═══════════ */
+const $=s=>document.querySelector(s);
+function pad(n){return String(n).padStart(2,'0')}
+function todayISO(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+function wdShort(s){return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(s+'T00:00:00').getDay()]}
+function prettyDate(s){return new Date(s+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+/* ═══════════ MINI MARKDOWN (headings, tables, lists, bold/italic/code/links, hr) ═══════════ */
+function mdInline(s){
+  return s
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/(^|[\s(>])_([^_\n]+)_(?=$|[\s).,;:!?<])/g,'$1<em>$2</em>');
+}
+function mdCells(row){return row.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(c=>mdInline(esc(c.trim())))}
+function mdToHtml(md){
+  const lines=md.split('\n');let html='',i=0,para=[];
+  const flush=()=>{if(para.length){html+='<p>'+mdInline(esc(para.join(' ')))+'</p>';para=[]}};
+  while(i<lines.length){
+    const l=lines[i];
+    if(/^\s*$/.test(l)){flush();i++;continue}
+    if(/^###\s/.test(l)){flush();html+='<h4>'+mdInline(esc(l.replace(/^###\s+/,'')))+'</h4>';i++;continue}
+    if(/^##\s/.test(l)){flush();html+='<h3>'+mdInline(esc(l.replace(/^##\s+/,'')))+'</h3>';i++;continue}
+    if(/^#\s/.test(l)){flush();html+='<h2>'+mdInline(esc(l.replace(/^#\s+/,'')))+'</h2>';i++;continue}
+    if(/^\s*---+\s*$/.test(l)){flush();html+='<hr/>';i++;continue}
+    if(/^\s*\|/.test(l)&&i+1<lines.length&&/^\s*\|[\s:|-]+\|?\s*$/.test(lines[i+1])){
+      flush();const head=mdCells(l),rows=[];i+=2;
+      while(i<lines.length&&/^\s*\|/.test(lines[i])){rows.push(mdCells(lines[i]));i++}
+      html+='<div class="tbl-wrap"><table><thead><tr>'+head.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>'
+        +rows.map(r=>'<tr>'+r.map(c=>`<td>${c}</td>`).join('')+'</tr>').join('')+'</tbody></table></div>';
+      continue;
+    }
+    if(/^\s*[-*]\s+/.test(l)){flush();const items=[];
+      while(i<lines.length&&/^\s*[-*]\s+/.test(lines[i])){items.push(lines[i].replace(/^\s*[-*]\s+/,''));i++}
+      html+='<ul>'+items.map(x=>'<li>'+mdInline(esc(x))+'</li>').join('')+'</ul>';continue}
+    para.push(l.trim());i++;
+  }
+  flush();return html;
+}
+
+/* ═══════════ SESSION PARSING ═══════════
+   Files follow the CLAUDE.md convention:
+   "# YYYY-MM-DD — Label (Mode X)" + "Status: planned|completed …" + ## Plan/Actual/Carry-forward */
+function parseSession(name,text){
+  const date=name.slice(0,10);
+  const tm=text.match(/^#\s+(.+)$/m);
+  const title=tm?tm[1].trim():date;
+  const modeM=title.match(/\(Mode\s+([A-Za-z])\)/);
+  const labelM=title.match(/—\s*([^(]+)/);
+  const stM=text.match(/^Status:\s*(.+)$/mi);
+  const statusRaw=stM?stM[1].trim():'planned';
+  const status=/^completed/i.test(statusRaw)?'completed':'planned';
+  // body = file minus the H1 title and Status line (shown in the card header instead)
+  const body=text.replace(/^#\s+.+$/m,'').replace(/^Status:\s*.+$/mi,'').replace(/^\s*\n/,'');
+  return {date,label:labelM?labelM[1].trim():title,mode:modeM?modeM[1].toUpperCase():null,status,statusRaw,md:body};
+}
+
+/* ═══════════ LOAD ═══════════ */
+async function loadAll(){
+  toast('Loading…');
+  try{
+    const [plan,list]=await Promise.all([
+      ghGet('contents/training_plan.md').catch(e=>{if(e.status===404)return null;throw e}),
+      ghGet('contents/sessions').catch(e=>{if(e.status===404)return [];throw e})
+    ]);
+    programMd=plan?fromB64(plan.content.replace(/\n/g,'')):'';
+    const files=(Array.isArray(list)?list:[]).filter(f=>/^\d{4}-\d{2}-\d{2}\.md$/.test(f.name)).sort((a,b)=>a.name<b.name?-1:1);
+    const bodies=await Promise.all(files.map(f=>ghGet(`contents/sessions/${f.name}`)));
+    sessions=bodies.map((b,i)=>parseSession(files[i].name,fromB64(b.content.replace(/\n/g,''))));
+    render();toast('Loaded');
+  }catch(e){toast('Error: '+e.message,true)}
+}
+
+/* ═══════════ RENDER ═══════════ */
+function focusSession(){
+  // today's session if it exists, else the next planned one, else the last on file
+  const t=todayISO();
+  return sessions.find(s=>s.date===t)||sessions.find(s=>s.date>t&&s.status==='planned')||sessions[sessions.length-1]||null;
+}
+function activeMode(){
+  for(let i=sessions.length-1;i>=0;i--)if(sessions[i].mode)return sessions[i].mode;
+  return null;
+}
+function render(){
+  $('#foot-repo').textContent='Stored in '+ghRepo();
+  const m=activeMode();
+  const done=sessions.filter(s=>s.status==='completed').length;
+  $('#mode-line').textContent=(m?`Mode ${m} (${m==='A'?'PPL':'Upper/Lower'}) active · `:'')+`${sessions.length} sessions on file · ${done} completed`;
+  const focus=focusSession();
+
+  // strip: the recent window (all if toggled)
+  const visible=showAll?sessions:sessions.slice(-RECENT_N);
+  $('#rotation-note').textContent=visible.length<sessions.length?`last ${visible.length} of ${sessions.length}`:'click a day';
+  $('#strip').innerHTML=visible.map(s=>`
+    <div class="strip-cell ${focus&&s.date===focus.date?'active':''}" data-date="${s.date}">
+      <div class="d">${wdShort(s.date)} ${s.date.slice(5)}</div>
+      <div class="lbl">${esc(s.label)}</div>
+      <div class="st ${s.status==='completed'?'done':'plan'}">${s.status==='completed'?'done':'planned'}</div>
+    </div>`).join('');
+
+  // day cards
+  if(!sessions.length){
+    $('#days').innerHTML=`<div class="empty">No session files yet. Days appear here as sessions/YYYY-MM-DD.md files are added to ${esc(ghRepo())}.</div>`;
+  }else{
+    $('#days').innerHTML=visible.map(s=>`
+      <div class="day-card ${focus&&s.date===focus.date?'open today':''}" data-date="${s.date}">
+        <div class="day-head" role="button" aria-expanded="${focus&&s.date===focus.date?'true':'false'}">
+          <div class="left">
+            <span class="date">${wdShort(s.date)} ${s.date}</span>
+            <span class="title">${esc(s.label)}</span>
+            ${s.mode?`<span class="mode">Mode ${s.mode}</span>`:''}
+          </div>
+          <span class="status-pill ${s.status==='completed'?'done':'plan'}" title="${esc(s.statusRaw)}">${s.status}</span>
+        </div>
+        <div class="day-body md">${mdToHtml(s.md)}</div>
+      </div>`).join('');
+  }
+  $('#btn-older').style.display=(!showAll&&sessions.length>RECENT_N)?'':'none';
+
+  $('#program-md').innerHTML=programMd?mdToHtml(programMd):'<div class="empty">training_plan.md not found in the repo.</div>';
+}
+
+/* ═══════════ EVENTS ═══════════ */
+function bind(){
+  $('#view-seg').addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;
+    document.querySelectorAll('#view-seg button').forEach(x=>x.classList.toggle('on',x===b));
+    $('#view-sessions').style.display=b.dataset.v==='sessions'?'':'none';
+    $('#view-program').style.display=b.dataset.v==='program'?'':'none';
+  });
+  $('#strip').addEventListener('click',e=>{
+    const c=e.target.closest('.strip-cell');if(!c)return;
+    const card=document.querySelector(`.day-card[data-date="${c.dataset.date}"]`);
+    if(card){card.classList.add('open');card.querySelector('.day-head').setAttribute('aria-expanded','true');card.scrollIntoView({behavior:'smooth',block:'start'})}
+  });
+  $('#days').addEventListener('click',e=>{
+    const h=e.target.closest('.day-head');if(!h)return;
+    const card=h.parentElement,open=card.classList.toggle('open');
+    h.setAttribute('aria-expanded',open?'true':'false');
+  });
+  $('#btn-older').addEventListener('click',()=>{showAll=true;render()});
+  $('#btn-refresh').addEventListener('click',loadAll);
+  $('#c-connect').addEventListener('click',connect);
+  $('#c-pat').addEventListener('keydown',e=>{if(e.key==='Enter')connect()});
+}
+function connect(){
+  const pat=$('#c-pat').value.trim(),repo=$('#c-repo').value.trim()||DEFAULT_REPO;
+  if(!pat){toast('Enter a token',true);return}
+  localStorage.setItem('pt_gh_pat',pat);localStorage.setItem('pt_gh_repo',repo);
+  showApp();loadAll();
+}
+function showApp(){$('#connect').style.display='none';$('#app').style.display=''}
+
+/* ═══════════ TOAST ═══════════ */
+let toastT;
+function toast(msg,err){const t=$('#toast');t.textContent=msg;t.classList.toggle('err',!!err);t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),err?4000:1600)}
+
+/* ═══════════ BOOT ═══════════ */
+bind();
+if(ghPat()){showApp();loadAll()}else{$('#connect').style.display='block'}
+</script>
+</body>
+</html>
