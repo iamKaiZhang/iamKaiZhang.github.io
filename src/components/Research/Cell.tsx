@@ -8,7 +8,7 @@ interface CellProps {
 }
 
 const Cell: React.FC<CellProps> = ({ data }) => (
-  <div className="cell-container">
+  <div className="cell-container" data-reveal>
     <article className="mini-post">
       <header>
         <h2>

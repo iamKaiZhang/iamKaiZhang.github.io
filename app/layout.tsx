@@ -8,6 +8,8 @@ import Navigation from '@/components/Template/Navigation';
 import { ThemeProvider } from '@/context/ThemeContext';
 import '@/static/css/main.scss';
 
+import ScrollReveal from './components/ScrollReveal';
+
 const sourceSans = Source_Sans_3({
   weight: ['400', '700'],
   subsets: ['latin'],
@@ -63,11 +65,12 @@ export const metadata: Metadata = {
 
 const themeInitScript = `
 (function(){
-  var now = new Date();
-  var h = now.getHours();
-  var slot = Math.floor((h * 60 + now.getMinutes()) / 10) % 4;
-  document.documentElement.setAttribute('data-theme', h >= 6 && h < 20 ? 'day' : 'night');
-  document.documentElement.setAttribute('data-day-theme', String(slot));
+  var stored = null;
+  try { stored = localStorage.getItem('theme'); } catch (e) {}
+  var theme = stored === 'day' || stored === 'night'
+    ? stored
+    : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day');
+  document.documentElement.setAttribute('data-theme', theme);
 })();
 `;
 
@@ -84,6 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeProvider>
+          <ScrollReveal />
           <div id="wrapper">
             <Navigation />
             {children}

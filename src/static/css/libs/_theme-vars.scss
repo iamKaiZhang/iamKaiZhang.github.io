@@ -1,17 +1,17 @@
 // Register each color as a typed CSS property so the browser can
 // smoothly interpolate between values when the theme changes.
-@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #fefcf8; }
-@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #fdf6ec; }
-@property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #7a5c42; }
-@property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #3d2010; }
-@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #c8a882; }
-@property --clr-border     { syntax: '<color>'; inherits: true; initial-value: rgba(220, 140, 60, 0.25); }
-@property --clr-border-bg  { syntax: '<color>'; inherits: true; initial-value: rgba(220, 140, 60, 0.08); }
-@property --clr-border-alt { syntax: '<color>'; inherits: true; initial-value: rgba(220, 140, 60, 0.5); }
-@property --clr-accent     { syntax: '<color>'; inherits: true; initial-value: #e07b2a; }
-@property --clr-accent-05  { syntax: '<color>'; inherits: true; initial-value: rgba(224, 123, 42, 0.05); }
+@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #f5f7f8; }
+@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #e9eef1; }
+@property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #46586a; }
+@property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #11212d; }
+@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #7e93a3; }
+@property --clr-border     { syntax: '<color>'; inherits: true; initial-value: rgba(17, 33, 45, 0.18); }
+@property --clr-border-bg  { syntax: '<color>'; inherits: true; initial-value: rgba(17, 33, 45, 0.05); }
+@property --clr-border-alt { syntax: '<color>'; inherits: true; initial-value: rgba(17, 33, 45, 0.38); }
+@property --clr-accent     { syntax: '<color>'; inherits: true; initial-value: #2c7d76; }
+@property --clr-accent-05  { syntax: '<color>'; inherits: true; initial-value: rgba(44, 125, 118, 0.05); }
 
-// Smooth transition across all palette shifts (day themes + day↔night toggle)
+// Smooth transition on the day/night toggle
 :root {
   transition:
     --clr-bg        1.2s ease,
@@ -26,77 +26,31 @@
     --clr-accent-05 0.8s ease;
 }
 
-// ─── Photo 0: me01.jpg — Venice at sunset ─────────────────────────────────────
-// Light warm cream, golden sky — less red, barely tinted
+// ─── Day theme: cool off-white derived from the navy identity ─────────────────
 :root,
-[data-day-theme='0'] {
-  --clr-bg: #fefcf8;
-  --clr-bg-alt: #fdf6ec;
-  --clr-fg: #7a6050;
-  --clr-fg-bold: #3a2818;
-  --clr-fg-light: #c0a888;
-  --clr-border: rgba(200, 130, 50, 0.2);
-  --clr-border-bg: rgba(200, 130, 50, 0.07);
-  --clr-border-alt: rgba(200, 130, 50, 0.42);
-  --clr-accent: #d4742a;
-  --clr-accent-05: rgba(212, 116, 42, 0.05);
+[data-theme='day'] {
+  --clr-bg: #f5f7f8;
+  --clr-bg-alt: #e9eef1;
+  --clr-fg: #46586a;
+  --clr-fg-bold: #11212d;
+  --clr-fg-light: #7e93a3;
+  --clr-border: rgba(17, 33, 45, 0.18);
+  --clr-border-bg: rgba(17, 33, 45, 0.05);
+  --clr-border-alt: rgba(17, 33, 45, 0.38);
+  --clr-accent: #2c7d76;
+  --clr-accent-05: rgba(44, 125, 118, 0.05);
 }
 
-// ─── Photo 1: me02.jpg — Alpine turquoise lake ────────────────────────────────
-// Vivid teal-turquoise water, snow-capped peaks, dark pine forest
-[data-day-theme='1'] {
-  --clr-bg: #f2f8f7;
-  --clr-bg-alt: #e3f0ee;
-  --clr-fg: #3b5654;
-  --clr-fg-bold: #1c2e2c;
-  --clr-fg-light: #7aa8a3;
-  --clr-border: rgba(45, 156, 148, 0.22);
-  --clr-border-bg: rgba(45, 156, 148, 0.07);
-  --clr-border-alt: rgba(45, 156, 148, 0.45);
-  --clr-accent: #2d9c94;
-  --clr-accent-05: rgba(45, 156, 148, 0.05);
-}
-
-// ─── Photo 2: me03.jpg — Overcast ocean ──────────────────────────────────────
-// Cool lavender-grey sky, calm coastal blues
-[data-day-theme='2'] {
-  --clr-bg: #f4f6f9;
-  --clr-bg-alt: #e8ecf4;
-  --clr-fg: #5c6878;
-  --clr-fg-bold: #2a3548;
-  --clr-fg-light: #9aabbc;
-  --clr-border: rgba(100, 120, 160, 0.22);
-  --clr-border-bg: rgba(100, 120, 160, 0.07);
-  --clr-border-alt: rgba(100, 120, 160, 0.45);
-  --clr-accent: #6888b0;
-  --clr-accent-05: rgba(104, 136, 176, 0.05);
-}
-
-// ─── Photo 3: me04.jpg — Iceland lava field ───────────────────────────────────
-// Light volcanic grey, overcast sky, dark slate text
-[data-day-theme='3'] {
-  --clr-bg: #e6e7e9;
-  --clr-bg-alt: #d8d9dc;
-  --clr-fg: #2e3238;
-  --clr-fg-bold: #141618;
-  --clr-fg-light: #6a7078;
-  --clr-border: rgba(40, 44, 52, 0.22);
-  --clr-border-bg: rgba(40, 44, 52, 0.08);
-  --clr-border-alt: rgba(40, 44, 52, 0.45);
-  --clr-accent: #4a5060;
-  --clr-accent-05: rgba(74, 80, 96, 0.05);
-}
-
-// ─── Night theme: always wins (declared last) ──────────────────────────────────
+// ─── Night theme: deep navy, the site's core identity ─────────────────────────
 [data-theme='night'] {
   --clr-bg: #11212d;
   --clr-bg-alt: #06141b;
   --clr-fg: #9ba8ab;
   --clr-fg-bold: #ccd0cf;
-  --clr-fg-light: #4a5c6a;
+  --clr-fg-light: #5d7183;
   --clr-border: rgba(75, 92, 106, 0.4);
   --clr-border-bg: rgba(75, 92, 106, 0.1);
   --clr-border-alt: rgba(75, 92, 106, 0.65);
-  --clr-accent: #9caba9;
-  --clr-accent-05: rgba(156, 171, 169, 0.05);
+  --clr-accent: #7fc4bc;
+  --clr-accent-05: rgba(127, 196, 188, 0.05);
 }

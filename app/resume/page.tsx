@@ -41,27 +41,27 @@ export default function ResumePage() {
         </div>
       </header>
 
-      <section id="education" className="education">
+      <section id="education" className="education" data-reveal>
         <div className="link-to" />
         <Education data={degrees} />
       </section>
 
-      <section id="experience" className="experience">
+      <section id="experience" className="experience" data-reveal>
         <div className="link-to" />
         <Experience data={work} />
       </section>
 
-      <section id="skills" className="skills">
+      <section id="skills" className="skills" data-reveal>
         <div className="link-to" />
         <Skills skills={skills} categories={categories} />
       </section>
 
-      <section id="courses" className="courses">
+      <section id="courses" className="courses" data-reveal>
         <div className="link-to" />
         <Courses data={courses} />
       </section>
 
-      <section id="references" className="references">
+      <section id="references" className="references" data-reveal>
         <div className="link-to" />
         <References />
       </section>
