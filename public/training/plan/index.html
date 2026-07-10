@@ -11,9 +11,16 @@
 /* ============================================================
    Training Plan viewer. Broadside theme (matches /training/).
    Standalone static page. Reads training_plan.md and sessions/
-   from the private iamKaiZhang/personal-training repo via the
-   GitHub Contents API (read-only — logging stays with the
-   CLAUDE.md workflow). Shares the /training/ PAT in localStorage.
+   from the private iamKaiZhang/personal-training repo (read-only —
+   logging stays with the CLAUDE.md workflow). Shares the /training/
+   PAT in localStorage.
+
+   Loading: stale-while-revalidate. Every fetched file is cached in
+   localStorage keyed by git blob sha; on load the page renders from
+   cache instantly, then one git/trees call reveals what changed and
+   only those blobs are re-fetched. sessions/ holds current + future
+   days and at most ~10 past days; older files live in
+   sessions/archive/ and are fetched lazily on demand.
    ============================================================ */
 :root{
   --bg:#111111; --bg-alt:#1a1a18; --accent:#e85d26; --accent-hi:#f06a31;
@@ -63,16 +70,19 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .seg button:hover{background:var(--bg-alt);border-color:transparent}
 .seg button.on{background:var(--accent);color:var(--ink-on-accent)}
 
-/* rotation strip */
-.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(96px,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow-x:auto}
+/* rotation strip: chronological, auto-scrolled so current/next is first in view.
+   Scroll left = past, scroll right = future. */
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(96px,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow-x:auto;scroll-behavior:smooth}
 .strip-cell{background:var(--bg);padding:0.65rem 0.45rem;text-align:center;cursor:pointer;transition:background .15s ease}
 .strip-cell:hover{background:var(--bg-alt)}
 .strip-cell.active{outline:1px solid var(--accent);outline-offset:-1px}
 .strip-cell .d{font-family:var(--f-mono);font-size:0.62rem;letter-spacing:0.08em;color:var(--fg-2);text-transform:uppercase;white-space:nowrap}
 .strip-cell .lbl{font-family:var(--f-mono);font-size:0.78rem;margin:0.4rem 0;white-space:nowrap}
+.strip-cell.past .lbl{color:var(--fg-2)}
 .strip-cell .st{font-family:var(--f-mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase}
 .strip-cell .st.done{color:var(--accent)}
 .strip-cell .st.plan{color:var(--fg-3)}
+.strip-cell .st.arch{color:var(--fg-3)}
 
 /* session cards */
 .day-card{border:1px solid var(--border);border-radius:var(--r);margin-top:0.9rem;overflow:hidden}
@@ -88,6 +98,7 @@ section{margin-top:clamp(1.6rem,4vh,2.8rem)}
 .day-body{display:none;border-top:1px solid var(--border);padding:1.05rem;background:var(--bg)}
 .day-card.open .day-body{display:block}
 .day-card.today{border-color:var(--accent)}
+.past-label{margin-top:1.6rem}
 
 /* rendered markdown */
 .md h2{font-family:var(--f-head);font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;font-size:1.3rem;margin:1.4rem 0 0.6rem}
@@ -130,6 +141,7 @@ footer{margin-top:clamp(2rem,5vh,3.2rem);padding-top:1.1rem;border-top:1px solid
 @media(prefers-reduced-motion:reduce){
   .reveal{animation:none;opacity:1;transform:none}
   .strip-cell,#toast{transition:none}
+  .strip{scroll-behavior:auto}
 }
 </style>
 </head>
@@ -159,15 +171,14 @@ footer{margin-top:clamp(2rem,5vh,3.2rem);padding-top:1.1rem;border-top:1px solid
         <button type="button" data-v="sessions" class="on">Sessions</button>
         <button type="button" data-v="program">Program</button>
       </div>
-      <button id="btn-refresh" title="Re-pull from GitHub">&#8635;</button>
+      <button id="btn-refresh" title="Re-check GitHub for changes">&#8635;</button>
     </div>
   </header>
 
   <section class="reveal" id="view-sessions" aria-label="Planned and completed sessions">
-    <div class="section-label"><span class="kicker accent">Rotation</span><span class="kicker" id="rotation-note"></span></div>
+    <div class="section-label"><span class="kicker accent">Rotation</span><span class="kicker">&larr; past · current/next · future &rarr;</span></div>
     <div class="strip" id="strip"></div>
     <div id="days"></div>
-    <div style="margin-top:0.6rem"><button type="button" class="linklike" id="btn-older" style="display:none">Show older sessions</button></div>
   </section>
 
   <section class="reveal" id="view-program" aria-label="Program reference" style="display:none">
@@ -192,23 +203,37 @@ function fromB64(b){return decodeURIComponent(escape(atob(b)))}
 async function ghGet(path){
   const headers={'Accept':'application/vnd.github+json'};
   if(ghPat())headers['Authorization']=`Bearer ${ghPat()}`;
-  const res=await fetch(`https://api.github.com/repos/${ghRepo()}/${path}`,{headers});
+  const url=`https://api.github.com/repos/${ghRepo()}`+(path?`/${path}`:'');
+  const res=await fetch(url,{headers});
   if(!res.ok){const e=await res.json().catch(()=>({}));const err=new Error(e.message||`HTTP ${res.status}`);err.status=res.status;throw err}
   return res.json();
 }
 
+/* ═══════════ SHA CACHE (stale-while-revalidate) ═══════════
+   localStorage holds { branch, treeSha, files:{path:{sha,text}}, archIdx:[{path,sha}] }.
+   Render happens from cache first; one git/trees call per visit tells us which
+   blobs changed, and only those are re-fetched. Archived sessions are immutable,
+   so once cached they never need another request. */
+const SESSION_RE=/^sessions\/(\d{4}-\d{2}-\d{2})\.md$/;
+const ARCHIVE_RE=/^sessions\/archive\/(\d{4}-\d{2}-\d{2})\.md$/;
+function cacheKey(){return 'pt_plan_cache_'+ghRepo()}
+function readCache(){try{const c=JSON.parse(localStorage.getItem(cacheKey())||'null');return (c&&c.files)?c:null}catch(e){return null}}
+function writeCache(){try{localStorage.setItem(cacheKey(),JSON.stringify(cache))}catch(e){}}
+var cache=readCache()||{branch:null,treeSha:null,files:{},archIdx:[]};
+
 /* ═══════════ STATE ═══════════ */
-var sessions=[];      // [{date,label,mode,status,statusRaw,md}] ascending by date
-var programMd='';     // raw training_plan.md
-var showAll=false;
-const RECENT_N=14;    // collapse anything older than the last N sessions behind "show older"
+var sessions=[];       // current window (sessions/*.md), ascending by date
+var archived=[];       // archived sessions once loaded, ascending by date
+var programMd='';
+var archiveOpen=false; // archive shown in strip + past list
+var openSet=new Set(); // which day cards are expanded (survives re-render)
+var focusDate=null;
 
 /* ═══════════ HELPERS ═══════════ */
 const $=s=>document.querySelector(s);
 function pad(n){return String(n).padStart(2,'0')}
 function todayISO(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
 function wdShort(s){return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(s+'T00:00:00').getDay()]}
-function prettyDate(s){return new Date(s+'T00:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
 /* ═══════════ MINI MARKDOWN (headings, tables, lists, bold/italic/code/links, hr) ═══════════ */
@@ -248,8 +273,7 @@ function mdToHtml(md){
 /* ═══════════ SESSION PARSING ═══════════
    Files follow the CLAUDE.md convention:
    "# YYYY-MM-DD — Label (Mode X)" + "Status: planned|completed …" + ## Plan/Actual/Carry-forward */
-function parseSession(name,text){
-  const date=name.slice(0,10);
+function parseSession(date,text,isArchived){
   const tm=text.match(/^#\s+(.+)$/m);
   const title=tm?tm[1].trim():date;
   const modeM=title.match(/\(Mode\s+([A-Za-z])\)/);
@@ -257,72 +281,134 @@ function parseSession(name,text){
   const stM=text.match(/^Status:\s*(.+)$/mi);
   const statusRaw=stM?stM[1].trim():'planned';
   const status=/^completed/i.test(statusRaw)?'completed':'planned';
-  // body = file minus the H1 title and Status line (shown in the card header instead)
   const body=text.replace(/^#\s+.+$/m,'').replace(/^Status:\s*.+$/mi,'').replace(/^\s*\n/,'');
-  return {date,label:labelM?labelM[1].trim():title,mode:modeM?modeM[1].toUpperCase():null,status,statusRaw,md:body};
+  return {date,label:labelM?labelM[1].trim():title,mode:modeM?modeM[1].toUpperCase():null,status,statusRaw,md:body,archived:!!isArchived};
 }
 
-/* ═══════════ LOAD ═══════════ */
-async function loadAll(){
-  toast('Loading…');
+/* ═══════════ HYDRATE (rebuild view state from cache) ═══════════ */
+function hydrate(){
+  sessions=[];archived=[];programMd='';
+  for(const p in cache.files){
+    const m=p.match(SESSION_RE),a=p.match(ARCHIVE_RE);
+    if(m)sessions.push(parseSession(m[1],cache.files[p].text,false));
+    else if(a)archived.push(parseSession(a[1],cache.files[p].text,true));
+    else if(p==='training_plan.md')programMd=cache.files[p].text;
+  }
+  sessions.sort((x,y)=>x.date<y.date?-1:1);
+  archived.sort((x,y)=>x.date<y.date?-1:1);
+}
+
+/* ═══════════ LOAD (SWR: cached render now, revalidate with one tree call) ═══════════ */
+var loading=false;
+async function revalidate(){
+  if(loading)return;loading=true;
   try{
-    const [plan,list]=await Promise.all([
-      ghGet('contents/training_plan.md').catch(e=>{if(e.status===404)return null;throw e}),
-      ghGet('contents/sessions').catch(e=>{if(e.status===404)return [];throw e})
-    ]);
-    programMd=plan?fromB64(plan.content.replace(/\n/g,'')):'';
-    const files=(Array.isArray(list)?list:[]).filter(f=>/^\d{4}-\d{2}-\d{2}\.md$/.test(f.name)).sort((a,b)=>a.name<b.name?-1:1);
-    const bodies=await Promise.all(files.map(f=>ghGet(`contents/sessions/${f.name}`)));
-    sessions=bodies.map((b,i)=>parseSession(files[i].name,fromB64(b.content.replace(/\n/g,''))));
-    render();toast('Loaded');
+    if(!cache.branch){const info=await ghGet('');cache.branch=info.default_branch||'main'}
+    let tree;
+    try{tree=await ghGet(`git/trees/${encodeURIComponent(cache.branch)}?recursive=1`)}
+    catch(e){ // branch may have been renamed — rediscover once
+      const info=await ghGet('');cache.branch=info.default_branch||'main';
+      tree=await ghGet(`git/trees/${encodeURIComponent(cache.branch)}?recursive=1`);
+    }
+    const blobs=tree.tree.filter(t=>t.type==='blob');
+    cache.archIdx=blobs.filter(t=>ARCHIVE_RE.test(t.path)).map(t=>({path:t.path,sha:t.sha}));
+    if(tree.sha===cache.treeSha){writeCache();hydrate();render();loading=false;return}
+    // eager set: current sessions window + program (+ archive only if opened)
+    const wanted=blobs.filter(t=>SESSION_RE.test(t.path)||t.path==='training_plan.md'||(archiveOpen&&ARCHIVE_RE.test(t.path)));
+    const toFetch=wanted.filter(w=>!cache.files[w.path]||cache.files[w.path].sha!==w.sha);
+    if(toFetch.length)toast(`Updating ${toFetch.length} file${toFetch.length>1?'s':''}…`);
+    const texts=await Promise.all(toFetch.map(w=>ghGet(`git/blobs/${w.sha}`).then(b=>fromB64(b.content.replace(/\n/g,'')))));
+    toFetch.forEach((w,i)=>{cache.files[w.path]={sha:w.sha,text:texts[i]}});
+    // drop cache entries whose path vanished (e.g. a file moved into archive/ —
+    // its archive-path copy is refetched on demand and then cached forever)
+    const present=new Set(blobs.map(t=>t.path));
+    for(const p in cache.files)if(!present.has(p))delete cache.files[p];
+    cache.treeSha=tree.sha;writeCache();
+    hydrate();render();
+    if(toFetch.length)toast('Updated');
   }catch(e){toast('Error: '+e.message,true)}
+  loading=false;
+}
+async function loadArchive(){
+  archiveOpen=true;
+  const missing=cache.archIdx.filter(a=>!cache.files[a.path]||cache.files[a.path].sha!==a.sha);
+  if(missing.length){
+    toast(`Loading ${missing.length} archived…`);
+    try{
+      const texts=await Promise.all(missing.map(a=>ghGet(`git/blobs/${a.sha}`).then(b=>fromB64(b.content.replace(/\n/g,'')))));
+      missing.forEach((a,i)=>{cache.files[a.path]={sha:a.sha,text:texts[i]}});
+      writeCache();
+    }catch(e){toast('Error: '+e.message,true);archiveOpen=false;return}
+  }
+  const strip=$('#strip'),before=strip.scrollWidth;
+  hydrate();render(true);
+  strip.scrollLeft+=strip.scrollWidth-before; // keep the view anchored while past cells prepend
 }
 
 /* ═══════════ RENDER ═══════════ */
-function focusSession(){
-  // today's session if it exists, else the next planned one, else the last on file
+function pickFocus(){
   const t=todayISO();
-  return sessions.find(s=>s.date===t)||sessions.find(s=>s.date>t&&s.status==='planned')||sessions[sessions.length-1]||null;
+  const f=sessions.find(s=>s.date===t)||sessions.find(s=>s.date>t)||sessions[sessions.length-1]||null;
+  return f?f.date:null;
 }
 function activeMode(){
   for(let i=sessions.length-1;i>=0;i--)if(sessions[i].mode)return sessions[i].mode;
   return null;
 }
-function render(){
+function cardHtml(s){
+  const open=openSet.has(s.date);
+  return `<div class="day-card ${open?'open':''} ${s.date===focusDate?'today':''}" data-date="${s.date}">
+    <div class="day-head" role="button" aria-expanded="${open?'true':'false'}">
+      <div class="left">
+        <span class="date">${wdShort(s.date)} ${s.date}</span>
+        <span class="title">${esc(s.label)}</span>
+        ${s.mode?`<span class="mode">Mode ${s.mode}</span>`:''}
+        ${s.archived?`<span class="mode">Archived</span>`:''}
+      </div>
+      <span class="status-pill ${s.status==='completed'?'done':'plan'}" title="${esc(s.statusRaw)}">${s.status}</span>
+    </div>
+    <div class="day-body md">${open?mdToHtml(s.md):''}</div>
+  </div>`;
+}
+function render(keepScroll){
   $('#foot-repo').textContent='Stored in '+ghRepo();
+  focusDate=pickFocus();
+  if(focusDate&&!openSet.size)openSet.add(focusDate);
   const m=activeMode();
   const done=sessions.filter(s=>s.status==='completed').length;
-  $('#mode-line').textContent=(m?`Mode ${m} (${m==='A'?'PPL':'Upper/Lower'}) active · `:'')+`${sessions.length} sessions on file · ${done} completed`;
-  const focus=focusSession();
+  const archN=cache.archIdx.length;
+  $('#mode-line').textContent=(m?`Mode ${m} (${m==='A'?'PPL':'Upper/Lower'}) active · `:'')
+    +`${sessions.length} on file · ${done} completed`+(archN?` · ${archN} archived`:'');
 
-  // strip: the recent window (all if toggled)
-  const visible=showAll?sessions:sessions.slice(-RECENT_N);
-  $('#rotation-note').textContent=visible.length<sessions.length?`last ${visible.length} of ${sessions.length}`:'click a day';
-  $('#strip').innerHTML=visible.map(s=>`
-    <div class="strip-cell ${focus&&s.date===focus.date?'active':''}" data-date="${s.date}">
+  // strip: [archived if open] + sessions, chronological; anchor scroll at focus
+  const stripList=(archiveOpen?archived:[]).concat(sessions);
+  $('#strip').innerHTML=stripList.map(s=>`
+    <div class="strip-cell ${s.date===focusDate?'active':''} ${s.date<todayISO()?'past':''}" data-date="${s.date}">
       <div class="d">${wdShort(s.date)} ${s.date.slice(5)}</div>
       <div class="lbl">${esc(s.label)}</div>
-      <div class="st ${s.status==='completed'?'done':'plan'}">${s.status==='completed'?'done':'planned'}</div>
+      <div class="st ${s.archived?'arch':(s.status==='completed'?'done':'plan')}">${s.archived?'archived':(s.status==='completed'?'done':'planned')}</div>
     </div>`).join('');
 
-  // day cards
-  if(!sessions.length){
+  // cards: current/next first (expanded), then future; past below, newest first
+  if(!sessions.length&&!archived.length){
     $('#days').innerHTML=`<div class="empty">No session files yet. Days appear here as sessions/YYYY-MM-DD.md files are added to ${esc(ghRepo())}.</div>`;
   }else{
-    $('#days').innerHTML=visible.map(s=>`
-      <div class="day-card ${focus&&s.date===focus.date?'open today':''}" data-date="${s.date}">
-        <div class="day-head" role="button" aria-expanded="${focus&&s.date===focus.date?'true':'false'}">
-          <div class="left">
-            <span class="date">${wdShort(s.date)} ${s.date}</span>
-            <span class="title">${esc(s.label)}</span>
-            ${s.mode?`<span class="mode">Mode ${s.mode}</span>`:''}
-          </div>
-          <span class="status-pill ${s.status==='completed'?'done':'plan'}" title="${esc(s.statusRaw)}">${s.status}</span>
-        </div>
-        <div class="day-body md">${mdToHtml(s.md)}</div>
-      </div>`).join('');
+    const nowFwd=sessions.filter(s=>s.date>=focusDate);
+    const past=sessions.filter(s=>s.date<focusDate).concat(archiveOpen?archived:[]).sort((x,y)=>x.date<y.date?1:-1);
+    let html=nowFwd.map(cardHtml).join('');
+    if(past.length||cache.archIdx.length){
+      html+=`<div class="section-label past-label"><span class="kicker">Past days</span><span class="kicker">${past.length} shown</span></div>`;
+      html+=past.map(cardHtml).join('');
+      if(!archiveOpen&&cache.archIdx.length)
+        html+=`<div style="margin-top:0.6rem"><button type="button" class="linklike" id="btn-archive">Load archive (${cache.archIdx.length})</button></div>`;
+    }
+    $('#days').innerHTML=html;
   }
-  $('#btn-older').style.display=(!showAll&&sessions.length>RECENT_N)?'':'none';
+
+  if(!keepScroll){ // put current/next at the left edge of the strip viewport
+    const strip=$('#strip'),cell=strip.querySelector('.strip-cell.active');
+    if(cell)strip.scrollLeft=cell.offsetLeft-strip.offsetLeft;
+  }
 
   $('#program-md').innerHTML=programMd?mdToHtml(programMd):'<div class="empty">training_plan.md not found in the repo.</div>';
 }
@@ -337,16 +423,27 @@ function bind(){
   });
   $('#strip').addEventListener('click',e=>{
     const c=e.target.closest('.strip-cell');if(!c)return;
+    openSet.add(c.dataset.date);
     const card=document.querySelector(`.day-card[data-date="${c.dataset.date}"]`);
-    if(card){card.classList.add('open');card.querySelector('.day-head').setAttribute('aria-expanded','true');card.scrollIntoView({behavior:'smooth',block:'start'})}
+    if(card){
+      card.classList.add('open');
+      const body=card.querySelector('.day-body');
+      if(!body.innerHTML){const s=sessions.concat(archived).find(x=>x.date===c.dataset.date);if(s)body.innerHTML=mdToHtml(s.md)}
+      card.querySelector('.day-head').setAttribute('aria-expanded','true');
+      card.scrollIntoView({behavior:'smooth',block:'start'});
+    }
   });
   $('#days').addEventListener('click',e=>{
+    const a=e.target.closest('#btn-archive');if(a){loadArchive();return}
     const h=e.target.closest('.day-head');if(!h)return;
-    const card=h.parentElement,open=card.classList.toggle('open');
+    const card=h.parentElement,date=card.dataset.date,open=card.classList.toggle('open');
+    if(open){openSet.add(date);
+      const body=card.querySelector('.day-body');
+      if(!body.innerHTML){const s=sessions.concat(archived).find(x=>x.date===date);if(s)body.innerHTML=mdToHtml(s.md)}
+    }else openSet.delete(date);
     h.setAttribute('aria-expanded',open?'true':'false');
   });
-  $('#btn-older').addEventListener('click',()=>{showAll=true;render()});
-  $('#btn-refresh').addEventListener('click',loadAll);
+  $('#btn-refresh').addEventListener('click',revalidate);
   $('#c-connect').addEventListener('click',connect);
   $('#c-pat').addEventListener('keydown',e=>{if(e.key==='Enter')connect()});
 }
@@ -354,7 +451,8 @@ function connect(){
   const pat=$('#c-pat').value.trim(),repo=$('#c-repo').value.trim()||DEFAULT_REPO;
   if(!pat){toast('Enter a token',true);return}
   localStorage.setItem('pt_gh_pat',pat);localStorage.setItem('pt_gh_repo',repo);
-  showApp();loadAll();
+  cache=readCache()||{branch:null,treeSha:null,files:{},archIdx:[]};
+  showApp();boot();
 }
 function showApp(){$('#connect').style.display='none';$('#app').style.display=''}
 
@@ -363,8 +461,13 @@ let toastT;
 function toast(msg,err){const t=$('#toast');t.textContent=msg;t.classList.toggle('err',!!err);t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),err?4000:1600)}
 
 /* ═══════════ BOOT ═══════════ */
+function boot(){
+  if(Object.keys(cache.files).length){hydrate();render()}   // instant, from cache
+  else toast('Loading…');
+  revalidate();                                             // one tree call; fetch only what changed
+}
 bind();
-if(ghPat()){showApp();loadAll()}else{$('#connect').style.display='block'}
+if(ghPat()){showApp();boot()}else{$('#connect').style.display='block'}
 </script>
 </body>
 </html>
