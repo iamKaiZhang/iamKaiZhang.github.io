@@ -7,10 +7,9 @@ import Markdown from 'markdown-to-jsx';
 import { textFactsMarkdown } from '@/data/facts/textfacts';
 
 const TextFacts: React.FC = () => (
-  <>
-    <h3>Other facts</h3>
+  <div className="text-facts">
     <Markdown>{textFactsMarkdown}</Markdown>
-  </>
+  </div>
 );
 
 export default TextFacts;

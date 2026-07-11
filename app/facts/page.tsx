@@ -28,9 +28,18 @@ export default function FactsPage() {
       </header>
 
       <div className="facts-content">
-        <Personal />
-        <TextFacts />
-        <InteractiveDog />
+        <section data-reveal>
+          <h2>Some stats about me</h2>
+          <Personal />
+        </section>
+        <section data-reveal>
+          <h2>Other facts</h2>
+          <TextFacts />
+        </section>
+        <section data-reveal>
+          <h2>Feed the dog</h2>
+          <InteractiveDog />
+        </section>
       </div>
     </article>
   );

@@ -323,30 +323,40 @@
   transition: transform 0.08s ease-out;
 }
 
-/* Table redesign for facts */
-#facts table {
-  border-collapse: collapse;
-  width: 100%;
-
-  tr {
-    border-bottom: 1px solid _palette(border);
-
-    &:last-child {
-      border-bottom: none;
+/* Facts page layout */
+#facts {
+  .stats-list {
+    .label {
+      width: 16rem;
     }
 
-    &:nth-child(even) {
-      background: rgba(0, 0, 0, 0.01);
+    .value {
+      color: _palette(fg-bold);
+      font-variant-numeric: tabular-nums;
     }
   }
 
-  td {
-    font-size: 1em;
-    padding: 0.75em 0.5em;
+  .text-facts ul {
+    margin: 0;
+    padding-left: 1.2rem;
 
-    &:last-child {
-      color: _palette(fg-bold);
-      text-align: left;
+    li {
+      margin: 0.5rem 0;
+
+      &::marker {
+        color: _palette(fg-light);
+      }
     }
+  }
+
+  .dog-mascot-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  #facts .stats-list .label {
+    width: auto;
   }
 }

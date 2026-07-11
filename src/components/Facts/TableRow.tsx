@@ -7,10 +7,10 @@ const TableRow: React.FC<TableRowProps> = ({ label, link = null, value = null, f
   const displayValue = isValidElement(value) ? value : format ? format(value) : String(value);
 
   return (
-    <tr>
-      <td width="70%">{label}</td>
-      <td>{link ? <a href={link}>{displayValue}</a> : displayValue}</td>
-    </tr>
+    <li>
+      <span className="label">{label}</span>
+      <span className="value">{link ? <a href={link}>{displayValue}</a> : displayValue}</span>
+    </li>
   );
 };
 
