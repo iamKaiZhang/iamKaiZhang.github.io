@@ -178,7 +178,11 @@ export default function InteractiveDog() {
       clearTimers();
       window.removeEventListener('resize', onResize);
     };
-  }, [clearTimers, setGazeToBone]);
+    // Mount/unmount only: setGazeToBone depends on isEating/isHappy, so
+    // listing it would re-run this cleanup mid-meal and clear the eating
+    // timers, freezing the dog in the eating pose forever.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onWrapPointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -300,147 +304,156 @@ export default function InteractiveDog() {
             <g className="dog-tail">
               <path
                 className="dog-fill-soft"
-                d="M235 114 C260 68, 308 80, 292 121 C314 130, 296 171, 254 162 C229 157, 220 134, 235 114 Z"
+                d="M230 128 C224 94, 258 78, 276 98 C290 114, 280 138, 258 136 C268 122, 262 108, 248 110 C240 112, 233 119, 230 128 Z"
               />
               <path
                 className="dog-line"
-                d="M235 114 C260 68, 308 80, 292 121 C314 130, 296 171, 254 162 C229 157, 220 134, 235 114 Z"
+                d="M230 128 C224 94, 258 78, 276 98 C290 114, 280 138, 258 136 C268 122, 262 108, 248 110 C240 112, 233 119, 230 128 Z"
               />
-              <path className="dog-line-thin" d="M259 103 C276 116, 275 139, 256 151" />
             </g>
 
             <g className="dog-body-group">
               <path
                 className="dog-fill-soft"
-                d="M108 154 C116 116, 151 98, 196 103 C236 108, 258 134, 251 170 C244 205, 199 216, 149 205 C117 198, 100 178, 108 154 Z"
+                d="M122 112 C150 98, 188 100, 214 118 C240 134, 254 160, 248 186 C244 202, 230 210, 212 210 L130 210 C116 210, 107 197, 108 178 C109 152, 112 128, 122 112 Z"
               />
               <path
                 className="dog-line"
-                d="M108 154 C116 116, 151 98, 196 103 C236 108, 258 134, 251 170 C244 205, 199 216, 149 205 C117 198, 100 178, 108 154 Z"
+                d="M122 112 C150 98, 188 100, 214 118 C240 134, 254 160, 248 186 C244 202, 230 210, 212 210 L130 210 C116 210, 107 197, 108 178 C109 152, 112 128, 122 112 Z"
               />
-              <path className="dog-line-thin" d="M160 113 C173 123, 178 137, 174 152" />
-              <path className="dog-line-thin" d="M194 112 C210 125, 215 141, 210 158" />
-              <path className="dog-line-thin" d="M130 169 C148 180, 177 182, 202 176" />
+              <path className="dog-line-thin" d="M196 210 C186 192, 190 168, 206 156" />
               <path
-                className="dog-line"
-                d="M122 184 C116 205, 104 218, 89 216 C82 215, 80 208, 86 202 C95 193, 109 187, 122 184 Z"
+                className="dog-fill-soft"
+                d="M124 156 L122 198 C122 206, 126 210, 133 210 L143 210 C150 210, 152 205, 151 198 L146 156 Z"
               />
               <path
                 className="dog-line"
-                d="M153 187 C148 209, 135 222, 120 220 C113 219, 111 212, 117 204 C126 194, 140 189, 153 187 Z"
+                d="M124 156 L122 198 C122 206, 126 210, 133 210 L143 210 C150 210, 152 205, 151 198 L146 156"
               />
               <path
                 className="dog-line"
-                d="M218 184 C220 206, 210 221, 195 220 C188 219, 185 212, 190 204 C197 193, 208 187, 218 184 Z"
+                d="M166 168 L166 198 C166 206, 170 210, 177 210 L185 210 C191 210, 193 205, 192 199 L190 172"
               />
               <path
                 className="dog-line"
-                d="M245 176 C256 194, 256 213, 242 219 C234 222, 229 216, 231 206 C234 194, 239 184, 245 176 Z"
+                d="M196 210 C196 202, 202 198, 210 199 C218 200, 222 205, 221 210"
               />
             </g>
 
             <g className="dog-head" ref={headRef}>
               <path
                 className="dog-fill-soft"
-                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+                d="M68 96 C58 72, 66 52, 82 46 C90 58, 92 76, 88 92 Z"
+              />
+              <path className="dog-line" d="M68 96 C58 72, 66 52, 82 46 C90 58, 92 76, 88 92 Z" />
+              <path
+                className="dog-fill-soft"
+                d="M118 90 C118 64, 128 46, 144 44 C150 58, 148 78, 140 94 Z"
               />
               <path
                 className="dog-line"
-                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+                d="M118 90 C118 64, 128 46, 144 44 C150 58, 148 78, 140 94 Z"
               />
-              <path className="dog-line" d="M74 94 L60 48 L96 80" />
-              <path className="dog-line-thin" d="M74 84 L67 61 L87 79" />
-              <path className="dog-line" d="M116 65 L134 34 L150 83" />
-              <path className="dog-line-thin" d="M123 70 L133 50 L143 81" />
+              <path className="dog-line-thin" d="M74 84 C70 72, 72 62, 78 56" />
+              <path className="dog-line-thin" d="M128 80 C128 68, 132 58, 138 52" />
               <path
-                className="dog-line"
-                d="M86 69 C91 49, 104 52, 104 68 C115 47, 129 54, 121 74"
-              />
-              <path
-                className="dog-line"
-                d="M67 123 C51 123, 45 133, 55 141 C43 145, 44 158, 58 162"
+                className="dog-fill-soft"
+                d="M62 112 C64 84, 84 66, 108 66 C134 66, 152 86, 152 112 C152 138, 134 156, 106 158 C80 160, 60 140, 62 112 Z"
               />
               <path
                 className="dog-line"
-                d="M149 120 C164 123, 166 136, 153 142 C166 149, 158 162, 143 161"
+                d="M62 112 C64 84, 84 66, 108 66 C134 66, 152 86, 152 112 C152 138, 134 156, 106 158 C80 160, 60 140, 62 112 Z"
               />
+              <path
+                className="dog-fill-soft"
+                d="M55 134 C51 148, 61 161, 77 163 C93 165, 105 157, 105 145 C105 133, 93 125, 77 125 C65 125, 58 128, 55 134 Z"
+              />
+              <path
+                className="dog-line"
+                d="M55 134 C51 148, 61 161, 77 163 C93 165, 105 157, 105 145 C105 133, 93 125, 77 125 C65 125, 58 128, 55 134 Z"
+              />
+              <ellipse className="dog-nose" cx="61" cy="136" rx="7" ry="5.5" />
+              <path className="dog-line-thin dog-mouth-smile" d="M65 146 C73 155, 87 156, 95 149" />
 
               <g className="dog-eye-group">
                 <g className="dog-eye-whites">
-                  <ellipse cx="91" cy="130" rx="8" ry="6.5" />
-                  <ellipse cx="123" cy="126" rx="8" ry="6.5" />
+                  <ellipse cx="92" cy="114" rx="8.5" ry="7.5" />
+                  <ellipse cx="126" cy="112" rx="8.5" ry="7.5" />
                 </g>
                 <g className="dog-eye-pupils">
-                  <ellipse className="dog-eye" cx="91" cy="130" rx="4.1" ry="5" />
-                  <ellipse className="dog-eye" cx="123" cy="126" rx="4.1" ry="5" />
+                  <ellipse className="dog-eye" cx="92" cy="114" rx="4.3" ry="5.4" />
+                  <ellipse className="dog-eye" cx="126" cy="112" rx="4.3" ry="5.4" />
                 </g>
               </g>
-
-              <ellipse className="dog-nose" cx="79" cy="148" rx="7" ry="5" />
-              <path
-                className="dog-line-thin dog-mouth-smile"
-                d="M86 152 C97 163, 117 163, 129 149"
-              />
-              <path className="dog-line-thin" d="M84 116 C91 111, 100 112, 105 117" />
-              <path className="dog-line-thin" d="M116 112 C125 108, 135 111, 140 117" />
+              <path className="dog-line-thin" d="M84 100 C90 96, 98 96, 103 100" />
+              <path className="dog-line-thin" d="M118 98 C124 94, 132 94, 137 98" />
             </g>
           </g>
 
           <g className="dog-eating-pose" aria-hidden="true">
             <path
               className="dog-fill-soft"
-              d="M106 176 C119 143, 156 129, 204 133 C246 137, 269 158, 264 187 C258 216, 209 225, 151 215 C113 209, 96 195, 106 176 Z"
+              d="M226 150 C220 116, 254 100, 272 120 C286 136, 276 160, 254 158 C264 144, 258 130, 244 132 C236 134, 229 141, 226 150 Z"
             />
             <path
               className="dog-line"
-              d="M106 176 C119 143, 156 129, 204 133 C246 137, 269 158, 264 187 C258 216, 209 225, 151 215 C113 209, 96 195, 106 176 Z"
+              d="M226 150 C220 116, 254 100, 272 120 C286 136, 276 160, 254 158 C264 144, 258 130, 244 132 C236 134, 229 141, 226 150 Z"
+            />
+            <path
+              className="dog-fill-soft"
+              d="M118 148 C146 132, 186 134, 212 150 C238 164, 250 184, 246 200 C242 212, 228 216, 210 216 L126 216 C112 216, 104 206, 105 190 C106 172, 110 158, 118 148 Z"
             />
             <path
               className="dog-line"
-              d="M232 136 C258 92, 305 105, 289 145 C312 153, 292 188, 252 178 C228 172, 218 153, 232 136 Z"
+              d="M118 148 C146 132, 186 134, 212 150 C238 164, 250 184, 246 200 C242 212, 228 216, 210 216 L126 216 C112 216, 104 206, 105 190 C106 172, 110 158, 118 148 Z"
             />
-            <path className="dog-line-thin" d="M258 125 C274 139, 272 160, 254 170" />
-            <g transform="translate(-8 38) rotate(-10 102 130)">
+            <path className="dog-line-thin" d="M194 216 C186 200, 190 180, 204 170" />
+            <path
+              className="dog-line"
+              d="M124 176 C112 190, 102 204, 96 214 C94 218, 98 221, 104 220 L124 216"
+            />
+            <path
+              className="dog-line"
+              d="M158 182 C150 194, 144 206, 141 214 C140 218, 144 221, 150 220 L166 216"
+            />
+            <g transform="translate(-6 40) rotate(-12 102 130)">
               <path
                 className="dog-fill-soft"
-                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
+                d="M68 96 C58 72, 66 52, 82 46 C90 58, 92 76, 88 92 Z"
+              />
+              <path className="dog-line" d="M68 96 C58 72, 66 52, 82 46 C90 58, 92 76, 88 92 Z" />
+              <path
+                className="dog-fill-soft"
+                d="M118 90 C118 64, 128 46, 144 44 C150 58, 148 78, 140 94 Z"
               />
               <path
                 className="dog-line"
-                d="M66 130 C52 96, 70 65, 101 60 C132 56, 158 76, 162 107 C166 139, 141 163, 106 166 C84 168, 70 153, 66 130 Z"
-              />
-              <path className="dog-line" d="M74 94 L60 48 L96 80" />
-              <path className="dog-line" d="M116 65 L134 34 L150 83" />
-              <path
-                className="dog-line"
-                d="M86 69 C91 49, 104 52, 104 68 C115 47, 129 54, 121 74"
+                d="M118 90 C118 64, 128 46, 144 44 C150 58, 148 78, 140 94 Z"
               />
               <path
-                className="dog-line"
-                d="M67 123 C51 123, 45 133, 55 141 C43 145, 44 158, 58 162"
+                className="dog-fill-soft"
+                d="M62 112 C64 84, 84 66, 108 66 C134 66, 152 86, 152 112 C152 138, 134 156, 106 158 C80 160, 60 140, 62 112 Z"
               />
               <path
                 className="dog-line"
-                d="M149 120 C164 123, 166 136, 153 142 C166 149, 158 162, 143 161"
+                d="M62 112 C64 84, 84 66, 108 66 C134 66, 152 86, 152 112 C152 138, 134 156, 106 158 C80 160, 60 140, 62 112 Z"
               />
-              <ellipse className="dog-eye" cx="89" cy="133" rx="3.8" ry="4.7" />
-              <ellipse className="dog-eye" cx="119" cy="129" rx="3.8" ry="4.7" />
-              <ellipse className="dog-nose" cx="78" cy="150" rx="7" ry="5" />
-              <path className="dog-line-thin dog-chew-line" d="M84 154 C96 161, 114 161, 126 151" />
+              <path
+                className="dog-fill-soft"
+                d="M55 134 C51 148, 61 161, 77 163 C93 165, 105 157, 105 145 C105 133, 93 125, 77 125 C65 125, 58 128, 55 134 Z"
+              />
+              <path
+                className="dog-line"
+                d="M55 134 C51 148, 61 161, 77 163 C93 165, 105 157, 105 145 C105 133, 93 125, 77 125 C65 125, 58 128, 55 134 Z"
+              />
+              <ellipse className="dog-nose" cx="61" cy="136" rx="7" ry="5.5" />
+              <path className="dog-line-thin dog-chew-line" d="M65 146 C73 155, 87 156, 95 149" />
+              <path className="dog-line-thin" d="M86 112 C90 108, 96 107, 100 110" />
+              <path className="dog-line-thin" d="M118 110 C122 106, 128 105, 132 108" />
             </g>
-            <path
-              className="dog-line"
-              d="M118 195 C106 216, 89 221, 78 212 C73 208, 77 199, 87 196"
-            />
-            <path
-              className="dog-line"
-              d="M151 197 C139 219, 119 224, 108 214 C104 209, 108 200, 119 197"
-            />
-            <path className="dog-line" d="M223 193 C222 213, 212 224, 198 222" />
-            <path className="dog-line" d="M254 187 C265 204, 264 219, 250 223" />
-            <path className="dog-line-thin dog-eaten-bone" d="M55 213 L106 199" />
-            <circle className="dog-bone-end" cx="52" cy="214" r="7.5" />
-            <circle className="dog-bone-end" cx="108" cy="198" r="7.5" />
+            <path className="dog-line-thin dog-eaten-bone" d="M48 214 L96 204" />
+            <circle className="dog-bone-end" cx="45" cy="215" r="7.5" />
+            <circle className="dog-bone-end" cx="99" cy="203" r="7.5" />
           </g>
 
           <g className="dog-heart" aria-hidden="true">
