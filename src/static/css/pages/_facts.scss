@@ -332,8 +332,28 @@
 
     .value {
       color: _palette(fg-bold);
+      font-size: 0.9em;
       font-variant-numeric: tabular-nums;
+      transition: color _duration(transition) ease;
     }
+
+    li:hover {
+      .label,
+      .value,
+      .value a {
+        color: _palette(accent);
+      }
+    }
+
+    .label {
+      transition: color _duration(transition) ease;
+    }
+  }
+
+  // No divider between the stats and the other facts
+  .facts-content section:nth-of-type(2) {
+    border-top: none;
+    padding-top: 0;
   }
 
   .text-facts ul {
@@ -342,9 +362,21 @@
 
     li {
       margin: 0.5rem 0;
+      font-size: 0.9em;
+      transition: color _duration(transition) ease;
 
       &::marker {
         color: _palette(fg-light);
+      }
+
+      &:hover {
+        color: _palette(accent);
+
+        a,
+        strong,
+        b {
+          color: _palette(accent);
+        }
       }
     }
   }

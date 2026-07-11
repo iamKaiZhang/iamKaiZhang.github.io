@@ -48,13 +48,13 @@ export const metadata: Metadata = {
   },
 };
 
+// The storage key is versioned: renaming it discards preferences stored by
+// older versions of the site, so the night default applies to everyone once.
 const themeInitScript = `
 (function(){
   var stored = null;
-  try { stored = localStorage.getItem('theme'); } catch (e) {}
-  var theme = stored === 'day' || stored === 'night'
-    ? stored
-    : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day');
+  try { stored = localStorage.getItem('kz-theme'); } catch (e) {}
+  var theme = stored === 'day' || stored === 'night' ? stored : 'night';
   document.documentElement.setAttribute('data-theme', theme);
 })();
 `;

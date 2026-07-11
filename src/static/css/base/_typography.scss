@@ -17,6 +17,7 @@ a {
     ('color #{_duration(transition)} ease', 'text-decoration-color #{_duration(transition)} ease')
   );
   color: _palette(fg-bold);
+  cursor: pointer;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-decoration-color: _palette(border);

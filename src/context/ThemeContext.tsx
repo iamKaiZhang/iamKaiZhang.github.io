@@ -5,14 +5,16 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 type Theme = 'day' | 'night';
 
 function initialTheme(): Theme {
-  if (typeof window === 'undefined') return 'day';
+  if (typeof window === 'undefined') return 'night';
   try {
-    const stored = localStorage.getItem('theme');
+    // Versioned key: older stored preferences are deliberately ignored
+    const stored = localStorage.getItem('kz-theme');
     if (stored === 'day' || stored === 'night') return stored;
   } catch {
-    // localStorage unavailable; fall through to system preference
+    // localStorage unavailable; fall through to the default
   }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
+  // Night is the site's default look; day stays available via the toggle
+  return 'night';
 }
 
 interface ThemeContextValue {
@@ -34,7 +36,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setTheme((t) => {
         const next = t === 'day' ? 'night' : 'day';
         try {
-          localStorage.setItem('theme', next);
+          localStorage.setItem('kz-theme', next);
         } catch {
           // ignore write failures (private mode, etc.)
         }

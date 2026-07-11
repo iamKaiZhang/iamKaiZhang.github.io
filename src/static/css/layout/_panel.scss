@@ -202,6 +202,11 @@ article.post {
     flex: none;
     padding-top: 0.2rem;
   }
+
+  // The value column reads better a notch smaller than the page base
+  li > :not(.label) {
+    font-size: 0.9em;
+  }
 }
 
 @media screen and (max-width: 620px) {

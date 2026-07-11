@@ -96,9 +96,13 @@
 .hero .hl {
   transition: color 0.3s ease;
 
-  // Linked text on the landing page speaks in the serif voice
+  // Linked text on the landing page speaks in the serif voice.
+  // The vertical padding widens the hover hit box into the line gap
+  // (inline padding paints without affecting the line height), so the
+  // hand cursor appears across the whole line band, not just the glyphs.
   a:not(.pill) {
     font-family: _font(family-heading);
+    padding-block: 0.22em;
     transition:
       color 0.3s ease,
       text-decoration-color 0.3s ease;
