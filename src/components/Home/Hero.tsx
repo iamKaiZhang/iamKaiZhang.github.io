@@ -4,10 +4,14 @@ import React, { useCallback, useState } from 'react';
 
 import Link from 'next/link';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import contactData from '@/data/contact';
+
 // Number of veiled sentences. Each one toggles independently: click to
 // reveal it, click again to veil it. The bar at the top of the viewport
 // shows how many sentences the visitor has revealed.
-const SENTENCES = 5;
+const SENTENCES = 4;
 
 export default function Hero() {
   const [revealed, setRevealed] = useState<Set<number>>(new Set());
@@ -61,7 +65,7 @@ export default function Hero() {
             </span>
           </span>
           <span className="hl">
-            <span className={veil(1)} data-veil-index="1">
+            <span className={veil(0)} data-veil-index="0">
               {' '}
               advised by <a href="https://www.bsaver.io/">Saverio Bolognani</a>,{' '}
               <a href="https://censi.science/">Andrea Censi</a>,{' '}
@@ -74,13 +78,13 @@ export default function Hero() {
           <span className="hl">
             My research lies at the intersection of <span className="pill">Game Theory</span> and{' '}
             <span className="pill">Control</span>
-            <span className={veil(2)} data-veil-index="2">
+            <span className={veil(1)} data-veil-index="1">
               . I use mathematical tools from game theory and optimization to analyse and design
               mechanisms
             </span>
           </span>
           <span className="hl">
-            <span className={veil(3)} data-veil-index="3">
+            <span className={veil(2)} data-veil-index="2">
               {' '}
               for <span className="pill">Socio-Technical Systems</span>, like energy markets and
               mobility systems, with the aim of promoting <span className="pill">Efficiency</span>{' '}
@@ -95,7 +99,7 @@ export default function Hero() {
             or playing board games.
           </span>
           <span className="hl">
-            <span className={veil(4)} data-veil-index="4">
+            <span className={veil(3)} data-veil-index="3">
               {' '}
               <em>
                 P.S.: click my <Link href="/facts">name</Link> up there for more fun (or not) facts
@@ -107,18 +111,17 @@ export default function Hero() {
       </div>
 
       <div className="hero-social">
-        <a className="pill" href="mailto:zhangkai@ethz.ch">
-          Email
-        </a>
-        <a className="pill" href="https://github.com/iamKaiZhang">
-          GitHub
-        </a>
-        <a className="pill" href="https://scholar.google.com/citations?user=tRIyxYIAAAAJ&hl=en">
-          Scholar
-        </a>
-        <a className="pill" href="https://www.linkedin.com/in/kaizhang2099/">
-          LinkedIn
-        </a>
+        {contactData.map((item) => (
+          <a
+            key={item.label}
+            className="pill icon-pill"
+            href={item.link}
+            aria-label={item.label}
+            title={item.label}
+          >
+            <FontAwesomeIcon icon={item.icon} />
+          </a>
+        ))}
       </div>
     </div>
   );
