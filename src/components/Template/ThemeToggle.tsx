@@ -22,7 +22,8 @@ export default function ThemeToggle() {
       onClick={toggle}
       title={isDay ? 'Switch to night mode' : 'Switch to day mode'}
     >
-      {isDay ? '⏾' : '☀'}
+      {/* ︎ forces the monochrome text glyph; iOS otherwise renders the color emoji sun */}
+      {isDay ? '⏾' : '☀︎'}
     </button>
   );
 }
