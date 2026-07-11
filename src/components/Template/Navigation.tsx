@@ -3,39 +3,34 @@
 import React from 'react';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import routes from '../../data/routes';
-import Hamburger from './Hamburger';
 import ThemeToggle from './ThemeToggle';
 
-// Websites Navbar, displays routes defined in 'src/data/routes'
-const Navigation: React.FC = () => (
-  <header id="header">
-    <h1 className="index-link">
-      {routes
-        .filter((l) => l.index)
-        .map((l) => (
-          <Link key={l.label} href={l.path}>
-            {l.label}
+// Site header: serif nav plus theme toggle.
+const Navigation: React.FC = () => {
+  // Normalize the trailing slash from static export URLs
+  const pathname = usePathname().replace(/\/+$/, '') || '/';
+
+  return (
+    <header id="header">
+      <nav aria-label="Main">
+        {routes.map((route) => (
+          <Link
+            key={route.label}
+            href={route.path}
+            aria-current={pathname === route.path ? 'page' : undefined}
+          >
+            {route.label}
           </Link>
         ))}
-    </h1>
-    <nav className="links">
-      <ul>
-        {routes
-          .filter((l) => !l.index)
-          .map((l) => (
-            <li key={l.label}>
-              <Link href={l.path}>{l.label}</Link>
-            </li>
-          ))}
-      </ul>
-    </nav>
-    <div className="header-right">
-      <ThemeToggle />
-      <Hamburger />
-    </div>
-  </header>
-);
+      </nav>
+      <div className="header-right">
+        <ThemeToggle />
+      </div>
+    </header>
+  );
+};
 
 export default Navigation;

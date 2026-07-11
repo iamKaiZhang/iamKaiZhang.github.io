@@ -8,8 +8,7 @@ import { usePathname } from 'next/navigation';
  * Reveals [data-reveal] elements as they scroll into view.
  * Elements are only hidden after this component mounts (html.reveal-ready),
  * so content stays visible without JS. Honors prefers-reduced-motion.
- * Also marks html.has-navigated on the first client-side route change,
- * which disables the sidebar entrance animation after the initial load.
+ * Also scrolls to the top on route changes.
  */
 export default function ScrollReveal() {
   const pathname = usePathname();
@@ -17,7 +16,7 @@ export default function ScrollReveal() {
 
   useEffect(() => {
     if (lastPathname.current !== null && lastPathname.current !== pathname) {
-      document.documentElement.classList.add('has-navigated');
+      window.scrollTo(0, 0);
     }
     lastPathname.current = pathname;
 

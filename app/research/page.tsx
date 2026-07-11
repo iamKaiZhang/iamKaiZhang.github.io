@@ -3,10 +3,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import Cell from '@/components/Research/Cell';
+import Paper from '@/components/Research/Paper';
 import { researchData } from '@/data/research';
-
-import PageWrapper from '../components/PageWrapper';
 
 export const metadata: Metadata = {
   title: 'Research',
@@ -15,20 +13,20 @@ export const metadata: Metadata = {
 
 export default function ResearchPage() {
   return (
-    <PageWrapper>
-      <article className="post" id="research">
-        <header>
-          <div className="title">
-            <h2>
-              <Link href="/research">Research</Link>
-            </h2>
-            <p>A selection of my research projects that I&apos;m excited about.</p>
-          </div>
-        </header>
-        {researchData.map((topic) => (
-          <Cell data={topic} key={topic.title} />
-        ))}
-      </article>
-    </PageWrapper>
+    <article className="post" id="research">
+      <header>
+        <div className="title">
+          <h2>
+            <Link href="/research">Research</Link>
+          </h2>
+          <p>A selection of my research projects that I&apos;m excited about.</p>
+        </div>
+      </header>
+      <section>
+        {researchData.map((topic) =>
+          topic.papers?.map((paper) => <Paper key={paper.title} data={paper} area={topic.title} />),
+        )}
+      </section>
+    </article>
   );
 }

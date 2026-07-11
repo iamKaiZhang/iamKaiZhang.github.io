@@ -3,11 +3,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import Markdown from 'markdown-to-jsx';
-
-import { teachingMarkdown } from '@/data/teaching';
-
-import PageWrapper from '../components/PageWrapper';
+import { courses, supervisions } from '@/data/teaching';
 
 export const metadata: Metadata = {
   title: 'Teaching',
@@ -16,18 +12,50 @@ export const metadata: Metadata = {
 
 export default function TeachingPage() {
   return (
-    <PageWrapper>
-      <article className="post" id="teaching">
-        <header>
-          <div className="title">
-            <h2>
-              <Link href="/teaching">Teaching</Link>
-            </h2>
-            <p>Courses and student projects that I am TAing.</p>
+    <article className="post" id="teaching">
+      <header>
+        <div className="title">
+          <h2>
+            <Link href="/teaching">Teaching</Link>
+          </h2>
+          <p>Courses and student projects that I am TAing.</p>
+        </div>
+      </header>
+
+      <section data-reveal>
+        <h2>Courses</h2>
+        {courses.map((course) => (
+          <div className="course" key={course.title}>
+            <div className="what">
+              {course.link ? <a href={course.link}>{course.title}</a> : course.title}
+              <small>{course.detail}</small>
+            </div>
+            <div className="when">{course.when}</div>
           </div>
-        </header>
-        <Markdown>{teachingMarkdown}</Markdown>
-      </article>
-    </PageWrapper>
+        ))}
+      </section>
+
+      <section data-reveal>
+        <h2>Student Supervision</h2>
+        {supervisions.map((item) => (
+          <div className="project" key={item.title}>
+            <div className="head">
+              <span className="title">{item.title}</span>
+              {item.ongoing && <span className="tag accent">Ongoing</span>}
+            </div>
+            <div className="student">{item.student}</div>
+            <div className="detail">
+              {item.project} · with{' '}
+              {item.supervisors.map((s, i) => (
+                <React.Fragment key={s.name}>
+                  {i > 0 && ' and '}
+                  {s.link ? <a href={s.link}>{s.name}</a> : s.name}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+    </article>
   );
 }

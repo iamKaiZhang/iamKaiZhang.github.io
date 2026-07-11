@@ -21,8 +21,8 @@ $size: (
 // Font.
 $font: (
   family: (
-    var(--font-source-sans),
     'Helvetica Neue',
+    Helvetica,
     Arial,
     sans-serif,
   ),
@@ -31,17 +31,17 @@ $font: (
     monospace,
   ),
   family-heading: (
-    var(--font-raleway),
-    'Raleway',
-    Helvetica,
-    sans-serif,
+    'Times New Roman',
+    Times,
+    Georgia,
+    serif,
   ),
   weight: 400,
-  weight-bold: 700,
+  weight-bold: 600,
   weight-heading: 400,
-  weight-heading-bold: 800,
-  weight-heading-extrabold: 900,
-  kerning-heading: 0.25em,
+  weight-heading-bold: 400,
+  weight-heading-extrabold: 400,
+  kerning-heading: 0,
 );
 
 // Palette — resolved via CSS custom properties in _theme-vars.scss

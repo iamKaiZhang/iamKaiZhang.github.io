@@ -1,15 +1,16 @@
 // Register each color as a typed CSS property so the browser can
 // smoothly interpolate between values when the theme changes.
-@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #f5f7f8; }
-@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #e9eef1; }
-@property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #46586a; }
-@property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #11212d; }
-@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #7e93a3; }
-@property --clr-border     { syntax: '<color>'; inherits: true; initial-value: rgba(17, 33, 45, 0.18); }
-@property --clr-border-bg  { syntax: '<color>'; inherits: true; initial-value: rgba(17, 33, 45, 0.05); }
-@property --clr-border-alt { syntax: '<color>'; inherits: true; initial-value: rgba(17, 33, 45, 0.38); }
-@property --clr-accent     { syntax: '<color>'; inherits: true; initial-value: #2c7d76; }
-@property --clr-accent-05  { syntax: '<color>'; inherits: true; initial-value: rgba(44, 125, 118, 0.05); }
+@property --clr-bg        { syntax: '<color>'; inherits: true; initial-value: #faf9f7; }
+@property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #faf9f7; }
+@property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #57534e; }
+@property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #1a1816; }
+@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #8d8880; }
+@property --clr-border     { syntax: '<color>'; inherits: true; initial-value: rgba(26, 24, 22, 0.16); }
+@property --clr-border-bg  { syntax: '<color>'; inherits: true; initial-value: rgba(26, 24, 22, 0.05); }
+@property --clr-border-alt { syntax: '<color>'; inherits: true; initial-value: rgba(26, 24, 22, 0.34); }
+@property --clr-accent     { syntax: '<color>'; inherits: true; initial-value: #c73e1d; }
+@property --clr-accent-05  { syntax: '<color>'; inherits: true; initial-value: rgba(199, 62, 29, 0.05); }
+@property --clr-accent-ink { syntax: '<color>'; inherits: true; initial-value: #faf9f7; }
 
 // Smooth transition on the day/night toggle
 :root {
@@ -23,34 +24,39 @@
     --clr-border-bg 1.0s ease,
     --clr-border-alt 1.0s ease,
     --clr-accent    0.8s ease,
-    --clr-accent-05 0.8s ease;
+    --clr-accent-05 0.8s ease,
+    --clr-accent-ink 0.8s ease;
 }
 
-// ─── Day theme: cool off-white derived from the navy identity ─────────────────
+// ─── Day theme: warm off-white, deep vermilion accent ──────────────────────────
 :root,
 [data-theme='day'] {
-  --clr-bg: #f5f7f8;
-  --clr-bg-alt: #e9eef1;
-  --clr-fg: #46586a;
-  --clr-fg-bold: #11212d;
-  --clr-fg-light: #7e93a3;
-  --clr-border: rgba(17, 33, 45, 0.18);
-  --clr-border-bg: rgba(17, 33, 45, 0.05);
-  --clr-border-alt: rgba(17, 33, 45, 0.38);
-  --clr-accent: #2c7d76;
-  --clr-accent-05: rgba(44, 125, 118, 0.05);
+  --clr-bg: #faf9f7;
+  --clr-bg-alt: #faf9f7;
+  --clr-fg: #57534e;
+  --clr-fg-bold: #1a1816;
+  --clr-fg-light: #8d8880;
+  --clr-border: rgba(26, 24, 22, 0.16);
+  --clr-border-bg: rgba(26, 24, 22, 0.05);
+  --clr-border-alt: rgba(26, 24, 22, 0.34);
+  --clr-accent: #c73e1d;
+  --clr-accent-05: rgba(199, 62, 29, 0.05);
+  --clr-accent-ink: #faf9f7;
+  --photo-opacity: 0.12;
 }
 
-// ─── Night theme: deep navy, the site's core identity ─────────────────────────
+// ─── Night theme: warm near-black, bright vermilion accent ─────────────────────
 [data-theme='night'] {
-  --clr-bg: #11212d;
-  --clr-bg-alt: #06141b;
-  --clr-fg: #9ba8ab;
-  --clr-fg-bold: #ccd0cf;
-  --clr-fg-light: #5d7183;
-  --clr-border: rgba(75, 92, 106, 0.4);
-  --clr-border-bg: rgba(75, 92, 106, 0.1);
-  --clr-border-alt: rgba(75, 92, 106, 0.65);
-  --clr-accent: #7fc4bc;
-  --clr-accent-05: rgba(127, 196, 188, 0.05);
+  --clr-bg: #141211;
+  --clr-bg-alt: #141211;
+  --clr-fg: #a8a49e;
+  --clr-fg-bold: #e9e7e4;
+  --clr-fg-light: #6e6a64;
+  --clr-border: rgba(233, 231, 228, 0.16);
+  --clr-border-bg: rgba(233, 231, 228, 0.06);
+  --clr-border-alt: rgba(233, 231, 228, 0.34);
+  --clr-accent: #ec4b26;
+  --clr-accent-05: rgba(236, 75, 38, 0.05);
+  --clr-accent-ink: #fdf4f1;
+  --photo-opacity: 0.22;
 }

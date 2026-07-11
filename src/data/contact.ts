@@ -15,6 +15,8 @@ export interface ContactItem {
   link: string;
   label: string;
   icon: IconDefinition;
+  /** Text shown for the link; falls back to a cleaned-up URL */
+  display?: string;
 }
 
 const data: ContactItem[] = [
@@ -37,6 +39,7 @@ const data: ContactItem[] = [
     link: 'https://scholar.google.com/citations?user=tRIyxYIAAAAJ&hl=en',
     label: 'Scholar',
     icon: faGoogleScholar,
+    display: 'Google Scholar',
   },
 ];
 

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import type { Metadata } from 'next';
-import { Raleway, Source_Sans_3 } from 'next/font/google';
 
 import GoogleAnalytics from '@/components/Template/GoogleAnalytics';
 import Navigation from '@/components/Template/Navigation';
@@ -9,20 +8,6 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import '@/static/css/main.scss';
 
 import ScrollReveal from './components/ScrollReveal';
-
-const sourceSans = Source_Sans_3({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  variable: '--font-source-sans',
-  display: 'swap',
-});
-
-const raleway = Raleway({
-  weight: ['400', '800', '900'],
-  subsets: ['latin'],
-  variable: '--font-raleway',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -76,11 +61,7 @@ const themeInitScript = `
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${sourceSans.variable} ${raleway.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Set theme before first paint to prevent flash */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
@@ -88,10 +69,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <ScrollReveal />
-          <div id="wrapper">
-            <Navigation />
-            {children}
-          </div>
+          <Navigation />
+          {children}
+          <footer id="site-footer">
+            <div>Zürich, Switzerland</div>
+            <div>© 2026 Kai Zhang</div>
+          </footer>
         </ThemeProvider>
         <GoogleAnalytics />
       </body>

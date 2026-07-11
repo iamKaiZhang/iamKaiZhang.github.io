@@ -1,0 +1,172 @@
+/* Landing page: shaded background photo + veiled introduction */
+
+.bg-photo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/images/bg-home.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  filter: blur(5px) grayscale(1) brightness(0.8);
+  opacity: var(--photo-opacity);
+  transition: opacity 0.4s ease;
+}
+
+.bg-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, transparent 25%, _palette(bg) 92%),
+    radial-gradient(ellipse at center, transparent 35%, _palette(bg) 100%);
+}
+
+#home {
+  position: relative;
+  min-height: calc(100dvh - 4rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 3.5rem clamp(2rem, 8vw, 6rem) 1.5rem;
+
+  p {
+    margin: 0.5em 0;
+    font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+    line-height: 1.55;
+    font-weight: 400;
+    color: _palette(fg-bold);
+    letter-spacing: -0.01em;
+  }
+}
+
+// Reveal progress: a thin accent bar across the top of the viewport
+.reveal-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  z-index: 100;
+  background: _palette(accent);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// Veiled text: the introduction unfolds one step per click.
+// Clicking an already-revealed segment veils the story again from there.
+.veil {
+  filter: blur(5px);
+  opacity: 0.55;
+  transition:
+    filter 0.7s ease,
+    opacity 0.7s ease,
+    color 0.3s ease;
+  cursor: pointer;
+
+  a {
+    pointer-events: none;
+  }
+
+  &.is-revealed {
+    filter: none;
+    opacity: 1;
+
+    a {
+      pointer-events: auto;
+    }
+  }
+}
+
+// Hovering a sentence renders it in the accent color, links and pills
+// included. Sentence groups (.hl) can span crisp and veiled fragments.
+// Links transition at the same speed as the surrounding text; pills keep
+// their own snappier fill.
+.hero .hl {
+  transition: color 0.3s ease;
+
+  a:not(.pill) {
+    transition:
+      color 0.3s ease,
+      text-decoration-color 0.3s ease;
+  }
+}
+
+.hero .hl:hover {
+  color: _palette(accent);
+
+  a {
+    color: _palette(accent);
+  }
+
+  .pill {
+    color: _palette(accent);
+    border-color: _palette(accent);
+  }
+}
+
+// A directly hovered pill still fills solid, like ped.ro's
+.hero .pill:hover {
+  background: _palette(accent);
+  border-color: _palette(accent);
+  color: var(--clr-accent-ink) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil {
+    transition: none;
+  }
+}
+
+.pill {
+  display: inline-block;
+  font-family: _font(family);
+  font-size: 0.66em;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid _palette(fg-bold);
+  border-radius: 999px;
+  padding: 0 0.6em;
+  line-height: 1.7;
+  vertical-align: 10%;
+  white-space: nowrap;
+  color: _palette(fg-bold);
+  // Pills react faster than the surrounding text (0.3s)
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+a.pill {
+  text-decoration: none;
+
+  &:hover {
+    background: _palette(accent);
+    border-color: _palette(accent);
+    color: var(--clr-accent-ink) !important;
+  }
+}
+
+.hero-social {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0 1.5rem 2.8rem;
+  font-size: 1.15rem;
+}

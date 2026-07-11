@@ -1,15 +1,65 @@
-export const teachingMarkdown = `# Courses
-- **[Game Theory and Control](https://www.bsaver.io/teaching/game-theory-and-control) - Dr. Saverio Bolognani, ETH Zürich**  
-*Fall 2023, Fall 2025*  
-Duties: Tutorial sessions, Exam preparation
-- **Control Systems - Prof. Dr. Florian Dörfler, ETH Zürich**  
-*Spring 2025, Spring 2026*  
-Duties: Exam preparation
+export interface Course {
+  title: string;
+  link?: string;
+  detail: string;
+  when: string;
+}
 
+export interface SupervisorLink {
+  name: string;
+  link?: string;
+}
 
-# Student Supervision
-- **<span style="color:#548235;">[ONGOING]</span>** **Sophia Lahrech**, *"Strategy-proof Learning in Refugee Allocation"* (Semester Project 2026), with Stefania Ionescu
-- **<span style="color:#548235;">[ONGOING]</span>** **Kim Kleinlogel**, *"The “Give-and-Take” in Recommender Systems: A Karma Economy for Fair Exploration"* (Bachelor Thesis 2026), with Stefania Ionescu
-- **Idriss Benhallam**, *"Fair Redesign of Online Ad Auctions with a Karma Economy"* (Semester Project 2026), with Stefania Ionescu
-- **Luise Lenné**, *"CO2 Karma Policy"* (Master Thesis 2025), with [Ezzat Elokda](https://www.elokda.info) and [Saverio Bolognani](https://www.bsaver.io)
-`;
+export interface Supervision {
+  title: string;
+  student: string;
+  project: string;
+  ongoing?: boolean;
+  supervisors: SupervisorLink[];
+}
+
+export const courses: Course[] = [
+  {
+    title: 'Game Theory and Control',
+    link: 'https://www.bsaver.io/teaching/game-theory-and-control',
+    detail: 'Tutorials and exam preparation, with Saverio Bolognani',
+    when: 'Fall 2023 / 2025',
+  },
+  {
+    title: 'Control Systems',
+    detail: 'Exam preparation, with Florian Dörfler',
+    when: 'Spring 2025 / 2026',
+  },
+];
+
+export const supervisions: Supervision[] = [
+  {
+    title: 'Strategy-proof Learning in Refugee Allocation',
+    student: 'Sophia Lahrech',
+    project: 'Semester Project 2026',
+    ongoing: true,
+    supervisors: [{ name: 'Stefania Ionescu' }],
+  },
+  {
+    title: "The 'Give-and-Take' in Recommender Systems: A Karma Economy for Fair Exploration",
+    student: 'Kim Kleinlogel',
+    project: 'Bachelor Thesis 2026',
+    ongoing: true,
+    supervisors: [{ name: 'Stefania Ionescu' }],
+  },
+  {
+    title: 'Fair Redesign of Online Ad Auctions with a Karma Economy',
+    student: 'Idriss Benhallam',
+    project: 'Semester Project 2026',
+    supervisors: [{ name: 'Stefania Ionescu' }],
+  },
+  {
+    title: 'CO2 Karma Policy',
+    student: 'Luise Lenné',
+    project: 'Master Thesis 2025',
+    supervisors: [
+      { name: 'Ezzat Elokda', link: 'https://www.elokda.info' },
+      { name: 'Saverio Bolognani', link: 'https://www.bsaver.io' },
+    ],
+  },
+];

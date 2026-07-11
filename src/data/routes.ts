@@ -6,11 +6,6 @@ export interface Route {
 
 const routes: Route[] = [
   {
-    index: true,
-    label: 'Kai Zhang',
-    path: '/facts',
-  },
-  {
     label: 'Home',
     path: '/',
   },

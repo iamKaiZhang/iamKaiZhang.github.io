@@ -1,35 +1,14 @@
 import React from 'react';
 
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
-import Markdown from 'markdown-to-jsx';
-
-import { aboutMarkdown } from '@/data/about';
-
-import PageWrapper from './components/PageWrapper';
-
-const count = (str: string) => str.split(/\s+/).filter((word) => word !== '').length;
+import Hero from '@/components/Home/Hero';
 
 export const metadata: Metadata = {
-  title: 'About',
-  description: 'Learn about Kai Zhang',
+  description:
+    'Kai Zhang is a PhD student at ETH Zürich working at the intersection of game theory and control theory.',
 };
 
 export default function HomePage() {
-  return (
-    <PageWrapper>
-      <article className="post markdown" id="about">
-        <header>
-          <div className="title">
-            <h2>
-              <Link href="/">About Me</Link>
-            </h2>
-            <p>(in about {count(aboutMarkdown)} words)</p>
-          </div>
-        </header>
-        <Markdown>{aboutMarkdown}</Markdown>
-      </article>
-    </PageWrapper>
-  );
+  return <Hero />;
 }
