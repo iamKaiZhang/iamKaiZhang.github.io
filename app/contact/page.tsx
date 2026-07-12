@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import contactData from '@/data/contact';
@@ -13,13 +14,20 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <article className="post" id="contact">
-      <header>
+      <header className="with-portrait">
         <div className="title">
           <h2>
             <Link href="/contact">Contact</Link>
           </h2>
           <p>Feel free to get in touch.</p>
         </div>
+        <Image
+          className="portrait"
+          src="/images/me03.jpg"
+          alt="Kai Zhang"
+          width={216}
+          height={216}
+        />
       </header>
       <section>
         <ul className="contact-list">

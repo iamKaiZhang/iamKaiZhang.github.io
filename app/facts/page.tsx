@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import InteractiveDog from '@/components/Facts/InteractiveDog';
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function FactsPage() {
   return (
     <article className="post" id="facts">
-      <header>
+      <header className="with-portrait">
         <div className="title">
           <h2>
             <Link href="/facts">Random Facts</Link>
@@ -25,6 +26,13 @@ export default function FactsPage() {
             in this world.
           </p>
         </div>
+        <Image
+          className="portrait"
+          src="/images/me03.jpg"
+          alt="Kai Zhang"
+          width={216}
+          height={216}
+        />
       </header>
 
       <div className="facts-content">

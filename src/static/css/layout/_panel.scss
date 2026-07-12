@@ -23,6 +23,14 @@ article.post {
     }
   }
 
+  // Header variant with a portrait photo beside the title
+  > header.with-portrait {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 3.5rem;
+  }
+
   section + section {
     margin-top: 3.5rem;
     padding-top: 3rem;
@@ -33,6 +41,18 @@ article.post {
     font-size: 1.45rem;
     margin-bottom: 1.4rem;
   }
+}
+
+/* Portrait beside a panel title, muted toward the site's grayscale mood */
+.portrait {
+  flex: none;
+  width: clamp(88px, 12vw, 116px);
+  height: clamp(88px, 12vw, 116px);
+  margin-bottom: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid _palette(border-alt);
+  filter: grayscale(0.35);
 }
 
 .tag {
