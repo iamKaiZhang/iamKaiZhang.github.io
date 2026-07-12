@@ -34,17 +34,15 @@ export const courses: Course[] = [
 
 export const supervisions: Supervision[] = [
   {
-    title: 'Strategy-proof Learning in Refugee Allocation',
+    title: 'Adversarial Interaction Attacks in Refugee Matching',
     student: 'Sophia Lahrech',
     project: 'Semester Project 2026',
-    ongoing: true,
     supervisors: [{ name: 'Stefania Ionescu' }],
   },
   {
     title: "The 'Give-and-Take' in Recommender Systems: A Karma Economy for Fair Exploration",
     student: 'Kim Kleinlogel',
     project: 'Bachelor Thesis 2026',
-    ongoing: true,
     supervisors: [{ name: 'Stefania Ionescu' }],
   },
   {
