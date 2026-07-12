@@ -43,7 +43,8 @@ article.post {
   }
 }
 
-/* Portrait beside a panel title, muted toward the site's grayscale mood */
+/* Portrait beside a panel title. In night mode it is muted toward the
+   site's grayscale mood; in day mode it keeps its original colors. */
 .portrait {
   flex: none;
   width: clamp(88px, 12vw, 116px);
@@ -52,6 +53,9 @@ article.post {
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid _palette(border-alt);
+}
+
+[data-theme='night'] .portrait {
   filter: grayscale(0.35);
 }
 
