@@ -23,7 +23,7 @@ export const courses: Course[] = [
     title: 'Game Theory and Control',
     link: 'https://www.bsaver.io/teaching/game-theory-and-control',
     detail: 'Tutorials and exam preparation, with Saverio Bolognani',
-    when: 'Fall 2023 / 2025',
+    when: 'Fall 2023 / 2025 / 2026',
   },
   {
     title: 'Control Systems',
@@ -34,22 +34,34 @@ export const courses: Course[] = [
 
 export const supervisions: Supervision[] = [
   {
+    title: 'Demand Response for Agentic LLM Serving',
+    student: 'Niklas Fischli',
+    project: 'Bachelor Thesis 2026',
+    supervisors: [{ name: 'Leonardo Pedroso', link: 'https://leonardopedroso.github.io' }],
+  },
+  {
+    title: 'Adversarial Interaction-proof Refugee Allocation',
+    student: 'Louis Richardt',
+    project: 'Semester Project 2026',
+    supervisors: [{ name: 'Stefania Ionescu', link: 'https://www.sionescu.ro' }],
+  },
+  {
     title: 'Adversarial Interaction Attacks in Refugee Matching',
     student: 'Sophia Lahrech',
     project: 'Semester Project 2026',
-    supervisors: [{ name: 'Stefania Ionescu' }],
+    supervisors: [{ name: 'Stefania Ionescu', link: 'https://www.sionescu.ro' }],
   },
   {
     title: "The 'Give-and-Take' in Recommender Systems: A Karma Economy for Fair Exploration",
     student: 'Kim Kleinlogel',
     project: 'Bachelor Thesis 2026',
-    supervisors: [{ name: 'Stefania Ionescu' }],
+    supervisors: [{ name: 'Stefania Ionescu', link: 'https://www.sionescu.ro' }],
   },
   {
     title: 'Fair Redesign of Online Ad Auctions with a Karma Economy',
     student: 'Idriss Benhallam',
     project: 'Semester Project 2026',
-    supervisors: [{ name: 'Stefania Ionescu' }],
+    supervisors: [{ name: 'Stefania Ionescu', link: 'https://www.sionescu.ro' }],
   },
   {
     title: 'CO2 Karma Policy',
