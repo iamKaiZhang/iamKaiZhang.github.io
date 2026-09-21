@@ -43,15 +43,18 @@ export default function TeachingPage() {
               <span className="title">{item.title}</span>
               {item.ongoing && <span className="tag accent">Ongoing</span>}
             </div>
-            <div className="student">{item.student}</div>
-            <div className="detail">
-              {item.project} · with{' '}
-              {item.supervisors.map((s, i) => (
-                <React.Fragment key={s.name}>
-                  {i > 0 && ' and '}
-                  {s.link ? <a href={s.link}>{s.name}</a> : s.name}
-                </React.Fragment>
-              ))}
+            <div className="student">
+              {item.student}
+              <span className="detail">
+                {' · '}
+                {item.project} · with{' '}
+                {item.supervisors.map((s, i) => (
+                  <React.Fragment key={s.name}>
+                    {i > 0 && ' and '}
+                    {s.link ? <a href={s.link}>{s.name}</a> : s.name}
+                  </React.Fragment>
+                ))}
+              </span>
             </div>
           </div>
         ))}
