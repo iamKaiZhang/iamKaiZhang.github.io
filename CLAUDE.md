@@ -41,7 +41,7 @@ This is a personal portfolio/resume website built with Next.js and TypeScript, d
 - **SCSS** for styling
 - **Jest** with React Testing Library and SWC
 - **Static Export** for GitHub Pages deployment
-- **Node 20+** runtime
+- **Node 22+** runtime
 
 ### Project Structure
 - `/app/` - Next.js App Router pages and layouts
