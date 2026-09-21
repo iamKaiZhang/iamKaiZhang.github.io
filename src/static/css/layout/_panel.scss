@@ -69,6 +69,9 @@ article.post {
   border-radius: 999px;
   padding: 0.05rem 0.65rem;
   white-space: nowrap;
+  // Centers the pill on the title's cap height; `middle` would center it on
+  // the lowercase x-height and leave it visibly low.
+  vertical-align: text-top;
 
   &.accent {
     color: _palette(accent);

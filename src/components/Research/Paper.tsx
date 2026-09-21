@@ -4,14 +4,17 @@ import { PaperData } from './types';
 
 interface PaperProps {
   data: PaperData;
-  area: string;
 }
 
-const Paper: React.FC<PaperProps> = ({ data, area }) => (
+const Paper: React.FC<PaperProps> = ({ data }) => (
   <div className="paper" data-reveal>
     <div className="title-row">
       <span className="title">{data.title}</span>
-      <span className="tag">{area}</span>
+      {data.tags.map((tag) => (
+        <span className="tag" key={tag}>
+          {tag}
+        </span>
+      ))}
     </div>
     <div className="meta">{data.authors}</div>
     <div className="venue">

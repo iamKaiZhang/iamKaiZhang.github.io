@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import Paper from '@/components/Research/Paper';
-import { researchData } from '@/data/research';
+import { papers } from '@/data/research';
 
 export const metadata: Metadata = {
   title: 'Research',
@@ -23,9 +23,9 @@ export default function ResearchPage() {
         </div>
       </header>
       <section>
-        {researchData.map((topic) =>
-          topic.papers?.map((paper) => <Paper key={paper.title} data={paper} area={topic.title} />),
-        )}
+        {papers.map((paper) => (
+          <Paper key={paper.title} data={paper} />
+        ))}
       </section>
     </article>
   );

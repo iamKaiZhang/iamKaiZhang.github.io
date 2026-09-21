@@ -1,22 +1,14 @@
 // src/components/Research/types.ts
 
-export interface CellData {
-  title: string;
-  link?: string;
-  image: string;
-  imageMobile?: string;
-  desc?: string;
-  papers: PaperData[];
-}
-
 export interface PaperLink {
   link: string;
   text?: string;
 }
 
-export interface PaperData {
+export interface PaperData<Tag extends string = string> {
   title: string;
   authors: string;
+  tags: Tag[];
   journal?: string;
   year?: number;
   remark?: string;
