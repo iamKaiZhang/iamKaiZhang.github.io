@@ -1,0 +1,146 @@
+[
+  {
+    "file": "brandenburger-tor.jpg",
+    "paper": "#efe4cf",
+    "focus": "90% 88%",
+    "mfocus": "90% 94%",
+    "place": "Brandenburger Tor · Berlin",
+    "de": "Ein Tor für alle Wege.",
+    "en": "A gate for every path."
+  },
+  {
+    "file": "fernsehturm.jpg",
+    "paper": "#f0e5cf",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Fernsehturm · Berlin",
+    "de": "Die Stadt schaut nach oben.",
+    "en": "The city looks up."
+  },
+  {
+    "file": "elbphilharmonie.jpg",
+    "paper": "#ede2cb",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Elbphilharmonie · Hamburg",
+    "de": "Wellen aus Glas über dem Hafen.",
+    "en": "Waves of glass above the harbour."
+  },
+  {
+    "file": "koelner-dom.jpg",
+    "paper": "#ece0c8",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Kölner Dom · Köln",
+    "de": "Zwei Türme über dem Rhein.",
+    "en": "Two towers above the Rhine."
+  },
+  {
+    "file": "neuschwanstein.jpg",
+    "paper": "#eee3cc",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Schloss Neuschwanstein · Bayern",
+    "de": "Ein Märchen aus Stein.",
+    "en": "A fairy tale made of stone."
+  },
+  {
+    "file": "grossmuenster.jpg",
+    "paper": "#efe5d2",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Grossmünster · Zürich",
+    "de": "Zwei Türme spiegeln sich im Fluss.",
+    "en": "Two towers mirrored in the river."
+  },
+  {
+    "file": "matterhorn.jpg",
+    "paper": "#ece6d6",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Matterhorn · Zermatt",
+    "de": "Der Berg trägt eine Wolke.",
+    "en": "The mountain wears a cloud."
+  },
+  {
+    "file": "riesenrad-prater.jpg",
+    "paper": "#f1e6d0",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Riesenrad im Prater · Wien",
+    "de": "Langsam dreht sich die Stadt.",
+    "en": "Slowly, the city turns."
+  },
+  {
+    "file": "eiffelturm.jpg",
+    "paper": "#f0e4cc",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Eiffelturm · Paris",
+    "de": "Eisen, leicht wie Spitze.",
+    "en": "Iron, light as lace."
+  },
+  {
+    "file": "rialto.jpg",
+    "paper": "#efe2c8",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Rialtobrücke · Venedig",
+    "de": "Die Stadt schwimmt im Licht.",
+    "en": "The city floats in the light."
+  },
+  {
+    "file": "fushimi-inari.jpg",
+    "paper": "#efe4cf",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Fushimi Inari · Kyōto",
+    "de": "Tausend Tore in den Wald.",
+    "en": "A thousand gates into the forest."
+  },
+  {
+    "file": "fuji.jpg",
+    "paper": "#f0e6d2",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Fuji & Chureito-Pagode · Japan",
+    "de": "Der Frühling wartet am Berg.",
+    "en": "Spring waits at the mountain."
+  },
+  {
+    "file": "golden-gate.jpg",
+    "paper": "#ede3cf",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Golden Gate Bridge · San Francisco",
+    "de": "Der Nebel kommt leise.",
+    "en": "The fog comes quietly."
+  },
+  {
+    "file": "sydney-opera.jpg",
+    "paper": "#eee4cf",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Opernhaus · Sydney",
+    "de": "Segel aus Stein am Hafen.",
+    "en": "Sails of stone in the harbour."
+  },
+  {
+    "file": "oia-santorini.jpg",
+    "paper": "#f1e8d6",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Oia · Santorini",
+    "de": "Das Licht trifft das Meer.",
+    "en": "The light meets the sea."
+  },
+  {
+    "file": "tower-bridge.jpg",
+    "paper": "#ece2cc",
+    "focus": "90% 90%",
+    "mfocus": "90% 94%",
+    "place": "Tower Bridge · London",
+    "de": "Die Brücke öffnet sich.",
+    "en": "The bridge opens up."
+  }
+]

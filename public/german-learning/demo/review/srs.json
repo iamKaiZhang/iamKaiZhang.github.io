@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "updated": null,
+  "settings": {
+    "newPerDay": 6,
+    "directions": "both"
+  },
+  "cards": {
+    "see#de": {
+      "due": "2026-10-03",
+      "interval": 6,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-27"
+    },
+    "see#genus": {
+      "due": "2026-10-02",
+      "interval": 3,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-29"
+    },
+    "ufer#de": {
+      "due": "2026-10-03",
+      "interval": 3,
+      "ease": 2.3,
+      "reps": 1,
+      "lapses": 1,
+      "last": "2026-09-30"
+    },
+    "wanderung#de": {
+      "due": "2026-10-07",
+      "interval": 14,
+      "ease": 2.5,
+      "reps": 4,
+      "lapses": 0,
+      "last": "2026-09-23"
+    },
+    "aussicht#de": {
+      "due": "2026-10-01",
+      "interval": 6,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-25"
+    },
+    "rucksack#de": {
+      "due": "2026-10-04",
+      "interval": 6,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-28"
+    },
+    "wetter#de": {
+      "due": "2026-10-15",
+      "interval": 30,
+      "ease": 2.5,
+      "reps": 5,
+      "lapses": 0,
+      "last": "2026-09-15"
+    },
+    "sich-ausruhen#de": {
+      "due": "2026-10-03",
+      "interval": 1,
+      "ease": 2.2,
+      "reps": 1,
+      "lapses": 1,
+      "last": "2026-10-02"
+    },
+    "vorhaben#de": {
+      "due": "2026-10-02",
+      "interval": 6,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-26"
+    },
+    "ankommen#en": {
+      "due": "2026-10-03",
+      "interval": 3,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-30"
+    },
+    "trotzdem#de": {
+      "due": "2026-10-03",
+      "interval": 1,
+      "ease": 1.9,
+      "reps": 3,
+      "lapses": 3,
+      "last": "2026-10-02"
+    },
+    "trotzdem#en": {
+      "due": "2026-10-05",
+      "interval": 8,
+      "ease": 2.5,
+      "reps": 3,
+      "lapses": 0,
+      "last": "2026-09-27"
+    },
+    "gemuetlich#de": {
+      "due": "2026-10-12",
+      "interval": 25,
+      "ease": 2.5,
+      "reps": 5,
+      "lapses": 0,
+      "last": "2026-09-17"
+    },
+    "ploetzlich#de": {
+      "due": "2026-10-03",
+      "interval": 6,
+      "ease": 2.5,
+      "reps": 2,
+      "lapses": 0,
+      "last": "2026-09-27"
+    }
+  },
+  "log": {},
+  "tests": [
+    {
+      "at": "2026-09-27T18:20:00.000Z",
+      "bank": "auto",
+      "title": "Aus deinen Karten",
+      "score": 7,
+      "of": 10
+    },
+    {
+      "at": "2026-10-01T19:05:00.000Z",
+      "bank": "demo-wiederholung",
+      "title": "Wiederholung: Ein Tag am See",
+      "score": 5,
+      "of": 7
+    }
+  ]
+}

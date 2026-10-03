@@ -1,0 +1,87 @@
+{
+  "id": "demo-wiederholung",
+  "title": "Wiederholung: Ein Tag am See",
+  "date": "2026-09-30",
+  "grammar": [
+    "perfekt-mit-sein"
+  ],
+  "items": [
+    {
+      "type": "mc",
+      "card": "trotzdem",
+      "prompt": "Was bedeutet *trotzdem*?",
+      "choices": [
+        "nevertheless",
+        "therefore",
+        "meanwhile",
+        "instead"
+      ],
+      "answer": 0,
+      "why": "deshalb = therefore."
+    },
+    {
+      "type": "gender",
+      "card": "ufer",
+      "prompt": "Ufer",
+      "answer": "das",
+      "why": "das Ufer, die Ufer."
+    },
+    {
+      "type": "cloze",
+      "card": "sich-ausruhen",
+      "prompt": "Nach der Wanderung ruhen wir ___ aus.",
+      "answer": [
+        "uns"
+      ],
+      "why": "sich ausruhen ist reflexiv: wir ruhen uns aus."
+    },
+    {
+      "type": "cloze",
+      "card": "ankommen",
+      "grammar": "perfekt-mit-sein",
+      "prompt": "Wir ___ um zehn Uhr angekommen.",
+      "answer": [
+        "sind"
+      ],
+      "why": "ankommen ist eine Bewegung: Perfekt mit sein."
+    },
+    {
+      "type": "order",
+      "grammar": "perfekt-mit-sein",
+      "tokens": [
+        "Trotzdem",
+        "sind",
+        "wir",
+        "noch",
+        "geblieben."
+      ],
+      "answer": "Trotzdem sind wir noch geblieben.",
+      "why": "Nach trotzdem kommt sofort das Verb."
+    },
+    {
+      "type": "translate",
+      "dir": "en-de",
+      "card": "sich-freuen-auf",
+      "prompt": "I am looking forward to the weekend.",
+      "reference": "Ich freue mich auf das Wochenende.",
+      "rubric": [
+        "freue mich",
+        "auf das wochenende"
+      ]
+    },
+    {
+      "type": "listen",
+      "text": "Es lohnt sich auf jeden Fall.",
+      "why": ""
+    },
+    {
+      "type": "speak",
+      "prompt": "Erzähl in drei Sätzen von deinem letzten Ausflug.",
+      "useful": [
+        "plötzlich",
+        "trotzdem",
+        "es lohnt sich"
+      ]
+    }
+  ]
+}

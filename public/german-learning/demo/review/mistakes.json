@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "items": {
+    "trotzdem": {
+      "front": "trotzdem",
+      "count": 3,
+      "last": "2026-10-01",
+      "leech": false,
+      "errors": [
+        {
+          "date": "2026-10-01",
+          "given": "therefore",
+          "expected": "nevertheless",
+          "source": "test",
+          "note": "Multiple Choice"
+        }
+      ]
+    },
+    "ufer": {
+      "front": "das Ufer",
+      "count": 2,
+      "last": "2026-09-30",
+      "leech": false,
+      "errors": [
+        {
+          "date": "2026-09-30",
+          "given": "der Ufer",
+          "expected": "das Ufer",
+          "source": "karten",
+          "note": "Genus"
+        }
+      ]
+    },
+    "sich-ausruhen": {
+      "front": "sich ausruhen",
+      "count": 1,
+      "last": "2026-09-29",
+      "leech": false,
+      "errors": [
+        {
+          "date": "2026-09-29",
+          "given": "wir ruhen aus",
+          "expected": "wir ruhen uns aus",
+          "source": "test",
+          "note": "Lückentext"
+        }
+      ]
+    }
+  }
+}

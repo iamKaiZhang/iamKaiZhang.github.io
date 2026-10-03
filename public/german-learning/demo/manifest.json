@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "generated": "2026-10-03",
+  "cards": {
+    "path": "cards/cards.json",
+    "count": 18
+  },
+  "articles": [
+    {
+      "slug": "2026-09-28-ein-tag-am-see",
+      "title": "Ein Tag am See",
+      "date": "2026-09-28",
+      "difficulty": "A2",
+      "source": "Beispieltext",
+      "path": "articles/2026-09-28-ein-tag-am-see.md"
+    }
+  ],
+  "grammar": [
+    {
+      "slug": "perfekt-mit-sein",
+      "title": "Perfekt mit sein",
+      "tags": [
+        "perfekt",
+        "verben"
+      ],
+      "path": "grammar/perfekt-mit-sein.md"
+    }
+  ],
+  "banks": [
+    {
+      "id": "demo-wiederholung",
+      "title": "Wiederholung: Ein Tag am See",
+      "date": "2026-09-30",
+      "count": 8,
+      "path": "tests/bank/demo-wiederholung.json"
+    }
+  ]
+}
