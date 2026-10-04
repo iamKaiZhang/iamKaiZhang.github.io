@@ -56,8 +56,10 @@ nav a, .gear { position: relative; font: 500 13px/1 var(--gothic); letter-spacin
 nav a:hover, .gear:hover { color: var(--ink); }
 nav a[aria-current="page"] { color: var(--ink); }
 nav a[aria-current="page"]::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--vermilion); transform: translateX(-50%); }
-.gear { margin-left: auto; font-size: 16px; letter-spacing: 0; display: flex; align-items: center; gap: 6px; }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: transparent; }
+.gear { margin-left: auto; letter-spacing: 0; display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border-radius: 50%; background: color-mix(in srgb, var(--paper) 78%, transparent); box-shadow: 0 0 14px 6px color-mix(in srgb, var(--paper) 60%, transparent); }
+.icon { display: inline-block; vertical-align: -0.2em; flex: none; }
+.gear .icon { width: 19px; height: 19px; }
+.sync-dot { position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%; background: transparent; }
 .sync-dot.pending { background: var(--ochre); }
 .sync-dot.error { background: var(--vermilion); }
 
@@ -222,7 +224,7 @@ mark.sel { background-color: rgba(43, 38, 34, .08); }
 .opts button { text-align: left; padding: 15px 4px; border-bottom: 1px solid var(--faint); font: 17px var(--mincho); }
 .opts button:hover:not(:disabled) { color: var(--vermilion); }
 .opts .right { color: var(--moss); opacity: 1; }
-.opts .right::after { content: "  ✓"; }
+.opts .right::after { content: "  \2713\FE0E"; }
 .opts .wrong { color: var(--vermilion); text-decoration: line-through; opacity: 1; }
 .tray { display: flex; flex-wrap: wrap; gap: 8px; min-height: 52px; padding: 10px 0; border-bottom: 1.5px solid var(--ink); margin-bottom: 16px; }
 .pool { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -318,3 +320,9 @@ td:first-child { font-family: var(--mincho); font-size: 16px; }
   .hide-narrow { display: none; }
   nav { gap: 13px; }
 }
+
+/* icon sizes per place */
+.hero-word .say .icon { width: 24px; height: 24px; }
+.say-btn .icon { width: 20px; height: 20px; }
+.caption .place button .icon { width: 13px; height: 13px; }
+.btn .icon { width: 17px; height: 17px; }

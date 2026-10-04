@@ -1,6 +1,7 @@
 import { escapeHtml, today, addDays, numberWord, formatDate, store, dailyIndex, speak, scoreText, $ } from '../util.js';
 import { data, isDemo } from '../store.js';
 import { buildQueue } from '../srs.js';
+import * as icons from '../icons.js';
 import { germanHtml, germanText } from '../cardtext.js';
 
 function wordOfTheDay() {
@@ -59,7 +60,7 @@ export default {
         <p class="eyebrow">${w ? 'Wort des Tages' : escapeHtml(greet)}<span class="hide-narrow"> · ${escapeHtml(dateText)}</span></p>
         ${w ? `
         <div class="hero">
-          <h1 class="hero-word">${germanHtml(w.card)} <button class="say" type="button" id="sayWotd" aria-label="Aussprechen">🔊</button></h1>
+          <h1 class="hero-word">${germanHtml(w.card)} <button class="say" type="button" id="sayWotd" aria-label="Aussprechen">${icons.speaker}</button></h1>
           <p class="hero-mean">${escapeHtml(w.card.back)}</p>
           ${w.card.example?.de ? `<p class="hero-ex">${escapeHtml(w.card.example.de)}</p>` : ''}
         </div>` : '<h1 class="hero-word">Willkommen bei Wortreise.</h1>'}

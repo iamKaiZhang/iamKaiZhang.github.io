@@ -4,6 +4,7 @@ import { buildQueue, schedule, nextInterval, kindOf, isLeech } from '../srs.js';
 import { germanHtml, germanText, posLabel, formsLine, shortDate } from '../cardtext.js';
 import { currentScene, cityOf } from '../scenes.js';
 import { sync } from '../sync.js';
+import * as icons from '../icons.js';
 
 const FILTERS = [
   { key: 'due', label: 'Fällig' },
@@ -152,7 +153,7 @@ function renderCard() {
         ${card.example?.de ? `<p class="ex">${escapeHtml(card.example.de)}<small>${escapeHtml(card.example.en || '')}</small></p>` : ''}
         ${forms ? `<p class="forms">${forms}</p>` : ''}
         ${card.notes ? `<p class="cnote">${escapeHtml(card.notes)}</p>` : ''}
-      </div><button type="button" class="say-btn" id="say" aria-label="Aussprechen">🔊</button></div>
+      </div><button type="button" class="say-btn" id="say" aria-label="Aussprechen">${icons.speaker}</button></div>
     </div>
     <div class="grade" id="gr" style="visibility:hidden">
       ${['Nochmal', 'Schwer', 'Gut', 'Leicht'].map((l, g) => `<button type="button" data-q="${g}" ${g === 0 ? 'class="again"' : ''}>${l}<small>${fmt(nextInterval(st, g))}</small></button>`).join('')}
