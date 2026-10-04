@@ -69,22 +69,27 @@ This is a personal portfolio/resume website built with Next.js and TypeScript, d
 - Google Analytics 4 is configured with NEXT_PUBLIC_GA_TRACKING_ID using @next/third-parties
 - Fonts are optimized using Next.js font optimization
 
-## German Learning Feature
+## German Learning Feature ("Wortreise")
 
-A standalone, self-contained HTML app at `/public/german-learning/index.html` (served at `/german-learning/`). It is **not** a Next.js page — all HTML, CSS, and JS live in that single file (~1300 lines). Do not apply Next.js conventions to it.
+A standalone static app in `/public/german-learning/` (served at `/german-learning/`). It is **not** a Next.js page: plain HTML, CSS and ES modules, no build step. Do not apply Next.js conventions to it.
 
 ### What it does
-- Loads German articles from a GitHub repo (`iamKaiZhang/german-learning`, configurable) or accepts pasted text
-- Lets the user highlight text with three annotation types: **word** (yellow), **hard sentence** (red), **comment** (green)
-- Saves/loads annotations to `annotations/{slug}.json` in the GitHub repo via the GitHub Contents API
-- Requires a GitHub PAT stored in `localStorage` (`gh_pat`) for write access
+- Reads and writes the learner's private repo `iamKaiZhang/german-learning` through the GitHub Contents API, using a token stored in `localStorage` (`gh_pat`, `gh_repo`). Without a token it runs on bundled sample data in `demo/` and keeps writes in the browser.
+- Screens (hash routes): `#heute` (start), `#lesen` (article list, paste, annotating reader), `#karten` (Anki-style cards over one collection, with filters), `#test` (auto / Claude bank / article tests), `#wiederholen` (Fehlerheft, inbox, grammar, journal), `#fortschritt` (stats, heatmap, passport), `#grammatik/<slug>`, `#einstellungen`.
+- A random background scene from `scenes/scenes.json` fills the page on every visit; working screens fade it to a wash.
+
+### Layout
+- `index.html` shell, `css/app.css`
+- `js/app.js` router · `js/store.js` data layer (github/demo backends, local cache, offline merge) · `js/github.js` API helpers · `js/srs.js` pure scheduling (SM-2 lite, unit-tested in `src/__tests__/wortreise.test.ts`) · `js/md.js` markdown · `js/scenes.js` · `js/sync.js` · `js/cardtext.js` · `js/views/*.js` one module per screen
+- `demo/` sample data (same file layout as the learning repo) · `scenes/` background images + `scenes.json` (`file`, `paper`, `focus`, `mfocus`, `place`, `de`, `en`)
+- Scenes are the owner's illustrations; how to add one is in `scenes/README.md`
+
+### Data contracts
+File formats are defined in the learning repo's `REFERENCE.md` (cards, srs, mistakes, inbox, banks, results, journal, manifest). Keep the app and that document in sync.
 
 ### Key implementation details
-- **State**: `annotations` object (`{ [id]: { id, type, text, note, offset, length } }`), `articleMeta`, `annotationCounter`
-- **Annotation offset**: each annotation stores `offset` (character index into `articleBody.textContent`) and `length` for precise re-application after page reload
-- **Re-applying saved annotations**: `reapplyAnnotations()` resolves character offsets via `getRangeAtTextOffset()` (TreeWalker over text nodes); falls back to `textContent.indexOf(text)` for older annotations saved without offset
-- **Article rendering**: `renderArticle()` parses a simple markdown subset into DOM; annotations are `<mark data-annotation-id="…">` elements wrapping the selected text
-- **GitHub API helpers**: `ghGet()`, `ghPut()`, `fetchArticle()`, `saveAnnotationsToRepo()`, `fetchAnnotationsFromRepo()`
+- **Annotations**: `annotations/<slug>.json` = `{ slug, annotations: [{ id, type: word|hard|comment, text, note, offset, length }] }`. `offset` is a character index into the reader's rendered `textContent`, so `renderArticle()` in `js/md.js` must keep producing exactly the same text (a unit test guards this).
+- **Progress writes**: card grades and test results update `review/srs.json` and `review/mistakes.json` in memory, are mirrored to `localStorage`, and are pushed in one batch at the end of a session (or when the page is hidden). Conflicts are merged per sub-card by the later review.
 
 ## Owner Preferences
 

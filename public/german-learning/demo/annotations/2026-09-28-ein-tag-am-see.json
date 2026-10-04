@@ -1,0 +1,37 @@
+{
+  "slug": "2026-09-28-ein-tag-am-see",
+  "annotations": [
+    {
+      "id": "ann-1",
+      "type": "word",
+      "text": "steil",
+      "note": "steep?",
+      "offset": 253,
+      "length": 5
+    },
+    {
+      "id": "ann-2",
+      "type": "word",
+      "text": "Aussicht",
+      "note": "",
+      "offset": 342,
+      "length": 8
+    },
+    {
+      "id": "ann-3",
+      "type": "hard",
+      "text": "Wer einmal an diesem See war, kommt bestimmt wieder.",
+      "note": "Wer-Satz: whoever …",
+      "offset": 637,
+      "length": 52
+    },
+    {
+      "id": "ann-4",
+      "type": "comment",
+      "text": "Trotzdem",
+      "note": "Verb direkt danach!",
+      "offset": 516,
+      "length": 8
+    }
+  ]
+}

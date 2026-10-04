@@ -1,0 +1,146 @@
+[
+  {
+    "file": "manarola.jpg",
+    "paper": "#e8d3b8",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Manarola · Italien",
+    "de": "Wo das Meer bleibt.",
+    "en": "Where the sea stays."
+  },
+  {
+    "file": "lauterbrunnen.jpg",
+    "paper": "#f6e3c4",
+    "focus": "55% 72%",
+    "mfocus": "55% 86%",
+    "place": "Lauterbrunnen · Schweiz",
+    "de": "Unter der Stille.",
+    "en": "Beneath the quiet."
+  },
+  {
+    "file": "torres-del-paine.jpg",
+    "paper": "#f9e5c5",
+    "focus": "55% 60%",
+    "mfocus": "55% 74%",
+    "place": "Torres del Paine · Chile",
+    "de": "Wo die Stille aufsteigt.",
+    "en": "Where silence rises."
+  },
+  {
+    "file": "fuji.jpg",
+    "paper": "#f9e6c8",
+    "focus": "55% 70%",
+    "mfocus": "55% 84%",
+    "place": "Fuji · Japan",
+    "de": "Bevor die Welt erwacht.",
+    "en": "Before the world wakes."
+  },
+  {
+    "file": "kappadokien.jpg",
+    "paper": "#f9e4c4",
+    "focus": "55% 60%",
+    "mfocus": "55% 74%",
+    "place": "Kappadokien · Türkei",
+    "de": "Vom Morgen getragen.",
+    "en": "Held by the morning."
+  },
+  {
+    "file": "moraine-lake.jpg",
+    "paper": "#f8e4c5",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Moraine Lake · Kanada",
+    "de": "Ein bisschen näher an der Stille.",
+    "en": "A little closer to stillness."
+  },
+  {
+    "file": "sossusvlei.jpg",
+    "paper": "#f8e6ca",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Sossusvlei · Namibia",
+    "de": "Die Form des Windes.",
+    "en": "The shape of the wind."
+  },
+  {
+    "file": "bali.jpg",
+    "paper": "#f7e3c4",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Bali · Indonesien",
+    "de": "Die Erde lässt sich Zeit.",
+    "en": "The earth takes its time."
+  },
+  {
+    "file": "machu-picchu.jpg",
+    "paper": "#f8e3c2",
+    "focus": "55% 60%",
+    "mfocus": "55% 74%",
+    "place": "Machu Picchu · Peru",
+    "de": "Wo die Wolken sich erinnern.",
+    "en": "Where the clouds remember."
+  },
+  {
+    "file": "venedig.jpg",
+    "paper": "#f8e5c6",
+    "focus": "55% 60%",
+    "mfocus": "55% 74%",
+    "place": "Venedig · Italien",
+    "de": "Der Abend zieht übers Wasser.",
+    "en": "Evening moves by water."
+  },
+  {
+    "file": "santorini.jpg",
+    "paper": "#f8e7cb",
+    "focus": "55% 64%",
+    "mfocus": "55% 78%",
+    "place": "Santorini · Griechenland",
+    "de": "Weiße Wände, langsame Stunden.",
+    "en": "White walls, slow hours."
+  },
+  {
+    "file": "grand-canyon.jpg",
+    "paper": "#f9e4c4",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Grand Canyon · USA",
+    "de": "Die lange Arbeit des Lichts.",
+    "en": "The long work of light."
+  },
+  {
+    "file": "ha-long.jpg",
+    "paper": "#f9e5c6",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Hạ-Long-Bucht · Vietnam",
+    "de": "Zwischen Inseln und Nebel.",
+    "en": "Between islands and mist."
+  },
+  {
+    "file": "petra.jpg",
+    "paper": "#fae8ca",
+    "focus": "55% 58%",
+    "mfocus": "55% 72%",
+    "place": "Petra · Jordanien",
+    "de": "Die Zeit ruht im Stein.",
+    "en": "Time rests in stone."
+  },
+  {
+    "file": "lofoten.jpg",
+    "paper": "#fae7c8",
+    "focus": "55% 62%",
+    "mfocus": "55% 76%",
+    "place": "Lofoten · Norwegen",
+    "de": "Ein bisschen Wärme bleibt.",
+    "en": "A small warmth remains."
+  },
+  {
+    "file": "milford-sound.jpg",
+    "paper": "#fae8cb",
+    "focus": "55% 60%",
+    "mfocus": "55% 74%",
+    "place": "Milford Sound · Neuseeland",
+    "de": "Das Wasser hält den Himmel fest.",
+    "en": "The water keeps the sky."
+  }
+]

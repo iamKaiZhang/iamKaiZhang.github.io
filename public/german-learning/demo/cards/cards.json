@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "updated": "2026-10-03",
+  "cards": [
+    {
+      "id": "see",
+      "front": "See",
+      "back": "lake",
+      "pos": "noun",
+      "gender": "der",
+      "plural": "Seen",
+      "forms": {},
+      "example": {
+        "de": "Am Wochenende fahren wir an den See.",
+        "en": "At the weekend we drive to the lake."
+      },
+      "notes": "der See = lake, die See = sea.",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "ufer",
+      "front": "Ufer",
+      "back": "shore, bank",
+      "pos": "noun",
+      "gender": "das",
+      "plural": "Ufer",
+      "forms": {},
+      "example": {
+        "de": "Wir sitzen am Ufer und essen.",
+        "en": "We sit on the shore and eat."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "wanderung",
+      "front": "Wanderung",
+      "back": "hike",
+      "pos": "noun",
+      "gender": "die",
+      "plural": "Wanderungen",
+      "forms": {},
+      "example": {
+        "de": "Die Wanderung dauert drei Stunden.",
+        "en": "The hike takes three hours."
+      },
+      "notes": "Nomen auf -ung sind immer feminin.",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "aussicht",
+      "front": "Aussicht",
+      "back": "view",
+      "pos": "noun",
+      "gender": "die",
+      "plural": "Aussichten",
+      "forms": {},
+      "example": {
+        "de": "Von hier hat man eine schöne Aussicht.",
+        "en": "From here you have a beautiful view."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "rucksack",
+      "front": "Rucksack",
+      "back": "backpack",
+      "pos": "noun",
+      "gender": "der",
+      "plural": "Rucksäcke",
+      "forms": {},
+      "example": {
+        "de": "Ich packe Wasser in den Rucksack.",
+        "en": "I pack water into the backpack."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "wetter",
+      "front": "Wetter",
+      "back": "weather",
+      "pos": "noun",
+      "gender": "das",
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Das Wetter ist heute perfekt.",
+        "en": "The weather is perfect today."
+      },
+      "notes": "Kein Plural im Alltag.",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "sich-ausruhen",
+      "front": "sich ausruhen",
+      "back": "to rest",
+      "pos": "verb",
+      "gender": null,
+      "plural": null,
+      "forms": {
+        "perfekt": "hat sich ausgeruht",
+        "separable": true
+      },
+      "example": {
+        "de": "Nach der Wanderung ruhen wir uns aus.",
+        "en": "After the hike we rest."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "vorhaben",
+      "front": "vorhaben",
+      "back": "to plan, to intend",
+      "pos": "verb",
+      "gender": null,
+      "plural": null,
+      "forms": {
+        "perfekt": "hat vorgehabt",
+        "separable": true
+      },
+      "example": {
+        "de": "Was hast du am Samstag vor?",
+        "en": "What are you planning on Saturday?"
+      },
+      "notes": "Sehr häufig im Gespräch.",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "ankommen",
+      "front": "ankommen",
+      "back": "to arrive",
+      "pos": "verb",
+      "gender": null,
+      "plural": null,
+      "forms": {
+        "perfekt": "ist angekommen",
+        "separable": true
+      },
+      "example": {
+        "de": "Wir sind um zehn Uhr angekommen.",
+        "en": "We arrived at ten o’clock."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "sich-freuen-auf",
+      "front": "sich freuen auf",
+      "back": "to look forward to",
+      "pos": "verb",
+      "gender": null,
+      "plural": null,
+      "forms": {
+        "perfekt": "hat sich gefreut",
+        "case": "akkusativ"
+      },
+      "example": {
+        "de": "Ich freue mich auf den Sommer.",
+        "en": "I am looking forward to the summer."
+      },
+      "notes": "sich freuen über = to be happy about (something that happened).",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "mitnehmen",
+      "front": "mitnehmen",
+      "back": "to take along",
+      "pos": "verb",
+      "gender": null,
+      "plural": null,
+      "forms": {
+        "perfekt": "hat mitgenommen",
+        "separable": true
+      },
+      "example": {
+        "de": "Nimm bitte eine Jacke mit.",
+        "en": "Please take a jacket along."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "gemuetlich",
+      "front": "gemütlich",
+      "back": "cosy, relaxed",
+      "pos": "adj",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Das Café am See ist sehr gemütlich.",
+        "en": "The café by the lake is very cosy."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "ploetzlich",
+      "front": "plötzlich",
+      "back": "suddenly",
+      "pos": "adv",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Plötzlich hat es angefangen zu regnen.",
+        "en": "Suddenly it started to rain."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "trotzdem",
+      "front": "trotzdem",
+      "back": "nevertheless, despite that",
+      "pos": "adv",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Es war kalt. Trotzdem sind wir geschwommen.",
+        "en": "It was cold. Nevertheless we swam."
+      },
+      "notes": "Nicht mit deshalb (therefore) verwechseln.",
+      "tags": [
+        "konnektor"
+      ],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "ausserdem",
+      "front": "außerdem",
+      "back": "besides, in addition",
+      "pos": "connector",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Außerdem haben wir Kuchen mitgenommen.",
+        "en": "Besides, we took cake along."
+      },
+      "notes": "",
+      "tags": [
+        "konnektor"
+      ],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "lust-haben",
+      "front": "Lust haben",
+      "back": "to feel like (doing)",
+      "pos": "phrase",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Hast du Lust, schwimmen zu gehen?",
+        "en": "Do you feel like going swimming?"
+      },
+      "notes": "Lust haben + zu + Infinitiv.",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "es-lohnt-sich",
+      "front": "es lohnt sich",
+      "back": "it is worth it",
+      "pos": "phrase",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Der Weg ist lang, aber es lohnt sich.",
+        "en": "The path is long, but it is worth it."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    },
+    {
+      "id": "auf-jeden-fall",
+      "front": "auf jeden Fall",
+      "back": "definitely, in any case",
+      "pos": "phrase",
+      "gender": null,
+      "plural": null,
+      "forms": {},
+      "example": {
+        "de": "Wir kommen auf jeden Fall wieder.",
+        "en": "We will definitely come again."
+      },
+      "notes": "",
+      "tags": [],
+      "grammar": [],
+      "added": "2026-09-20",
+      "sources": [
+        {
+          "type": "article",
+          "slug": "2026-09-28-ein-tag-am-see"
+        }
+      ]
+    }
+  ]
+}
