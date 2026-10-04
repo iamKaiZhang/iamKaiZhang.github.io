@@ -9,6 +9,9 @@ import { parseArticleMd, renderArticle } from '../md.js';
 const TYPE_LABEL = { word: 'Wort', hard: 'Schwerer Satz', comment: 'Notiz' };
 const CLASS = { word: 'highlight-word', hard: 'highlight-hard', comment: 'highlight-comment' };
 const pasted = new Map(); // slug → meta for texts pasted in this visit and not yet saved
+// Long texts are split into pages of about this many characters, at paragraph boundaries.
+// The whole text stays in the DOM (other pages are only hidden), so annotation offsets never change.
+const PAGE_CHARS = 2200;
 
 let A = null;          // current reader state
 let cleanup = [];      // listeners to remove on leave
@@ -121,7 +124,9 @@ async function renderReader(root, slug) {
         <a class="link red" href="#test/article/${encodeURIComponent(slug)}">Aus diesem Artikel testen</a>
       </div>
       <div class="legend"><span class="mk-word">Wort</span><span class="mk-hard">Schwerer Satz</span><span class="mk-comment">Notiz</span><span>Text auswählen zum Markieren</span></div>
+      <div class="pager" id="pagerTop" role="navigation" aria-label="Seiten" hidden></div>
       <div id="articleBody" lang="de">${renderArticle(meta.text)}</div>
+      <div class="pager" id="pagerBottom" role="navigation" aria-label="Seiten" hidden></div>
       <div class="notes" id="notes"></div>
     </article>`;
 
@@ -144,11 +149,22 @@ async function renderReader(root, slug) {
   } catch (e) {
     toast(`Markierungen konnten nicht geladen werden: ${e.message}`, 'error');
   }
+  paginate();
+  showPage(Math.min(Number(store.get(`wr_page:${slug}`, 0)) || 0, A.pages - 1), false);
   updateMeta();
-  renderNotes();
   setStatus();
 
   const body = $('#articleBody');
+  on(root, 'click', e => {
+    const b = e.target.closest('.pager button[data-go]');
+    if (b && !b.disabled) showPage(A.page + Number(b.dataset.go), b.closest('#pagerBottom') !== null);
+  });
+  on(document, 'keydown', e => {
+    if (!A || A.pages < 2 || e.target.matches('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+    if ($('#popover')?.classList.contains('visible')) return;
+    if (e.key === 'ArrowRight' && A.page < A.pages - 1) showPage(A.page + 1, true);
+    if (e.key === 'ArrowLeft' && A.page > 0) showPage(A.page - 1, true);
+  });
   on(document, 'mouseup', onSelectionChange);
   on(document, 'touchend', onSelectionChange);
   on(document, 'selectionchange', onSelectionChange);
@@ -177,6 +193,41 @@ async function renderReader(root, slug) {
 }
 
 function bodyEl() { return $('#articleBody'); }
+
+// Assign each top-level block (paragraph, heading, list) to a page.
+function paginate() {
+  let page = 0, acc = 0;
+  for (const block of bodyEl().children) {
+    const len = block.textContent.length;
+    if (acc > 0 && acc + len > PAGE_CHARS) { page++; acc = 0; }
+    block.dataset.page = String(page);
+    acc += len;
+  }
+  A.pages = page + 1;
+}
+
+const pageOfMark = id => Number($(`mark[data-annotation-id="${id}"]`)?.closest('#articleBody > *')?.dataset.page ?? -1);
+
+function showPage(n, scroll) {
+  A.page = Math.max(0, Math.min(n, A.pages - 1));
+  for (const block of bodyEl().children) block.hidden = Number(block.dataset.page) !== A.page;
+  store.set(`wr_page:${A.meta.slug}`, String(A.page));
+  window.getSelection()?.removeAllRanges();
+  $('#toolbar')?.classList.remove('visible');
+  hidePopover();
+  for (const id of ['pagerTop', 'pagerBottom']) {
+    const el = $(`#${id}`);
+    el.hidden = A.pages < 2;
+    if (A.pages < 2) continue;
+    el.innerHTML = `
+      <button type="button" class="link" data-go="-1" ${A.page === 0 ? 'disabled' : ''}>← Zurück</button>
+      <span class="pager-pos">Seite ${A.page + 1} von ${A.pages}</span>
+      <button type="button" class="link" data-go="1" ${A.page === A.pages - 1 ? 'disabled' : ''}>Weiter →</button>
+      <span class="pager-bar" aria-hidden="true"><i style="width:${((A.page + 1) / A.pages) * 100}%"></i></span>`;
+  }
+  renderNotes();
+  if (scroll) $('#pagerTop')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 function getRangeAtTextOffset(body, offset, length) {
   let charCount = 0;
@@ -371,9 +422,13 @@ async function sendToInbox(id) {
 function renderNotes() {
   const el = $('#notes');
   if (!el) return;
-  const items = Object.values(A.annotations).sort((a, b) => a.offset - b.offset);
+  const all = Object.values(A.annotations).sort((a, b) => a.offset - b.offset);
+  const items = A.pages > 1 ? all.filter(a => pageOfMark(a.id) === A.page) : all;
   if (!items.length) { el.innerHTML = ''; return; }
-  el.innerHTML = `<p class="eyebrow" style="margin:22px 0 4px">Markierungen</p>` + items.map(a => {
+  const heading = A.pages > 1 ? `Markierungen auf dieser Seite · ${items.length} von ${all.length}` : 'Markierungen';
+  // Long lists start folded so the page stays short; the reader can still tap marks in the text.
+  const open = items.length <= 6 || store.get('wr_notes_open') === '1';
+  el.innerHTML = `<details id="notesBox" ${open ? 'open' : ''}><summary class="eyebrow">${heading}</summary>` + items.map(a => {
     let act = '';
     if (a.type === 'word') {
       const st = wordStatus(a);
@@ -382,7 +437,8 @@ function renderNotes() {
       act = `<a class="act" href="#test/article/${encodeURIComponent(A.meta.slug)}">Als Übung</a>`;
     }
     return `<div class="n" data-id="${a.id}"><b>${escapeHtml(a.text)}</b><span class="t">${TYPE_LABEL[a.type] || 'Notiz'}</span>${a.note ? `<span class="q">${escapeHtml(a.note)}</span>` : ''}${act}</div>`;
-  }).join('');
+  }).join('') + '</details>';
+  $('#notesBox').addEventListener('toggle', e => { if (items.length > 6) store.set('wr_notes_open', e.target.open ? '1' : '0'); });
   $$('.n', el).forEach(n => n.addEventListener('click', e => {
     const id = n.dataset.id;
     if (e.target.closest('[data-card]')) { sendToInbox(id); return; }
