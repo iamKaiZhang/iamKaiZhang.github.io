@@ -291,7 +291,7 @@ td:first-child { font-family: var(--mincho); font-size: 16px; }
   .scene { inset: auto 0 0 0; height: 60vh; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 34%); mask-image: linear-gradient(to bottom, transparent 0, #000 34%); }
   body.working:not(.cards) .scene { height: 100vh; }
   /* Start screen: lift the scene so the landmark sits between the buttons and the word-of-the-day slip. */
-  body:not(.working) .scene { bottom: 13vh; height: 58vh;
+  body:not(.working) .scene { bottom: 13vh; height: 47vh;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%); }
   .scene img { object-position: var(--mfocus, 55% 60%); }
   header { padding-block: 18px 0; gap: 6px 18px; }
@@ -303,6 +303,7 @@ td:first-child { font-family: var(--mincho); font-size: 16px; }
   .hello { font-size: clamp(34px, 9vw, 44px); }
   .hello, .lede, #s-heute > .eyebrow { text-shadow: 0 0 14px var(--paper), 0 0 6px var(--paper); }
   .hint, .deckline, .grade { text-shadow: 0 0 10px var(--paper), 0 0 4px var(--paper); }
+  #s-heute .row .link { text-shadow: 0 0 10px var(--paper), 0 0 4px var(--paper), 0 0 2px var(--paper); }
   .caption { display: none; }
   /* The start screen fills exactly one screen: text on top, scene in the middle, word of the day at the bottom. */
   #s-heute { display: flex; flex-direction: column; min-height: calc(100svh - 148px); }

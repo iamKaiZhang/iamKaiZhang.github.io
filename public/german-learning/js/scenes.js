@@ -54,5 +54,5 @@ export function show(i) {
   listeners.forEach(fn => fn(s));
 }
 
-// Short city name for passport stamps: "Brandenburger Tor · Berlin" → "Berlin".
-export const cityOf = s => (s?.place || '').split('·').pop().trim();
+// Short place name for passport stamps: "Manarola · Italien" → "Manarola".
+export const cityOf = s => (s?.place || '').split('·')[0].trim();

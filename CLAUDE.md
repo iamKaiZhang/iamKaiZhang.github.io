@@ -82,7 +82,7 @@ A standalone static app in `/public/german-learning/` (served at `/german-learni
 - `index.html` shell, `css/app.css`
 - `js/app.js` router · `js/store.js` data layer (github/demo backends, local cache, offline merge) · `js/github.js` API helpers · `js/srs.js` pure scheduling (SM-2 lite, unit-tested in `src/__tests__/wortreise.test.ts`) · `js/md.js` markdown · `js/scenes.js` · `js/sync.js` · `js/cardtext.js` · `js/views/*.js` one module per screen
 - `demo/` sample data (same file layout as the learning repo) · `scenes/` background images + `scenes.json` (`file`, `paper`, `focus`, `mfocus`, `place`, `de`, `en`)
-- Scene generator: `tools/scenes/` (SVG woodblock prints rendered with Playwright, see its README)
+- Scenes are the owner's illustrations; how to add one is in `scenes/README.md`
 
 ### Data contracts
 File formats are defined in the learning repo's `REFERENCE.md` (cards, srs, mistakes, inbox, banks, results, journal, manifest). Keep the app and that document in sync.
