@@ -98,17 +98,14 @@ p { margin: 0 0 12px; }
 .loading { font: 11px var(--type); letter-spacing: .14em; color: var(--graphite); padding: 20px 0; }
 
 /* ── Heute ── */
-#s-heute { display: block; }
-.hello { font: 500 clamp(40px, 5.6vw, 66px)/1.12 var(--mincho); margin: 0 0 22px; text-wrap: balance; letter-spacing: .005em; }
-.hello em { font-style: normal; color: var(--vermilion); }
-.lede { font: 16px/1.8 var(--gothic); color: var(--graphite); margin: 0 0 34px; max-width: 38ch; }
-.wotd { margin-top: clamp(40px, 8vh, 80px); padding-top: 22px; border-top: 1px solid var(--faint); display: grid; grid-template-columns: auto 1fr; gap: 6px 26px; align-items: baseline; max-width: 520px; }
-.wotd .eyebrow { grid-column: 1 / -1; margin-bottom: 8px; }
-.wotd .w { font: 500 30px/1.1 var(--mincho); }
-.wotd .m { font-size: 14px; color: var(--graphite); }
-.wotd .wex { grid-column: 1 / -1; font: 16px/1.6 var(--mincho); color: var(--graphite); }
-.wotd .say { font-size: 14px; color: var(--graphite); padding: 4px; margin: -4px; }
-.slipcap { display: none; }
+.hero { max-width: 620px; }
+.hero-word { font: 500 clamp(46px, 6vw, 76px)/1.08 var(--mincho); margin: 0 0 10px; letter-spacing: .005em; overflow-wrap: anywhere; }
+.hero-word .art { color: var(--graphite); font-size: .5em; }
+.hero-word .say { font-size: 18px; vertical-align: middle; color: var(--graphite); padding: 6px; }
+.hero-word .say:hover { color: var(--vermilion); }
+.hero-mean { font: 18px/1.5 var(--gothic); color: var(--vermilion); margin: 0 0 14px; }
+.hero-ex { font: 20px/1.6 var(--mincho); margin: 0; max-width: 34ch; }
+.day-status { font: 14px/1.7 var(--gothic); color: var(--graphite); margin: 30px 0 22px; padding-top: 18px; border-top: 1px solid var(--faint); max-width: 44ch; }
 .days { display: flex; gap: 6px; align-items: center; margin-top: 26px; font: 11px var(--gothic); letter-spacing: .14em; color: var(--graphite); flex-wrap: wrap; text-transform: uppercase; }
 .days i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid rgba(43, 38, 34, .3); }
 .days i.on { background: var(--moss); border-color: var(--moss); }
@@ -290,9 +287,8 @@ td:first-child { font-family: var(--mincho); font-size: 16px; }
 @media (max-width: 860px) {
   .scene { inset: auto 0 0 0; height: 60vh; -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 34%); mask-image: linear-gradient(to bottom, transparent 0, #000 34%); }
   body.working:not(.cards) .scene { height: 100vh; }
-  /* Start screen: lift the scene so the landmark sits between the buttons and the word-of-the-day slip. */
-  body:not(.working) .scene { bottom: 13vh; height: 47vh;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 30%, #000 80%, transparent 100%); }
+  /* Start screen: text on blank paper at the top, the scene fills the lower half untouched. */
+  body:not(.working) .scene { height: 50vh; }
   .scene img { object-position: var(--mfocus, 55% 60%); }
   header { padding-block: 18px 0; gap: 6px 18px; }
   nav { order: 3; gap: 16px; width: calc(100% + 2 * var(--col)); flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(var(--col) * -1); padding-inline: var(--col); }
@@ -300,23 +296,18 @@ td:first-child { font-family: var(--mincho); font-size: 16px; }
   nav a { font-size: 12.5px; letter-spacing: .06em; white-space: nowrap; }
   nav a[data-route="heute"] { display: none; }
   main { margin-top: 26px; }
-  .hello { font-size: clamp(34px, 9vw, 44px); }
-  .hello, .lede, #s-heute > .eyebrow { text-shadow: 0 0 14px var(--paper), 0 0 6px var(--paper); }
+  .hero-word { font-size: clamp(40px, 11vw, 54px); }
+  .hero-mean { font-size: 16px; margin-bottom: 10px; }
+  .hero-ex { font-size: 17px; }
+  .day-status { margin: 22px 0 18px; padding-top: 14px; }
+  #s-heute > .eyebrow, #s-heute .hero > *, .day-status { text-shadow: 0 0 14px var(--paper), 0 0 6px var(--paper); }
   .hint, .deckline, .grade { text-shadow: 0 0 10px var(--paper), 0 0 4px var(--paper); }
   #s-heute .row .link { text-shadow: 0 0 10px var(--paper), 0 0 4px var(--paper), 0 0 2px var(--paper); }
-  .caption { display: none; }
-  /* The start screen fills exactly one screen: text on top, scene in the middle, word of the day at the bottom. */
-  #s-heute { display: flex; flex-direction: column; min-height: calc(100svh - 148px); }
-  body:not(.working) .app { padding-block-end: 16px; }
-  .lede { margin-bottom: 22px; }
-  .wotd { margin-top: auto; max-width: none; padding: 16px 18px 12px; border-top: 0; gap: 4px 16px;
-    background: color-mix(in srgb, var(--sheet) 82%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-    box-shadow: 0 18px 40px -24px rgba(70, 45, 20, .5), 0 0 0 1px rgba(43, 38, 34, .06); }
-  .wotd .eyebrow { margin-bottom: 4px; }
-  .wotd .w { font-size: 26px; }
-  .wotd .wex { font-size: 15px; line-height: 1.5; }
-  .slipcap { display: flex; grid-column: 1 / -1; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--faint); font: 11px/1.4 var(--type); letter-spacing: .06em; color: var(--graphite); }
-  .slipcap button { font-size: 14px; color: var(--graphite); padding: 6px; margin: -6px; }
+  /* Scene caption: bottom-left on the start screen, hidden while working. */
+  .caption { left: 16px; right: auto; bottom: 14px; text-align: left; justify-items: start; padding: 30px 40px; margin: -30px -40px; }
+  .caption .de { font-size: 12.5px; letter-spacing: .1em; }
+  .caption .en { font-size: 11px; letter-spacing: .08em; }
+  body.working .caption { display: none; }
   .days { display: none; }
   .nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sheet { margin-inline: calc(var(--col) * -0.5); }
@@ -326,5 +317,4 @@ td:first-child { font-family: var(--mincho); font-size: 16px; }
 @media (max-width: 420px) {
   .hide-narrow { display: none; }
   nav { gap: 13px; }
-  .hello { font-size: 34px; }
 }

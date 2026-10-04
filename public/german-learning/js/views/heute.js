@@ -2,7 +2,6 @@ import { escapeHtml, today, addDays, numberWord, formatDate, store, dailyIndex, 
 import { data, isDemo } from '../store.js';
 import { buildQueue } from '../srs.js';
 import { germanHtml, germanText } from '../cardtext.js';
-import { currentScene, onSceneChange, show, allScenes } from '../scenes.js';
 
 function wordOfTheDay() {
   const byId = new Map(data.cards.map(c => [c.id, c]));
@@ -36,51 +35,40 @@ export default {
     const lastTest = (data.srs.tests || []).at(-1);
     const lastArticle = store.json('wr_last_article');
     const h = new Date().getHours();
-    const greet = (h < 11 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend') + ' · ' +
-      new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+    const greet = h < 11 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend';
+    const dateText = new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
 
-    let headline;
-    if (!data.cards.length) headline = 'Willkommen bei <em>Wortreise</em>.';
-    else if (due === 0) headline = 'Für heute ist alles <em>erledigt</em>.';
-    else if (due === 1) headline = 'Eine Karte <em>wartet</em> auf dich.';
-    else headline = `${numberWord(due, true)} Karten <em>warten</em> auf dich.`;
-
-    const lede = [];
+    const status = [];
     if (!data.cards.length) {
-      lede.push(isDemo() ? 'Hier entsteht deine Kartensammlung.' : 'Sobald Claude deine Wörter in cards/cards.json gesammelt hat, erscheinen sie hier als Karten. Bis dahin kannst du lesen und markieren.');
+      status.push(isDemo() ? 'Hier entsteht deine Kartensammlung.' : 'Sobald Claude deine Wörter in cards/cards.json gesammelt hat, erscheinen sie hier als Karten.');
     } else if (due === 0) {
-      lede.push('Morgen kommen neue Wiederholungen. Ein kurzer Test oder ein Artikel geht immer.');
-    } else if (fehler) {
-      lede.push(`${numberWord(fehler, true)} davon ${fehler === 1 ? 'steht' : 'stehen'} im Fehlerheft.`);
+      status.push('Für heute ist alles erledigt.');
+    } else {
+      status.push(`${due === 1 ? 'Eine Karte' : `${numberWord(due, true)} Karten`} fällig${fehler ? `, ${numberWord(fehler)} davon aus dem Fehlerheft` : ''}.`);
     }
-    if (lastTest) lede.push(`Dein letzter Test lag bei ${scoreText(lastTest.score, lastTest.of)}.`);
-    if (lastArticle?.title) lede.push(`<i>${escapeHtml(lastArticle.title)}</i> wartet beim Lesen.`);
+    if (lastTest) status.push(`Letzter Test: ${scoreText(lastTest.score, lastTest.of)}.`);
 
     const w = wordOfTheDay();
     const s = streak();
-    const scene = currentScene();
     const lastHref = lastArticle?.slug ? `#lesen/${encodeURIComponent(lastArticle.slug)}` : '#lesen';
 
     root.innerHTML = `
       <section id="s-heute">
         ${isDemo() ? `<p class="banner">Du siehst Beispieldaten. Verbinde dein GitHub-Repo in den <a href="#einstellungen">Einstellungen</a>, um mit deinen eigenen Karten zu lernen.</p>` : ''}
         ${data.error ? `<p class="banner error">Offline-Kopie · ${escapeHtml(data.error)}</p>` : ''}
-        <p class="eyebrow">${escapeHtml(greet)}</p>
-        <h1 class="hello">${headline}</h1>
-        <p class="lede">${lede.join(' ')}</p>
+        <p class="eyebrow">${w ? 'Wort des Tages' : escapeHtml(greet)}<span class="hide-narrow"> · ${escapeHtml(dateText)}</span></p>
+        ${w ? `
+        <div class="hero">
+          <h1 class="hero-word">${germanHtml(w.card)} <button class="say" type="button" id="sayWotd" aria-label="Aussprechen">🔊</button></h1>
+          <p class="hero-mean">${escapeHtml(w.card.back)}</p>
+          ${w.card.example?.de ? `<p class="hero-ex">${escapeHtml(w.card.example.de)}</p>` : ''}
+        </div>` : '<h1 class="hero-word">Willkommen bei Wortreise.</h1>'}
+        <p class="day-status">${status.join(' ')}</p>
         <div class="row">
           ${due ? '<a class="btn" href="#karten">Karten lernen <span aria-hidden="true">→</span></a>' : '<a class="btn" href="#test">Kurzer Test <span aria-hidden="true">→</span></a>'}
           <a class="link" href="${lastHref}">${lastArticle ? 'Weiterlesen' : 'Lesen'}</a>
           ${due ? '<a class="link hide-narrow" href="#test">Kurzer Test</a>' : '<a class="link hide-narrow" href="#wiederholen">Wiederholen</a>'}
         </div>
-        ${w ? `
-        <div class="wotd">
-          <p class="eyebrow">Wort des Tages${w.weak ? '<span class="hide-narrow"> · aus dem Fehlerheft</span>' : ''}</p>
-          <span class="w">${germanHtml(w.card)}</span>
-          <span class="m">${escapeHtml(w.card.back)} <button class="say" type="button" id="sayWotd" aria-label="Aussprechen">🔊</button></span>
-          ${w.card.example?.de ? `<span class="wex">${escapeHtml(w.card.example.de)}</span>` : ''}
-          <div class="slipcap"><span id="slipCap"></span><button type="button" id="shuffle2" aria-label="Andere Szene">↻</button></div>
-        </div>` : ''}
         ${data.cards.length ? `
         <div class="days" aria-label="Lerntage der letzten drei Wochen">
           ${s.days.map(x => `<i class="${x.on ? 'on' : ''} ${x.now ? 'now' : ''}" title="${formatDate(x.d)}"></i>`).join('')}
@@ -88,13 +76,6 @@ export default {
         </div>` : ''}
       </section>`;
 
-    const setCap = sc => { const el = $('#slipCap'); if (el && sc) el.textContent = `${sc.de} · ${sc.place}`; };
-    setCap(scene);
-    onSceneChange(setCap);
-    $('#shuffle2')?.addEventListener('click', () => {
-      const all = allScenes();
-      if (all.length > 1) { let i; do { i = Math.floor(Math.random() * all.length); } while (all[i] === currentScene()); show(i); }
-    });
     $('#sayWotd')?.addEventListener('click', () => speak(w.card.example?.de || germanText(w.card)));
   },
 };
