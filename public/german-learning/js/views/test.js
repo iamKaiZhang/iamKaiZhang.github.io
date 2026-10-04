@@ -6,6 +6,7 @@ import { buildQueue } from '../srs.js';
 import { germanText } from '../cardtext.js';
 import { parseArticleMd, renderArticle } from '../md.js';
 import { sync } from '../sync.js';
+import * as icons from '../icons.js';
 
 const LABEL = { mc: 'Multiple Choice', cloze: 'Lückentext', gender: 'Genus', order: 'Satzbau', translate: 'Übersetzung', listen: 'Diktat', speak: 'Sprechen' };
 let T = null; // running test
@@ -199,7 +200,7 @@ function renderQ() {
   if (q.type === 'cloze') body = `${q.hint ? `<p class="muted small">Hinweis: ${escapeHtml(q.hint)}</p>` : ''}<input class="line" id="f" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Antwort" placeholder="Fehlendes Wort"><div class="row mt"><button class="btn" type="button" id="chk">Prüfen</button></div>`;
   if (q.type === 'order') body = `<div class="tray" id="tray" aria-label="Dein Satz"></div><div class="pool" id="pool">${shuffle(q.tokens.map((t, i) => ({ t, i }))).map(x => `<button type="button" data-i="${x.i}">${escapeHtml(x.t)}</button>`).join('')}</div><div class="row mt"><button class="btn" type="button" id="chk">Prüfen</button></div>`;
   if (q.type === 'translate') body = `<input class="line" id="f" autocomplete="off" aria-label="Übersetzung" placeholder="${q.dir === 'de-en' ? 'In English …' : 'Auf Deutsch …'}"><div class="row mt"><button class="btn" type="button" id="chk">Lösung zeigen</button></div>`;
-  if (q.type === 'listen') body = `<div class="row" style="margin-bottom:16px"><button class="btn ghost" type="button" id="play">🔊 Anhören</button><button class="link" type="button" id="slow">langsam</button></div><input class="line" id="f" autocomplete="off" spellcheck="false" aria-label="Was hörst du?" placeholder="Schreib, was du hörst"><div class="row mt"><button class="btn" type="button" id="chk">Prüfen</button></div>`;
+  if (q.type === 'listen') body = `<div class="row" style="margin-bottom:16px"><button class="btn ghost" type="button" id="play">${icons.speaker} Anhören</button><button class="link" type="button" id="slow">langsam</button></div><input class="line" id="f" autocomplete="off" spellcheck="false" aria-label="Was hörst du?" placeholder="Schreib, was du hörst"><div class="row mt"><button class="btn" type="button" id="chk">Prüfen</button></div>`;
   if (q.type === 'speak') body = `${q.useful?.length ? `<p class="eyebrow" style="margin:0">Nützlich</p><div class="useful">${q.useful.map(u => `<span>${escapeHtml(u)}</span>`).join('')}</div>` : ''}<div class="row"><span class="timer" id="timer">1:00</span><button class="btn" type="button" id="tgo">Start</button><button class="link" type="button" id="tdone">Fertig</button></div>`;
 
   const promptHtml = q.type === 'gender' ? `… ${escapeHtml(q.prompt)}` : q.type === 'order' ? 'Bring die Wörter in die richtige Reihenfolge.'
