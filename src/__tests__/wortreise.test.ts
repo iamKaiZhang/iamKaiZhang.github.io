@@ -1,13 +1,18 @@
 import { parseArticleMd, renderArticle } from '../../public/german-learning/js/md.js';
 import {
   buildQueue,
+  isLearning,
   mergeSrs,
-  nextInterval,
+  nextCard,
+  preview,
   schedule,
+  studyPools,
   subIds,
 } from '../../public/german-learning/js/srs.js';
 
 const day = '2026-10-03';
+const noon = new Date(2026, 9, 3, 12, 0).getTime();
+const MIN = 60000;
 const card = (id: string, pos = 'verb', gender: string | null = null) => ({
   id,
   front: id,
@@ -23,50 +28,92 @@ describe('Wortreise spaced repetition', () => {
     expect(subIds(card('gehen'), 'de')).toEqual(['gehen#de']);
   });
 
-  it('schedules new cards 1 day, then 6 days, then by ease', () => {
-    const a = schedule(null, 2, day);
-    expect(a).toMatchObject({ interval: 1, reps: 1, due: '2026-10-04', ease: 2.5 });
-    const b = schedule(a, 2, '2026-10-04');
-    expect(b).toMatchObject({ interval: 6, reps: 2, due: '2026-10-10' });
-    const c = schedule(b, 2, '2026-10-10');
-    expect(c.interval).toBe(15);
-    expect(c.due).toBe('2026-10-25');
+  it('walks a new card through 1- and 10-minute steps before it graduates to a day', () => {
+    expect([0, 1, 2, 3].map((g) => preview(null, g))).toEqual([
+      { minutes: 1 },
+      { minutes: 6 },
+      { minutes: 10 },
+      { days: 4 },
+    ]);
+    const a = schedule(null, 2, noon);
+    expect(a).toMatchObject({ learn: 1, reps: 0, due: day });
+    expect(Date.parse(a.dueAt) - noon).toBe(10 * MIN);
+    expect(isLearning(a)).toBe(true);
+    const b = schedule(a, 2, noon + 10 * MIN);
+    expect(b).toMatchObject({ interval: 1, reps: 1, due: '2026-10-04' });
+    expect(b.learn).toBeUndefined();
+    expect(b.dueAt).toBeUndefined();
+    expect(schedule(null, 3, noon)).toMatchObject({ interval: 4, due: '2026-10-07' });
   });
 
-  it('adjusts ease and never drops below 1.3', () => {
-    let st = schedule(null, 2, day);
-    for (let i = 0; i < 12; i++) st = schedule(st, 1, day);
-    expect(st.ease).toBe(1.3);
-    expect(schedule(st, 3, day).ease).toBeCloseTo(1.45);
+  it('sends a missed learning card back to the first step', () => {
+    const a = schedule(schedule(null, 2, noon), 0, noon);
+    expect(a.learn).toBe(0);
+    expect(Date.parse(a.dueAt) - noon).toBe(1 * MIN);
+    expect(a.lapses).toBe(0);
   });
 
-  it('counts a lapse only for cards that were already learned', () => {
-    const fresh = schedule(null, 0, day);
-    expect(fresh).toMatchObject({ lapses: 0, reps: 0, interval: 0, due: day });
-    const learned = schedule(schedule(null, 2, day), 2, day);
-    const lapsed = schedule(learned, 0, day);
-    expect(lapsed).toMatchObject({ lapses: 1, reps: 0, interval: 0, due: day });
+  it('grows review intervals by ease and never lets ease drop below 1.3', () => {
+    const st = { interval: 10, ease: 2.5, reps: 3, lapses: 0, due: day };
+    expect([1, 2, 3].map((g) => preview(st, g).days)).toEqual([12, 25, 33]);
+    expect(schedule(st, 2, noon)).toMatchObject({ interval: 25, reps: 4, due: '2026-10-28' });
+    let r: Record<string, unknown> = st;
+    for (let i = 0; i < 12; i++) r = schedule(r, 1, noon);
+    expect(r.ease).toBe(1.3);
+  });
+
+  it('relearns a missed review card for 10 minutes, then restarts at one day', () => {
+    const st = { interval: 20, ease: 2.5, reps: 4, lapses: 0, due: day };
+    const lapsed = schedule(st, 0, noon);
+    expect(lapsed).toMatchObject({ lapses: 1, relearn: true, learn: 0, interval: 1 });
     expect(lapsed.ease).toBeCloseTo(2.3);
+    expect(Date.parse(lapsed.dueAt) - noon).toBe(10 * MIN);
+    expect(schedule(lapsed, 2, noon + 10 * MIN)).toMatchObject({ interval: 1, due: '2026-10-04' });
   });
 
-  it('previews intervals for the grade buttons', () => {
-    expect([0, 1, 2, 3].map((g) => nextInterval(null, g))).toEqual([0, 1, 1, 4]);
-    const st = { interval: 10, ease: 2.5, reps: 3 };
-    expect([1, 2, 3].map((g) => nextInterval(st, g))).toEqual([12, 25, 33]);
+  it('treats older data that only marked a miss with interval 0 as learning', () => {
+    expect(isLearning({ reps: 0, interval: 0, due: day })).toBe(true);
+    expect(isLearning({ reps: 1, interval: 1, due: day })).toBe(false);
   });
 
-  it('builds a due queue with siblings buried and a new-card limit', () => {
-    const cards = [card('a'), card('b'), card('c'), card('d')];
+  it('builds the day from learning, due reviews and a limited number of new cards', () => {
+    const cards = [card('a'), card('b'), card('c'), card('d'), card('e')];
     const srs = {
       cards: {
         'a#de': { due: '2026-10-01', interval: 3, ease: 2.5, reps: 2, lapses: 0 },
         'a#en': { due: '2026-10-02', interval: 3, ease: 2.5, reps: 2, lapses: 0 },
         'b#de': { due: '2026-10-09', interval: 6, ease: 2.5, reps: 2, lapses: 0 },
+        'e#de': {
+          due: day,
+          interval: 0,
+          reps: 0,
+          learn: 1,
+          dueAt: new Date(noon + 5 * MIN).toISOString(),
+        },
       },
     };
-    const q = buildQueue({ cards, srs, day, settings: { newPerDay: 1, directions: 'both' } });
-    expect(q.map((x) => x.sub)).toEqual(['a#de', 'b#en']);
-    expect(q.filter((x) => x.card.id === 'a')).toHaveLength(1);
+    const pools = studyPools({
+      cards,
+      srs,
+      now: noon,
+      settings: { newPerDay: 1, directions: 'both' },
+    });
+    expect(pools.learning.map((x) => x.sub)).toEqual(['e#de']);
+    expect(pools.reviews.map((x) => x.sub)).toEqual(['a#de']);
+    expect(pools.news.map((x) => x.sub)).toEqual(['b#en']);
+    expect(
+      buildQueue({ cards, srs, now: noon, settings: { newPerDay: 1, directions: 'both' } }),
+    ).toHaveLength(3);
+  });
+
+  it('shows a learning card when its step is due, and early only when nothing else is left', () => {
+    const lrn = { sub: 'x#de', kind: 'learning', at: noon + 5 * MIN };
+    const rev = { sub: 'y#de', kind: 'review' };
+    const pools = { learning: [lrn], reviews: [rev], news: [] };
+    expect(nextCard(pools, noon, 0)?.sub).toBe('y#de');
+    expect(nextCard(pools, noon, 1)?.sub).toBe('x#de');
+    const later = { learning: [{ ...lrn, at: noon + 30 * MIN }], reviews: [], news: [] };
+    expect(nextCard(later, noon, 0)).toBeNull();
   });
 
   it('merges two devices per card by the later review', () => {

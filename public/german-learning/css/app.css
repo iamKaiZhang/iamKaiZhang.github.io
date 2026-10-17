@@ -12,6 +12,7 @@
   --vermilion: #c2482a;
   --moss: #6d7440;
   --ochre: #c9963a;
+  --indigo: #3d5a73;
   --mincho: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', Georgia, serif;
   --gothic: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Helvetica Neue', Arial, sans-serif;
   --type: 'Courier Prime', 'Courier New', monospace;
@@ -118,6 +119,13 @@ p { margin: 0 0 12px; }
 
 /* ── Karten ── */
 .deckline { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; font: 12px var(--gothic); letter-spacing: .08em; color: var(--graphite); margin-bottom: 26px; }
+.srs-counts { display: flex; gap: 22px; align-items: baseline; margin-right: auto; }
+.srs-counts span { font: 500 24px/1 var(--mincho); font-variant-numeric: tabular-nums; padding-bottom: 4px; border-bottom: 2px solid transparent; }
+.srs-counts small { font: 10.5px var(--gothic); letter-spacing: .14em; text-transform: uppercase; color: var(--graphite); margin-left: 6px; }
+.srs-counts .c-new { color: var(--indigo); }
+.srs-counts .c-learn { color: var(--vermilion); }
+.srs-counts .c-review { color: var(--moss); }
+.srs-counts .on { border-color: currentColor; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px 18px; width: 100%; }
 .chips button { font: 500 13px/1 var(--gothic); letter-spacing: .06em; color: var(--graphite); padding: 8px 0; border-bottom: 1px solid transparent; }
 .chips button:hover { color: var(--ink); }
