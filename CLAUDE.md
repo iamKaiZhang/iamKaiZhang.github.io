@@ -75,12 +75,12 @@ A standalone static app in `/public/german-learning/` (served at `/german-learni
 
 ### What it does
 - Reads and writes the learner's private repo `iamKaiZhang/german-learning` through the GitHub Contents API, using a token stored in `localStorage` (`gh_pat`, `gh_repo`). Without a token it runs on bundled sample data in `demo/` and keeps writes in the browser.
-- Screens (hash routes): `#heute` (start), `#lesen` (article list, paste, annotating reader), `#karten` (Anki-style cards over one collection, with filters), `#test` (auto / Claude bank / article tests), `#wiederholen` (Fehlerheft, inbox, grammar, journal), `#fortschritt` (stats, heatmap, passport), `#grammatik/<slug>`, `#einstellungen`.
+- Screens (hash routes): `#heute` (start), `#lesen` (article list, paste, annotating reader), `#karten` (Anki-style session the app builds itself; "Gezielt üben" for focused practice), `#test` (auto / Claude bank / article tests), `#wiederholen` (Fehlerheft, inbox, grammar, journal), `#fortschritt` (stats, heatmap, passport), `#grammatik/<slug>`, `#einstellungen`.
 - A random background scene from `scenes/scenes.json` fills the page on every visit; working screens fade it to a wash.
 
 ### Layout
 - `index.html` shell, `css/app.css`
-- `js/app.js` router · `js/store.js` data layer (github/demo backends, local cache, offline merge) · `js/github.js` API helpers · `js/srs.js` pure scheduling (SM-2 lite, unit-tested in `src/__tests__/wortreise.test.ts`) · `js/md.js` markdown · `js/scenes.js` · `js/sync.js` · `js/cardtext.js` · `js/views/*.js` one module per screen
+- `js/app.js` router · `js/store.js` data layer (github/demo backends, local cache, offline merge) · `js/github.js` API helpers · `js/srs.js` pure Anki-style scheduling with learning steps (unit-tested in `src/__tests__/wortreise.test.ts`) · `js/md.js` markdown · `js/scenes.js` · `js/sync.js` · `js/cardtext.js` · `js/views/*.js` one module per screen
 - `demo/` sample data (same file layout as the learning repo) · `scenes/` background images + `scenes.json` (`file`, `paper`, `focus`, `mfocus`, `place`, `de`, `en`)
 - Scenes are the owner's illustrations; how to add one is in `scenes/README.md`
 
