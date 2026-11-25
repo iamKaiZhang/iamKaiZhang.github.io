@@ -428,7 +428,12 @@ export default function SketchDog() {
       </div>
       <div className="sketch-meta">
         <span>Drag the bone to the bowl, or click it</span>
-        <a href="https://iso-glow.vercel.app">Made with ISO-GLOW ↗</a>
+        <a href="https://iso-glow.vercel.app">
+          Made with ISO-GLOW
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M3 9 9 3M4.5 3H9v4.5" />
+          </svg>
+        </a>
       </div>
     </>
   );
