@@ -17,6 +17,7 @@
 @use 'components/section';
 @use 'components/table';
 @use 'components/markdown';
+@use 'components/snowboard-figure';
 
 // Layout.
 
@@ -25,6 +26,7 @@
 @use 'layout/panel';
 
 @use 'pages/facts';
+@use 'pages/dog-generations';
 @use 'pages/notFound';
 @use 'pages/resume';
 @use 'pages/skills';

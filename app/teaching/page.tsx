@@ -3,7 +3,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { courses, supervisions } from '@/data/teaching';
+import SnowboardFigure from '@/components/Teaching/SnowboardFigure';
+import { courses, offCampus, supervisions } from '@/data/teaching';
 
 export const metadata: Metadata = {
   title: 'Teaching',
@@ -91,6 +92,20 @@ export default function TeachingPage() {
               </div>
             ),
         )}
+      </section>
+
+      <section data-reveal>
+        <h2>Other Teaching</h2>
+        {offCampus.map((item) => (
+          <div className="course" key={item.title}>
+            <div className="what">
+              {item.title}
+              <small>{item.detail}</small>
+            </div>
+            <div className="when">{item.when}</div>
+          </div>
+        ))}
+        <SnowboardFigure />
       </section>
     </article>
   );

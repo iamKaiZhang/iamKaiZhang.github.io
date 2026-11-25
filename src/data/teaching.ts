@@ -33,6 +33,15 @@ export const courses: Course[] = [
   },
 ];
 
+// Teaching outside the university
+export const offCampus: Course[] = [
+  {
+    title: 'Certified Snowboard Instructor',
+    detail: 'Anwärter, international Level 2, Vienna Ski and Snowboard Instructor Association',
+    when: 'Since 2026',
+  },
+];
+
 export const supervisions: Supervision[] = [
   {
     title:

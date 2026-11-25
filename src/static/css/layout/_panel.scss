@@ -14,7 +14,7 @@ article.post {
     margin-bottom: 2.5rem;
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 2rem;
       margin-bottom: 0.2rem;
     }
 
@@ -33,14 +33,16 @@ article.post {
     gap: 3.5rem;
   }
 
+  // Section breaks carry the one strong rule on the page; rows inside a
+  // section use a much fainter one.
   section + section {
-    margin-top: 3.5rem;
-    padding-top: 3rem;
+    margin-top: 4.5rem;
+    padding-top: 3.5rem;
     border-top: 1px solid palette(border-alt);
   }
 
   h2 {
-    font-size: 1.45rem;
+    font-size: 1.7rem;
     margin-bottom: 1.4rem;
   }
 }
@@ -85,10 +87,10 @@ article.post {
 /* Papers */
 .paper {
   padding: 0.95rem 0;
-  border-top: 1px solid palette(border);
+  border-top: 1px solid palette(border-bg);
 
   &:last-child {
-    border-bottom: 1px solid palette(border);
+    border-bottom: 1px solid palette(border-bg);
   }
 
   // Tag flows inline right after the title's last word, wrapping only
@@ -168,6 +170,25 @@ article.post {
   }
 }
 
+/* Teaching: each section sits on its own faintly tinted panel. The
+   negative margin lets the panel extend past the text column, so the
+   text stays aligned with the page title. */
+#teaching section {
+  margin-inline: -1.5rem;
+  padding: 2rem 1.5rem;
+  background: palette(border-bg);
+  border-radius: 0.75rem;
+
+  + section {
+    margin-top: 1.5rem;
+    border-top: 0;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+}
+
 /* Student supervision */
 
 // One block per status, each labeled once. Green is reserved for open
@@ -200,10 +221,10 @@ article.post {
   justify-content: space-between;
   gap: 0.4rem 1.5rem;
   padding: 0.7rem 0;
-  border-top: 1px solid palette(border);
+  border-top: 1px solid palette(border-bg);
 
   &:last-child {
-    border-bottom: 1px solid palette(border);
+    border-bottom: 1px solid palette(border-bg);
   }
 
   // Avoids a single stranded word when a title wraps
@@ -291,10 +312,10 @@ article.post {
     display: flex;
     gap: 1.2rem;
     padding: 0.55rem 0;
-    border-top: 1px solid palette(border);
+    border-top: 1px solid palette(border-bg);
 
     &:last-child {
-      border-bottom: 1px solid palette(border);
+      border-bottom: 1px solid palette(border-bg);
     }
   }
 
@@ -328,13 +349,17 @@ article.post {
     }
   }
 
-  .contact-list li {
-    flex-direction: column;
-    gap: 0;
-  }
-
   .project {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+// Label-and-value rows stack only on phone widths; a narrow desktop window
+// still has room for them side by side.
+@media screen and (max-width: 480px) {
+  .contact-list li {
+    flex-direction: column;
+    gap: 0;
   }
 }

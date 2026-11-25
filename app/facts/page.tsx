@@ -4,8 +4,8 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import InteractiveDog from '@/components/Facts/InteractiveDog';
 import Personal from '@/components/Facts/Personal';
+import SketchDog from '@/components/Facts/SketchDog';
 import TextFacts from '@/components/Facts/TextFacts';
 
 export const metadata: Metadata = {
@@ -46,7 +46,13 @@ export default function FactsPage() {
         </section>
         <section data-reveal>
           <h2>Feed the dog</h2>
-          <InteractiveDog />
+          <SketchDog />
+          <p className="dog-note">
+            I&apos;ve been trying to use AI to generate an interactive dog here. Obviously it is not
+            perfect (limited by the capability and my time spent on it). But on the other hand, we
+            can also see that AI has been evolving fast.{' '}
+            <Link href="/facts/dogs">Click here to see the past versions of the dog.</Link>
+          </p>
         </section>
       </div>
     </article>

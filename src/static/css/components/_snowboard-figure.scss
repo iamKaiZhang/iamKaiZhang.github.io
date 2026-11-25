@@ -1,0 +1,192 @@
+@use '../libs' as *;
+
+/* Snowboarder pen sketch. Ink and paper come from the page's own colors;
+   the accent is a hatched spot color on the board. Stroke widths are in
+   drawing units, so the sketch scales as a whole. */
+
+.sketch {
+  max-width: 24rem;
+  margin: 1.2rem auto 0;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible {
+    outline: 2px solid palette(accent);
+    outline-offset: 4px;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  svg * {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .ink {
+    stroke: palette(fg-bold);
+  }
+
+  // Tubes are filled with the panel's own tone so they hide what is behind
+  .paper {
+    stroke: color-mix(in srgb, palette(fg-bold) 6%, palette(bg));
+  }
+
+  // The lighter second pass of the pen, and fabric folds
+  .loose {
+    stroke-width: 0.32;
+    opacity: 0.8;
+  }
+
+  .streak {
+    stroke-width: 0.3;
+  }
+
+  .mitt,
+  .hood {
+    fill: color-mix(in srgb, palette(fg-bold) 6%, palette(bg));
+    stroke: palette(fg-bold);
+    stroke-width: 0.4;
+  }
+
+  .goggles {
+    stroke: palette(fg-bold);
+    stroke-width: 2.8;
+  }
+
+  .shadow {
+    fill: palette(fg-bold);
+  }
+
+  .spray {
+    fill: palette(fg-bold);
+  }
+
+  // The board: an ink outline over the panel tone, hatched in the one spot
+  // of color like quick marker strokes.
+  .deck {
+    fill: color-mix(in srgb, palette(fg-bold) 6%, palette(bg));
+    stroke: palette(fg-bold);
+    stroke-width: 0.45;
+  }
+
+  .spot {
+    stroke: palette(accent);
+    stroke-width: 1;
+  }
+
+  // A pool of light under the board (night theme only)
+  .halo {
+    fill: palette(accent);
+    opacity: 0.13;
+  }
+
+  // The freshest stretch of the carved line still carries the board's color
+  .trail {
+    stroke-width: 0.7;
+  }
+
+  // The line the board leaves in the snow
+  .track {
+    stroke-width: 0.45;
+    opacity: 0.55;
+  }
+}
+
+.sketch-meta {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  max-width: 24rem;
+  margin: 0.2rem auto 0;
+  font-size: 0.72rem;
+  color: palette(fg-light);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+// The dog on the Facts page shares the sketch's ink, paper and spot color
+.sketch-dog {
+  max-width: 27rem;
+  cursor: default;
+  touch-action: none;
+
+  .collar {
+    stroke-width: 1.7;
+  }
+
+  .tongue {
+    stroke-width: 2;
+  }
+
+  .heart path {
+    fill: palette(accent);
+  }
+
+  // No tinted panel behind the dog, so its paper is the page itself
+  .paper {
+    stroke: palette(bg);
+  }
+
+  .paper-fill,
+  .deck {
+    fill: palette(bg);
+  }
+
+  .knob {
+    fill: palette(accent);
+  }
+
+  .shaft {
+    stroke-width: 4.2;
+  }
+
+  .shade {
+    stroke-width: 0.45;
+  }
+
+  .bone {
+    cursor: grab;
+    outline: none;
+    transform-origin: 0 0;
+
+    // An invisible, generous hit area
+    .grab {
+      fill: transparent;
+    }
+
+    &.is-flying {
+      transition: transform 0.5s cubic-bezier(0.3, 0, 0.2, 1);
+    }
+
+    &:focus-visible .grab {
+      stroke: palette(accent);
+      stroke-width: 0.5;
+      stroke-dasharray: 1.2 1.6;
+    }
+  }
+
+  &.is-dragging .bone {
+    cursor: grabbing;
+  }
+}
+
+// The light theme keeps the color but has no glow
+[data-theme='day'] .sketch {
+  .halo {
+    display: none;
+  }
+
+  .lit {
+    filter: none;
+  }
+}
