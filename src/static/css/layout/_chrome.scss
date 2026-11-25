@@ -1,3 +1,5 @@
+@use '../libs' as *;
+
 /* Site chrome: header nav + footer */
 
 #header {
@@ -11,7 +13,7 @@
   max-width: 76rem;
   margin: 0 auto;
   padding: 1.6rem clamp(1.5rem, 4vw, 2.5rem) 0;
-  font-family: _font(family-heading);
+  font-family: font(family-heading);
   // Same size as today on phones, noticeably larger on laptops
   font-size: clamp(1.02rem, 0.85rem + 0.55vw, 1.3rem);
 
@@ -21,13 +23,16 @@
     gap: 0.2rem 1.6rem;
 
     a {
-      color: _palette(fg-bold);
+      color: palette(fg-bold);
       text-decoration: none;
+      // Taller hit area for thumbs; the negative margin keeps the layout
+      padding-block: 0.5rem;
+      margin-block: -0.5rem;
 
       &[aria-current] {
         text-decoration: underline;
         text-decoration-thickness: 1px;
-        text-decoration-color: _palette(accent);
+        text-decoration-color: palette(accent);
         text-underline-offset: 4px;
       }
     }
@@ -39,26 +44,28 @@
     align-items: baseline;
 
     button {
-      font-family: _font(family-heading);
+      font-family: font(family-heading);
       font-size: inherit;
       height: auto;
       line-height: inherit;
       background: none;
       border: none;
       box-shadow: none;
-      padding: 0;
-      color: _palette(fg-bold);
+      // Larger hit area for thumbs; the negative margin keeps the layout
+      padding: 0.5rem 0.9rem;
+      margin: -0.5rem -0.9rem;
+      color: palette(fg-bold);
       cursor: pointer;
       letter-spacing: 0;
       text-transform: none;
-      transition: color _duration(transition) ease;
+      transition: color duration(transition) ease;
 
       &:hover {
-        color: _palette(accent);
+        color: palette(accent);
       }
 
       &:focus-visible {
-        outline: 2px solid _palette(accent);
+        outline: 2px solid palette(accent);
         outline-offset: 2px;
         border-radius: 2px;
       }
@@ -77,5 +84,5 @@
   gap: 1rem;
   flex-wrap: wrap;
   font-size: 0.8rem;
-  color: _palette(fg-light);
+  color: palette(fg-light);
 }

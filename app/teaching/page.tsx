@@ -10,14 +10,24 @@ export const metadata: Metadata = {
   description: 'Courses and Student Supervision',
 };
 
+// Supervisions grouped by status; an entry without a status is a past project.
+const groups = [
+  { label: 'Open Projects', className: 'open', status: 'open' },
+  { label: 'Ongoing', className: 'ongoing', status: 'ongoing' },
+  { label: 'Past', className: 'past', status: undefined },
+].map((group) => ({
+  ...group,
+  items: supervisions.filter((item) => item.status === group.status),
+}));
+
 export default function TeachingPage() {
   return (
     <article className="post" id="teaching">
       <header>
         <div className="title">
-          <h2>
+          <h1>
             <Link href="/teaching">Teaching</Link>
-          </h2>
+          </h1>
           <p>Courses and student projects that I am TAing.</p>
         </div>
       </header>
@@ -37,27 +47,50 @@ export default function TeachingPage() {
 
       <section data-reveal>
         <h2>Student Supervision</h2>
-        {supervisions.map((item) => (
-          <div className="project" key={item.title}>
-            <div className="head">
-              <span className="title">{item.title}</span>
-              {item.ongoing && <span className="tag accent">Ongoing</span>}
-            </div>
-            <div className="student">
-              {item.student}
-              <span className="detail">
-                {' · '}
-                {item.project} · with{' '}
-                {item.supervisors.map((s, i) => (
-                  <React.Fragment key={s.name}>
-                    {i > 0 && ' and '}
-                    {s.link ? <a href={s.link}>{s.name}</a> : s.name}
-                  </React.Fragment>
+        {groups.map(
+          (group) =>
+            group.items.length > 0 && (
+              <div className="group" key={group.label}>
+                <h3 className={`status ${group.className}`}>{group.label}</h3>
+                {group.items.map((item) => (
+                  <div className="project" key={item.title}>
+                    <div className="body">
+                      <div className="head">
+                        {item.link ? (
+                          <a className="title" href={item.link}>
+                            {item.title}
+                          </a>
+                        ) : (
+                          <span className="title">{item.title}</span>
+                        )}
+                      </div>
+                      <div className="student">
+                        {item.student}
+                        <span className="detail">
+                          {item.student && ' · '}
+                          {item.project} · with{' '}
+                          {item.supervisors.map((s, i) => (
+                            <React.Fragment key={s.name}>
+                              {i > 0 && ' and '}
+                              {s.link ? <a href={s.link}>{s.name}</a> : s.name}
+                            </React.Fragment>
+                          ))}
+                        </span>
+                      </div>
+                    </div>
+                    {item.link && (
+                      <a className="tag apply" href={item.link}>
+                        Apply on SiROP
+                        <svg viewBox="0 0 12 12" aria-hidden="true">
+                          <path d="M3 9 9 3M4.5 3H9v4.5" />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
                 ))}
-              </span>
-            </div>
-          </div>
-        ))}
+              </div>
+            ),
+        )}
       </section>
     </article>
   );

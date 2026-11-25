@@ -35,6 +35,7 @@ export default function Hero() {
 
   return (
     <div id="home">
+      <h1 className="sr-only">Kai Zhang</h1>
       <div className="bg-photo" aria-hidden="true" />
       <div className="bg-vignette" aria-hidden="true" />
       <div

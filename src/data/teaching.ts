@@ -12,9 +12,10 @@ export interface SupervisorLink {
 
 export interface Supervision {
   title: string;
-  student: string;
+  student?: string;
   project: string;
-  ongoing?: boolean;
+  status?: 'open' | 'ongoing';
+  link?: string;
   supervisors: SupervisorLink[];
 }
 
@@ -34,15 +35,25 @@ export const courses: Course[] = [
 
 export const supervisions: Supervision[] = [
   {
+    title:
+      "The 'Give-and-Take' in Recommender Systems: A Karma Economy for Fair Visibility Allocation",
+    project: 'Bachelor Thesis / Semester Project / Master Thesis',
+    status: 'open',
+    link: 'https://sirop.org/app/ab476f30-5b8a-4413-b298-6e67f3f064e9',
+    supervisors: [{ name: 'Stefania Ionescu', link: 'https://www.sionescu.ro' }],
+  },
+  {
     title: 'Demand Response for Agentic LLM Serving',
     student: 'Niklas Fischli',
     project: 'Bachelor Thesis 2026',
+    status: 'ongoing',
     supervisors: [{ name: 'Leonardo Pedroso', link: 'https://leonardopedroso.github.io' }],
   },
   {
     title: 'Adversarial Interaction-proof Refugee Allocation',
     student: 'Louis Richardt',
-    project: 'Semester Project 2026',
+    project: 'Bachelor Thesis 2026',
+    status: 'ongoing',
     supervisors: [{ name: 'Stefania Ionescu', link: 'https://www.sionescu.ro' }],
   },
   {

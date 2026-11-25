@@ -1,3 +1,5 @@
+@use '../libs' as *;
+
 /* Landing page: shaded background photo + veiled introduction */
 
 .bg-photo {
@@ -19,8 +21,8 @@
   z-index: 0;
   pointer-events: none;
   background:
-    linear-gradient(to bottom, transparent 25%, _palette(bg) 92%),
-    radial-gradient(ellipse at center, transparent 35%, _palette(bg) 100%);
+    linear-gradient(to bottom, transparent 25%, palette(bg) 92%),
+    radial-gradient(ellipse at center, transparent 35%, palette(bg) 100%);
 }
 
 #home {
@@ -48,7 +50,7 @@
     font-size: clamp(1.15rem, 2.2vw, 1.55rem);
     line-height: 1.55;
     font-weight: 400;
-    color: _palette(fg-bold);
+    color: palette(fg-bold);
     letter-spacing: -0.01em;
   }
 }
@@ -60,7 +62,7 @@
   left: 0;
   height: 3px;
   z-index: 100;
-  background: _palette(accent);
+  background: palette(accent);
   transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -101,7 +103,7 @@
   // (inline padding paints without affecting the line height), so the
   // hand cursor appears across the whole line band, not just the glyphs.
   a:not(.pill) {
-    font-family: _font(family-heading);
+    font-family: font(family-heading);
     padding-block: 0.22em;
     transition:
       color 0.3s ease,
@@ -110,22 +112,22 @@
 }
 
 .hero .hl:hover {
-  color: _palette(accent);
+  color: palette(accent);
 
   a {
-    color: _palette(accent);
+    color: palette(accent);
   }
 
   .pill {
-    color: _palette(accent);
-    border-color: _palette(accent);
+    color: palette(accent);
+    border-color: palette(accent);
   }
 }
 
 // A directly hovered pill still fills solid, like ped.ro's
 .hero .pill:hover {
-  background: _palette(accent);
-  border-color: _palette(accent);
+  background: palette(accent);
+  border-color: palette(accent);
   color: var(--clr-accent-ink) !important;
 }
 
@@ -137,18 +139,18 @@
 
 .pill {
   display: inline-block;
-  font-family: _font(family);
+  font-family: font(family);
   font-size: 0.66em;
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  border: 1px solid _palette(fg-bold);
+  border: 1px solid palette(fg-bold);
   border-radius: 999px;
   padding: 0 0.6em;
   line-height: 1.7;
   vertical-align: 10%;
   white-space: nowrap;
-  color: _palette(fg-bold);
+  color: palette(fg-bold);
   // Pills react faster than the surrounding text (0.3s)
   transition:
     background 0.15s ease,
@@ -160,8 +162,8 @@ a.pill {
   text-decoration: none;
 
   &:hover {
-    background: _palette(accent);
-    border-color: _palette(accent);
+    background: palette(accent);
+    border-color: palette(accent);
     color: var(--clr-accent-ink) !important;
   }
 }
@@ -172,7 +174,7 @@ a.pill {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 1rem;
   padding: 0 1.5rem 2.8rem;
   font-size: 1.15rem;
 }
@@ -185,6 +187,14 @@ a.pill {
   height: 2.4em;
   padding: 0;
   border-radius: 50%;
+  position: relative;
+
+  // Extends the hit area to about 44px without changing the look
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -0.45rem;
+  }
 
   svg {
     width: 1.05em;

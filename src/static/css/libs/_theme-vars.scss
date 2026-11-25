@@ -4,7 +4,7 @@
 @property --clr-bg-alt    { syntax: '<color>'; inherits: true; initial-value: #faf9f7; }
 @property --clr-fg        { syntax: '<color>'; inherits: true; initial-value: #57534e; }
 @property --clr-fg-bold   { syntax: '<color>'; inherits: true; initial-value: #1a1816; }
-@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #8d8880; }
+@property --clr-fg-light  { syntax: '<color>'; inherits: true; initial-value: #716c65; }
 @property --clr-border     { syntax: '<color>'; inherits: true; initial-value: rgba(26, 24, 22, 0.16); }
 @property --clr-border-bg  { syntax: '<color>'; inherits: true; initial-value: rgba(26, 24, 22, 0.05); }
 @property --clr-border-alt { syntax: '<color>'; inherits: true; initial-value: rgba(26, 24, 22, 0.34); }
@@ -35,13 +35,14 @@
   --clr-bg-alt: #faf9f7;
   --clr-fg: #57534e;
   --clr-fg-bold: #1a1816;
-  --clr-fg-light: #8d8880;
+  --clr-fg-light: #716c65;
   --clr-border: rgba(26, 24, 22, 0.16);
   --clr-border-bg: rgba(26, 24, 22, 0.05);
   --clr-border-alt: rgba(26, 24, 22, 0.34);
   --clr-accent: #c73e1d;
   --clr-accent-05: rgba(199, 62, 29, 0.05);
   --clr-accent-ink: #faf9f7;
+  --clr-open: #15803d; // "open" status only
   --photo-opacity: 0.30;
 }
 
@@ -51,12 +52,13 @@
   --clr-bg-alt: #141211;
   --clr-fg: #a8a49e;
   --clr-fg-bold: #e9e7e4;
-  --clr-fg-light: #6e6a64;
+  --clr-fg-light: #8a857e;
   --clr-border: rgba(233, 231, 228, 0.16);
   --clr-border-bg: rgba(233, 231, 228, 0.06);
   --clr-border-alt: rgba(233, 231, 228, 0.34);
   --clr-accent: #ec4b26;
   --clr-accent-05: rgba(236, 75, 38, 0.05);
   --clr-accent-ink: #fdf4f1;
+  --clr-open: #7fb894;
   --photo-opacity: 0.25;
 }

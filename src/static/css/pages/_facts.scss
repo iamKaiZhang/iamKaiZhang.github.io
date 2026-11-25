@@ -1,3 +1,6 @@
+@use 'sass:color';
+@use '../libs' as *;
+
 
 
 .facts-content {
@@ -35,7 +38,7 @@
 /* SVG element classes */
 .dog-line {
   fill: none;
-  stroke: _palette(accent);
+  stroke: palette(accent);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 4.4;
@@ -43,30 +46,30 @@
 
 .dog-line-thin {
   fill: none;
-  stroke: _palette(accent);
+  stroke: palette(accent);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2.7;
 }
 
 .dog-fill-soft {
-  fill: color-mix(in srgb, _palette(accent) 10%, _palette(bg));
+  fill: color-mix(in srgb, palette(accent) 10%, palette(bg));
   stroke: none;
 }
 
 .dog-eye,
 .dog-nose {
-  fill: _palette(accent);
+  fill: palette(accent);
 }
 
 .dog-eye-whites {
-  fill: _palette(bg);
+  fill: palette(bg);
   opacity: 0.86;
   stroke: none;
 }
 
 .dog-shadow {
-  fill: color-mix(in srgb, _palette(accent) 12%, transparent);
+  fill: color-mix(in srgb, palette(accent) 12%, transparent);
 }
 
 .dog-heart {
@@ -76,7 +79,7 @@
 }
 
 .dog-heart-fill {
-  fill: color-mix(in srgb, _palette(accent) 18%, _palette(bg));
+  fill: color-mix(in srgb, palette(accent) 18%, palette(bg));
 }
 
 .dog-spark {
@@ -127,12 +130,12 @@
 }
 
 .dog-wrap.is-dragging .dog-bone-wrap {
-  filter: drop-shadow(0 5px 8px color-mix(in srgb, _palette(accent) 24%, transparent));
+  filter: drop-shadow(0 5px 8px color-mix(in srgb, palette(accent) 24%, transparent));
   transform: scale(1.08) rotate(-6deg);
 }
 
 .dog-wrap.is-near-drop .dog-bone-wrap {
-  filter: drop-shadow(0 0 10px color-mix(in srgb, _palette(accent) 36%, transparent));
+  filter: drop-shadow(0 0 10px color-mix(in srgb, palette(accent) 36%, transparent));
   transform: scale(0.96) rotate(3deg);
 }
 
@@ -147,7 +150,7 @@
 }
 
 .dog-bone-wrap:focus-visible {
-  outline: 2px solid _palette(accent);
+  outline: 2px solid palette(accent);
   outline-offset: 4px;
   border-radius: 999px;
 }
@@ -216,8 +219,8 @@
 }
 
 .dog-bone-end {
-  fill: _palette(bg);
-  stroke: _palette(accent);
+  fill: palette(bg);
+  stroke: palette(accent);
   stroke-width: 3;
 }
 
@@ -238,8 +241,8 @@
 }
 
 .dog-bone-path {
-  fill: _palette(bg);
-  stroke: _palette(accent);
+  fill: palette(bg);
+  stroke: palette(accent);
   stroke-linejoin: round;
   stroke-width: 5;
 }
@@ -247,8 +250,8 @@
 /* Hint label */
 .dog-hint {
   bottom: 6px;
-  color: _palette(fg-light);
-  font-family: _font(family-heading);
+  color: palette(fg-light);
+  font-family: font(family-heading);
   font-size: 0.68em;
   left: 12px;
   letter-spacing: 0;
@@ -331,22 +334,22 @@
     }
 
     .value {
-      color: _palette(fg-bold);
+      color: palette(fg-bold);
       font-size: 0.9em;
       font-variant-numeric: tabular-nums;
-      transition: color _duration(transition) ease;
+      transition: color duration(transition) ease;
     }
 
     li:hover {
       .label,
       .value,
       .value a {
-        color: _palette(accent);
+        color: palette(accent);
       }
     }
 
     .label {
-      transition: color _duration(transition) ease;
+      transition: color duration(transition) ease;
     }
   }
 
@@ -363,19 +366,19 @@
     li {
       margin: 0.5rem 0;
       font-size: 0.9em;
-      transition: color _duration(transition) ease;
+      transition: color duration(transition) ease;
 
       &::marker {
-        color: _palette(fg-light);
+        color: palette(fg-light);
       }
 
       &:hover {
-        color: _palette(accent);
+        color: palette(accent);
 
         a,
         strong,
         b {
-          color: _palette(accent);
+          color: palette(accent);
         }
       }
     }

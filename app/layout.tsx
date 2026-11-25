@@ -68,9 +68,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeProvider>
+          <a className="skip-link" href="#main">
+            Skip to content
+          </a>
           <ScrollReveal />
           <Navigation />
-          {children}
+          <main id="main">{children}</main>
           <footer id="site-footer">
             <div>Zürich, Switzerland</div>
             <div>© 2026 Kai Zhang</div>

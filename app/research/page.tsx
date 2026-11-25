@@ -16,9 +16,9 @@ export default function ResearchPage() {
     <article className="post" id="research">
       <header>
         <div className="title">
-          <h2>
+          <h1>
             <Link href="/research">Research</Link>
-          </h2>
+          </h1>
           <p>A selection of my research projects that I&apos;m excited about.</p>
         </div>
       </header>

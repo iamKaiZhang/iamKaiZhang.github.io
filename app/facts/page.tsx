@@ -18,9 +18,9 @@ export default function FactsPage() {
     <article className="post" id="facts">
       <header className="with-portrait">
         <div className="title">
-          <h2>
+          <h1>
             <Link href="/facts">Random Facts</Link>
-          </h2>
+          </h1>
           <p>
             The random facts about me are small yet certain proofs that I&apos;m unlike anyone else
             in this world.

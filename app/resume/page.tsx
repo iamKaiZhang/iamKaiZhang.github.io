@@ -30,7 +30,7 @@ export default function ResumePage() {
     <article className="post" id="resume">
       <header>
         <div className="title">
-          <h2>Resume</h2>
+          <h1>Resume</h1>
           <div className="link-container">
             {sections.map((section) => (
               <h4 key={section.id}>

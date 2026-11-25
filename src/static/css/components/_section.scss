@@ -1,3 +1,5 @@
+@use '../libs' as *;
+
 ///
 /// Future Imperfect by HTML5 UP
 /// html5up.net | @ajlkn
@@ -15,7 +17,7 @@ article {
 
 header {
   p {
-    color: _palette(fg-light);
+    color: palette(fg-light);
     margin-top: -0.5em;
   }
 }

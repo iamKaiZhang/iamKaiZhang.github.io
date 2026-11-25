@@ -25,7 +25,7 @@ export default function ScrollReveal() {
     const els = Array.from(
       document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)'),
     );
-    if (els.length === 0) return undefined;
+    if (els.length === 0 || !('IntersectionObserver' in window)) return undefined;
 
     document.documentElement.classList.add('reveal-ready');
 
@@ -44,7 +44,19 @@ export default function ScrollReveal() {
     );
 
     els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+
+    // Safety net: if the observer never reports, show everything rather
+    // than leave content hidden.
+    const fallback = window.setTimeout(() => {
+      if (!els.some((el) => el.classList.contains('is-visible'))) {
+        document.documentElement.classList.remove('reveal-ready');
+      }
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(fallback);
+      observer.disconnect();
+    };
   }, [pathname]);
 
   return null;

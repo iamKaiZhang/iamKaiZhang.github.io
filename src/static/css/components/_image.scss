@@ -1,3 +1,5 @@
+@use '../libs' as *;
+
 ///
 /// Future Imperfect by HTML5 UP
 /// html5up.net | @ajlkn
@@ -38,7 +40,7 @@
 
   &.fit {
     display: block;
-    margin: 0 0 _size(element-margin) 0;
+    margin: 0 0 size(element-margin) 0;
     width: 100%;
 
     img {
@@ -48,7 +50,7 @@
 
   &.featured {
     display: block;
-    margin: 0 0 _size(section-spacing) 0;
+    margin: 0 0 size(section-spacing) 0;
     width: 100%;
 
     img {
@@ -56,13 +58,13 @@
     }
 
     @include breakpoint(small) {
-      margin: 0 0 _size(section-spacing-small) 0;
+      margin: 0 0 size(section-spacing-small) 0;
     }
   }
 
   &.main {
     display: block;
-    margin: 0 0 (_size(element-margin) * 1.5) 0;
+    margin: 0 0 (size(element-margin) * 1.5) 0;
     width: 100%;
 
     img {

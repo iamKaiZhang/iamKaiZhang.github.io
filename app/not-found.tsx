@@ -15,7 +15,7 @@ export default function NotFound() {
         <article className="post" id="contact">
           <header>
             <div className="title">
-              <h2>Page Not Found</h2>
+              <h1>Page Not Found</h1>
             </div>
           </header>
           <Link href="/">Return Home</Link>

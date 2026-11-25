@@ -16,9 +16,9 @@ export default function ContactPage() {
     <article className="post" id="contact">
       <header className="with-portrait">
         <div className="title">
-          <h2>
+          <h1>
             <Link href="/contact">Contact</Link>
-          </h2>
+          </h1>
           <p>Feel free to get in touch.</p>
         </div>
         <Image

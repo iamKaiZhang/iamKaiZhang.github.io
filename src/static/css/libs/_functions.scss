@@ -1,34 +1,37 @@
+@use 'vars' as *;
+@use 'skel' as *;
+
 /// Gets a duration value.
 /// @param {string} $keys Key(s).
 /// @return {string} Value.
-@function _duration($keys...) {
+@function duration($keys...) {
   @return val($duration, $keys...);
 }
 
 /// Gets a font value.
 /// @param {string} $keys Key(s).
 /// @return {string} Value.
-@function _font($keys...) {
+@function font($keys...) {
   @return val($font, $keys...);
 }
 
 /// Gets a misc value.
 /// @param {string} $keys Key(s).
 /// @return {string} Value.
-@function _misc($keys...) {
+@function misc($keys...) {
   @return val($misc, $keys...);
 }
 
 /// Gets a palette value as a CSS custom property reference.
 /// @param {string} $key Key.
 /// @return {string} CSS var() reference.
-@function _palette($key) {
+@function palette($key) {
   @return var(--clr-#{$key});
 }
 
 /// Gets a size value.
 /// @param {string} $keys Key(s).
 /// @return {string} Value.
-@function _size($keys...) {
+@function size($keys...) {
   @return val($size, $keys...);
 }

@@ -1,54 +1,30 @@
-@import-normalize;
-
-@import 'libs/vars';
-@import 'libs/theme-vars';
-@import 'libs/functions';
-@import 'libs/mixins';
-@import 'libs/skel';
-
-@include skel-breakpoints(
-  (
-    xlarge: '(max-width: 1680px)',
-    large: '(max-width: 1280px)',
-    medium: '(max-width: 980px)',
-    small: '(max-width: 736px)',
-    xsmall: '(max-width: 480px)',
-  )
-);
-
-@include skel-layout(
-  (
-    reset: 'full',
-    boxModel: 'border',
-    grid: (
-      gutters: 1em,
-    ),
-  )
-);
+@use 'base/normalize';
+@use 'libs/theme-vars';
 
 // Base.
 
-@import 'base/page';
-@import 'base/typography';
-@import 'base/motion';
+@use 'base/reset';
+@use 'base/page';
+@use 'base/typography';
+@use 'base/motion';
 
 // Component.
 
-@import 'components/button';
-@import 'components/icon';
-@import 'components/image';
-@import 'components/list';
-@import 'components/section';
-@import 'components/table';
-@import 'components/markdown';
+@use 'components/button';
+@use 'components/icon';
+@use 'components/image';
+@use 'components/list';
+@use 'components/section';
+@use 'components/table';
+@use 'components/markdown';
 
 // Layout.
 
-@import 'layout/chrome';
-@import 'layout/hero';
-@import 'layout/panel';
+@use 'layout/chrome';
+@use 'layout/hero';
+@use 'layout/panel';
 
-@import 'pages/facts';
-@import 'pages/notFound';
-@import 'pages/resume';
-@import 'pages/skills';
+@use 'pages/facts';
+@use 'pages/notFound';
+@use 'pages/resume';
+@use 'pages/skills';

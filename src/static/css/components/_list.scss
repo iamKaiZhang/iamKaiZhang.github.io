@@ -1,3 +1,5 @@
+@use '../libs' as *;
+
 ///
 /// Future Imperfect by HTML5 UP
 /// html5up.net | @ajlkn
@@ -8,7 +10,7 @@
 
 ol {
   list-style: decimal;
-  margin: 0 0 _size(element-margin) 0;
+  margin: 0 0 size(element-margin) 0;
   padding-left: 1.25em;
 
   li {
@@ -18,7 +20,7 @@ ol {
 
 ul {
   list-style: disc;
-  margin: 0 0 _size(element-margin) 0;
+  margin: 0 0 size(element-margin) 0;
   padding-left: 1em;
 
   li {
@@ -30,7 +32,7 @@ ul {
     padding-left: 0;
 
     li {
-      border-top: solid 1px _palette(border);
+      border-top: solid 1px palette(border);
       padding: 0.5em 0;
 
       &:first-child {
@@ -72,7 +74,7 @@ ul {
 
     li {
       display: inline-block;
-      padding: 0 (_size(element-margin) * 0.75) 0 0;
+      padding: 0 (size(element-margin) * 0.75) 0 0;
       vertical-align: middle;
 
       &:last-child {
@@ -116,14 +118,14 @@ ul {
 
     &.small {
       li {
-        padding: 0 (_size(element-margin) * 0.5) 0 0;
+        padding: 0 (size(element-margin) * 0.5) 0 0;
       }
     }
 
     &.vertical {
       li {
         display: block;
-        padding: (_size(element-margin) * 0.75) 0 0 0;
+        padding: (size(element-margin) * 0.75) 0 0 0;
 
         &:first-child {
           padding-top: 0;
@@ -136,7 +138,7 @@ ul {
 
       &.small {
         li {
-          padding: (_size(element-margin) * 0.5) 0 0 0;
+          padding: (size(element-margin) * 0.5) 0 0 0;
 
           &:first-child {
             padding-top: 0;
@@ -147,14 +149,14 @@ ul {
 
     &.fit {
       display: table;
-      margin-left: (_size(element-margin) * -0.5);
+      margin-left: (size(element-margin) * -0.5);
       padding: 0;
       table-layout: fixed;
-      width: calc(100% + #{(_size(element-margin) * 0.5)});
+      width: calc(100% + #{(size(element-margin) * 0.5)});
 
       li {
         display: table-cell;
-        padding: 0 0 0 (_size(element-margin) * 0.5);
+        padding: 0 0 0 (size(element-margin) * 0.5);
 
         > * {
           margin-bottom: 0;
@@ -162,20 +164,20 @@ ul {
       }
 
       &.small {
-        margin-left: (_size(element-margin) * -0.25);
-        width: calc(100% + #{(_size(element-margin) * 0.25)});
+        margin-left: (size(element-margin) * -0.25);
+        width: calc(100% + #{(size(element-margin) * 0.25)});
 
         li {
-          padding: 0 0 0 (_size(element-margin) * 0.25);
+          padding: 0 0 0 (size(element-margin) * 0.25);
         }
       }
     }
 
     @include breakpoint(xsmall) {
-      margin: 0 0 _size(element-margin) 0;
+      margin: 0 0 size(element-margin) 0;
 
       li {
-        padding: (_size(element-margin) * 0.5) 0 0 0;
+        padding: (size(element-margin) * 0.5) 0 0 0;
         display: block;
         text-align: center;
         width: 100%;
@@ -197,7 +199,7 @@ ul {
 
       &.small {
         li {
-          padding: (_size(element-margin) * 0.25) 0 0 0;
+          padding: (size(element-margin) * 0.25) 0 0 0;
 
           &:first-child {
             padding-top: 0;
@@ -212,9 +214,9 @@ ul {
     padding: 0;
 
     li {
-      border-top: dotted 1px _palette(border);
-      margin: (_size(element-margin) * 0.75) 0 0 0;
-      padding: (_size(element-margin) * 0.75) 0 0 0;
+      border-top: dotted 1px palette(border);
+      margin: (size(element-margin) * 0.75) 0 0 0;
+      padding: (size(element-margin) * 0.75) 0 0 0;
 
       &:first-child {
         border-top: 0;
@@ -250,11 +252,11 @@ ul {
 
         .published {
           display: block;
-          font-family: _font(family-heading);
+          font-family: font(family-heading);
           font-size: 0.6em;
-          font-weight: _font(weight-heading);
-          letter-spacing: _font(kerning-heading);
-          margin: -0.625em 0 (_size(element-margin) * 0.85) 0;
+          font-weight: font(weight-heading);
+          letter-spacing: font(kerning-heading);
+          margin: -0.625em 0 (size(element-margin) * 0.85) 0;
           text-transform: uppercase;
         }
 
@@ -267,15 +269,15 @@ ul {
 }
 
 dl {
-  margin: 0 0 _size(element-margin) 0;
+  margin: 0 0 size(element-margin) 0;
 
   dt {
     display: block;
-    font-weight: _font(weight-bold);
-    margin: 0 0 (_size(element-margin) * 0.5) 0;
+    font-weight: font(weight-bold);
+    margin: 0 0 (size(element-margin) * 0.5) 0;
   }
 
   dd {
-    margin-left: _size(element-margin);
+    margin-left: size(element-margin);
   }
 }

@@ -1,3 +1,5 @@
+@use '../libs' as *;
+
 ///
 /// Future Imperfect by HTML5 UP
 /// html5up.net | @ajlkn
@@ -25,7 +27,7 @@ body {
 }
 
 body {
-  background: _palette(bg-alt);
+  background: palette(bg-alt);
 
   // Prevents animation/transition "flicker" on page load.
   // Automatically added/removed by js/main.js.
@@ -36,5 +38,30 @@ body {
       @include vendor('animation', 'none !important');
       @include vendor('transition', 'none !important');
     }
+  }
+}
+
+// Text for screen readers only
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Keyboard users can jump past the nav; visible only while focused
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  padding: 0.4rem 0.8rem;
+  background: palette(bg);
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: none;
   }
 }
