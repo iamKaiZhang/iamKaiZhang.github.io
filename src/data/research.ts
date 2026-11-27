@@ -1,10 +1,26 @@
 import { PaperData } from '../components/Research/types';
 
 // Tag vocabulary. Add new tags here; a typo in a paper's tags fails type-check.
-export const researchTags = ['Energy Markets', 'Data-Driven Control'] as const;
+export const researchTags = [
+  'Welfarist Control Design',
+  'Energy Markets',
+  'Data-Driven Control',
+] as const;
 export type ResearchTag = (typeof researchTags)[number];
 
 export const papers: PaperData<ResearchTag>[] = [
+  {
+    title: 'Welfarist Control Design - How to fulfill the societal mandate in multi-agent control?',
+    authors: 'Sophie Hall, Kai Zhang, Ilia Shilov, Heinrich H. Nax, Saverio Bolognani',
+    tags: ['Welfarist Control Design'],
+    status: 'Working Paper',
+    links: [
+      {
+        link: 'https://arxiv.org/abs/2606.23931',
+        text: 'Preprint',
+      },
+    ],
+  },
   {
     title: 'Proactive Electricity Markets',
     authors: 'Kai Zhang, Nicolas Lanzetti, Florian Dörfler, Keith Moffat',

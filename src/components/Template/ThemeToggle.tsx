@@ -7,8 +7,8 @@ import { useTheme } from '@/context/ThemeContext';
 export default function ThemeToggle() {
   const { theme, toggle } = useTheme();
 
-  // The server always renders the night glyph (the site default), but a
-  // visitor with a stored day preference hydrates with day state. Render
+  // The server always renders the night glyph (it has no visitor to ask),
+  // but a visitor in daylight hydrates with day state. Render
   // the night glyph until after hydration so server and client markup
   // match, then show the real theme; this avoids a hydration mismatch.
   const [mounted, setMounted] = useState(false);

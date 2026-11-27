@@ -353,12 +353,6 @@
     }
   }
 
-  // No divider between the stats and the other facts
-  .facts-content section:nth-of-type(2) {
-    border-top: none;
-    padding-top: 0;
-  }
-
   .text-facts ul {
     margin: 0;
     padding-left: 1.2rem;

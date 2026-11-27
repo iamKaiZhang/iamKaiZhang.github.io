@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import GoogleAnalytics from '@/components/Template/GoogleAnalytics';
 import Navigation from '@/components/Template/Navigation';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { THEME_KEY, pickTheme } from '@/context/sunTheme';
 import '@/static/css/main.scss';
 
 import ScrollReveal from './components/ScrollReveal';
@@ -48,14 +49,13 @@ export const metadata: Metadata = {
   },
 };
 
-// The storage key is versioned: renaming it discards preferences stored by
-// older versions of the site, so the night default applies to everyone once.
+// Runs before first paint so the page never flashes the wrong theme. The
+// picker is inlined from its source, which is why it has to be self-contained.
 const themeInitScript = `
 (function(){
   var stored = null;
-  try { stored = localStorage.getItem('kz-theme'); } catch (e) {}
-  var theme = stored === 'day' || stored === 'night' ? stored : 'night';
-  document.documentElement.setAttribute('data-theme', theme);
+  try { stored = localStorage.getItem('${THEME_KEY}'); } catch (e) {}
+  document.documentElement.setAttribute('data-theme', (${pickTheme.toString()})(new Date(), stored));
 })();
 `;
 

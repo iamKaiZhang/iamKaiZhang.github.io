@@ -53,7 +53,7 @@ export const supervisions: Supervision[] = [
   },
   {
     title: 'Demand Response for Agentic LLM Serving',
-    student: 'Niklas Fischli',
+    student: 'Niclas Fischli',
     project: 'Bachelor Thesis 2026',
     status: 'ongoing',
     supervisors: [{ name: 'Leonardo Pedroso', link: 'https://leonardopedroso.github.io' }],

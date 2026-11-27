@@ -2,19 +2,23 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-type Theme = 'day' | 'night';
+import { THEME_KEY, pickTheme } from './sunTheme';
+import type { Theme } from './sunTheme';
 
-function initialTheme(): Theme {
-  if (typeof window === 'undefined') return 'night';
+function storedChoice(): string | null {
   try {
-    // Versioned key: older stored preferences are deliberately ignored
-    const stored = localStorage.getItem('kz-theme');
-    if (stored === 'day' || stored === 'night') return stored;
+    return localStorage.getItem(THEME_KEY);
   } catch {
-    // localStorage unavailable; fall through to the default
+    // localStorage unavailable (private mode, etc.)
+    return null;
   }
-  // Night is the site's default look; day stays available via the toggle
-  return 'night';
+}
+
+// Day between the visitor's sunrise and sunset, unless they chose a theme
+// themselves today. The server render has no visitor, so it uses night.
+function currentTheme(): Theme {
+  if (typeof window === 'undefined') return 'night';
+  return pickTheme(new Date(), storedChoice());
 }
 
 interface ThemeContextValue {
@@ -25,18 +29,25 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue>({ theme: 'day', toggle: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  const [theme, setTheme] = useState<Theme>(currentTheme);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Follow the sun while the page stays open: switch at sunrise and sunset
+  useEffect(() => {
+    const timer = setInterval(() => setTheme(currentTheme()), 5 * 60 * 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const toggle = useCallback(
     () =>
       setTheme((t) => {
         const next = t === 'day' ? 'night' : 'day';
         try {
-          localStorage.setItem('kz-theme', next);
+          // A manual choice holds for the rest of the day it was made on
+          localStorage.setItem(THEME_KEY, `${next}|${new Date().toDateString()}`);
         } catch {
           // ignore write failures (private mode, etc.)
         }
